@@ -12,7 +12,7 @@ const Navbar: FC = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
             <Link href="/" className="text-2xl font-bold text-emerald-700 tracking-tight" onClick={() => setIsOpen(false)}>
-              OPRA<span className="text-slate-800">Exam</span>
+              OPRA<span className="text-slate-800"> Exam</span>
             </Link>
           </div>
 
