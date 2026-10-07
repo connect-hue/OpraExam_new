@@ -19,20 +19,11 @@ const Footer: FC = () => {
             <h3 className="text-white font-semibold mb-4 text-lg">Quick Links</h3>
             <ul className="space-y-3 text-sm">
               <li><Link href="/" className="hover:text-emerald-400 transition-colors">Home</Link></li>
-              <li><Link href="/about" className="hover:text-emerald-400 transition-colors">About Us</Link></li>
-              <li><Link href="#syllabus" className="hover:text-emerald-400 transition-colors">Syllabus</Link></li>
+              <li><Link href="/sample-papers" className="hover:text-emerald-400 transition-colors">Sample Papers</Link></li>
+              <li><Link href="/#enquiry" className="hover:text-emerald-400 transition-colors">Get Study Pack</Link></li>
+              <li><Link href="/#syllabus" className="hover:text-emerald-400 transition-colors">Syllabus</Link></li>
               <li><Link href="/#exam-dates" className="hover:text-emerald-400 transition-colors">Exam Dates</Link></li>
               <li><Link href="/opra-quiz" className="hover:text-emerald-400 transition-colors">Free Quiz</Link></li>
-              <li>
-                <a
-                  href="https://gumroad.com/l/opra-pro-mock-test-pack"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-emerald-400 transition-colors"
-                >
-                  Pro Mock Test Pack
-                </a>
-              </li>
             </ul>
           </div>
           <div>
@@ -44,17 +35,15 @@ const Footer: FC = () => {
                   About the Authors
                 </Link>
               </li>
-              <li>Terms of Service</li>
-              <li>Privacy Policy</li>
               <li>
-                <a
-                  href="https://www.pharmacycouncil.org.au/candidates/opra/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-emerald-400 transition-colors"
-                >
-                  Verify Dates on APC ↗
-                </a>
+                <Link href="/terms" className="hover:text-emerald-400 transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-emerald-400 transition-colors">
+                  Privacy Policy
+                </Link>
               </li>
             </ul>
           </div>

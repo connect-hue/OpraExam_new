@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import LeadForm from '@/components/LeadForm';
+import LeadForm, { LeadData } from '@/components/LeadForm';
 import Link from 'next/link';
 
 export default function SamplePapersPage() {
   const [isUnlocked, setIsUnlocked] = useState(false);
 
-  const handleLeadSuccess = (data: { name: string; email: string; phone: string }) => {
-    // In a real application, we would send this data to a backend or CRM here.
-    console.log("Lead captured:", data);
+  const handleLeadSuccess = (data: LeadData) => {
+    console.log("Lead captured and synced to Pharmlly:", data);
     setIsUnlocked(true);
   };
 

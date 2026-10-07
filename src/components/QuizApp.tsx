@@ -352,7 +352,7 @@ export default function QuizApp() {
     const domains: Domain[] = ['Pharmacology', 'Pharmaceutics', 'Chemistry'];
     const domainStats = domains.map(domain => {
       const domainQs = questions.filter(q => q.domain === domain);
-      const correct = domainQs.filter((q, _) => answers[questions.indexOf(q)]?.correct).length;
+      const correct = domainQs.filter((q) => answers[questions.indexOf(q)]?.correct).length;
       return { domain, correct, total: domainQs.length, pct: Math.round((correct / domainQs.length) * 100) };
     });
 
@@ -548,7 +548,7 @@ export default function QuizApp() {
           </button>
         </form>
         <p className="text-xs text-slate-400 text-center mt-4">
-          No spam. We'll send you a free AMH case study every Monday.
+          No spam. We&apos;ll send you a free AMH case study every Monday.
         </p>
       </div>
     );

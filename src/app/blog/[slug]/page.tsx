@@ -3,7 +3,7 @@ import TableOfContents from "@/components/TableOfContents";
 import InlineCTA from "@/components/InlineCTA";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPostBySlug } from "@/data/blogPosts";
+import { getPostBySlug, blogPosts } from "@/data/blogPosts";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -181,7 +181,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <h3 className="text-xl font-bold text-slate-900 mb-6">Continue Reading</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {post.relatedSlugs.map((s) => {
-                    const { blogPosts } = require('@/data/blogPosts');
                     const related = blogPosts.find((p: { slug: string }) => p.slug === s);
                     if (!related) return null;
                     return (

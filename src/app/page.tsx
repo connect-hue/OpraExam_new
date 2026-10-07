@@ -1,43 +1,79 @@
 import Link from 'next/link';
 import MedicalBackground from '@/components/MedicalBackground';
+import VerifiedExamDates from '@/components/VerifiedExamDates';
+import LeadForm from '@/components/LeadForm';
 import { faqs } from '@/data/faqs';
 
 export default function Home() {
   return (
     <div className="flex flex-col w-full h-full bg-white relative">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden w-full bg-gradient-to-b from-emerald-50/70 via-white/50 to-white pt-16 pb-24 md:pt-24 md:pb-32">
+      {/* Hero Section with LeadForm */}
+      <section id="hero-lead-form" className="relative overflow-hidden w-full bg-gradient-to-b from-emerald-50/70 via-white/50 to-white pt-10 pb-16 md:pt-16 md:pb-24">
         <MedicalBackground />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center">
-          <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-800 mb-8 transform transition-transform hover:scale-105 duration-300">
-            <span className="flex h-2 w-2 rounded-full bg-emerald-600 mr-2 animate-pulse"></span>
-            Registration for 2026 OPRA Exam is Open
-          </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 max-w-4xl mb-6 leading-tight">
-            How to Pass the <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">OPRA Exam</span> in Australia
-          </h1>
-          <p className="mt-4 text-xl text-slate-600 max-w-2xl mb-10 leading-relaxed font-medium">
-            The Overseas Pharmacist Readiness Assessment (OPRA) is the mandatory exam for international pharmacists. Master the clinical syllabus, access past papers, and unlock your Australian pharmacy career.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mt-6">
-            <Link 
-              href="#syllabus" 
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-lg hover:shadow-emerald-500/30 transform hover:-translate-y-1 w-full sm:w-auto text-center flex items-center justify-center gap-2"
-            >
-              Explore 2026 Syllabus
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </Link>
-            <Link 
-              href="/sample-papers" 
-              className="bg-white hover:bg-slate-50 text-emerald-700 border-2 border-emerald-600 px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-sm hover:shadow-md transform hover:-translate-y-1 w-full sm:w-auto text-center flex items-center justify-center gap-2"
-            >
-              Download Free OPRA Cheat Sheet (PDF)
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-            </Link>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            
+            {/* Left Column: Hero Content & Value Props */}
+            <div className="lg:col-span-7 flex flex-col items-start text-left">
+              <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50/90 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-emerald-800 mb-6 shadow-2xs backdrop-blur-xs">
+                <span className="flex h-2 w-2 rounded-full bg-emerald-600 mr-2 animate-pulse"></span>
+                Registration for 2026 OPRA Exam is Open
+              </div>
+              
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.15]">
+                How to Pass the <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">OPRA Exam</span> in Australia
+              </h1>
+              
+              <p className="text-base sm:text-lg lg:text-xl text-slate-600 mb-8 leading-relaxed font-normal max-w-2xl">
+                The Overseas Pharmacist Readiness Assessment (OPRA) is the mandatory exam for international pharmacists. Master the clinical syllabus, access high-yield AMH materials, and unlock your Australian pharmacy career.
+              </p>
+
+              {/* Key Highlights */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full mb-8">
+                {[
+                  "Official 2026 OPRA Syllabus & Domain Weights",
+                  "120-Question Authentic Mock Practice Papers",
+                  "AMH Clinical Therapeutics & Calculation Guides",
+                  "1-on-1 APC Eligibility & Documentation Advice"
+                ].map((perk, idx) => (
+                  <div key={idx} className="flex items-center gap-2.5 bg-white/80 backdrop-blur-xs border border-emerald-100 rounded-xl px-3.5 py-2.5 shadow-2xs">
+                    <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-xs sm:text-sm font-semibold text-slate-700">{perk}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-slate-200/60 w-full text-slate-500 text-xs sm:text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="flex -space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center ring-2 ring-white">OP</div>
+                    <div className="w-8 h-8 rounded-full bg-teal-600 text-white font-bold text-xs flex items-center justify-center ring-2 ring-white">PS</div>
+                    <div className="w-8 h-8 rounded-full bg-slate-800 text-white font-bold text-xs flex items-center justify-center ring-2 ring-white">+5k</div>
+                  </div>
+                  <span className="font-semibold text-slate-700">5,000+ Pharmacists Guided</span>
+                </div>
+                <div className="flex items-center gap-1 text-amber-500 font-semibold">
+                  <span>★★★★★</span>
+                  <span className="text-slate-600 font-medium">4.9/5 Candidate Satisfaction</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Lead Form in Hero Section */}
+            <div className="lg:col-span-5 w-full">
+              <LeadForm
+                title="Book Your 1 : 1 Doubt Clearing Session"
+                buttonText="BOOK NOW"
+                tag="opraexam"
+                source="OPRAExam"
+              />
+            </div>
+
           </div>
         </div>
       </section>
@@ -173,105 +209,39 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Newsletter Lead Magnet Section */}
-      <section className="py-12 bg-emerald-600 w-full">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-emerald-700/50 p-8 rounded-3xl border border-emerald-500/50 backdrop-blur-sm">
-            <div className="flex-1">
-              <h3 className="text-2xl font-bold text-white mb-2">Want to ace the OPRA exam?</h3>
-              <p className="text-emerald-100">Join 5,000+ top pharmacists receiving weekly AMH case studies, syllabus updates, and preparation tips directly in their inbox.</p>
+      {/* Mid-page Fast-Track Consultation Banner */}
+      <section className="py-14 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 text-white w-full relative overflow-hidden shadow-inner">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="max-w-2xl text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-100 text-xs font-semibold uppercase tracking-wider mb-3">
+              Fast-Track Preparation
             </div>
-            <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-              <input type="email" placeholder="Enter your email address" className="px-5 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400 min-w-[250px] text-slate-800" />
-              <button className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl transition-colors whitespace-nowrap shadow-lg">
-                Send Me Tips
-              </button>
-            </div>
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
+              Ready to verify your eligibility for the 2026 OPRA Exam?
+            </h3>
+            <p className="text-emerald-100 text-base leading-relaxed">
+              Connect with OPRA mentors to get a full transcript evaluation and comprehensive APC skills assessment roadmap.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 shrink-0 w-full md:w-auto">
+            <Link
+              href="#hero-lead-form"
+              className="bg-white text-emerald-800 hover:bg-emerald-50 px-7 py-3.5 rounded-full font-bold text-base transition-all shadow-lg hover:shadow-xl text-center transform hover:-translate-y-0.5"
+            >
+              Get Free Study Kit
+            </Link>
+            <Link
+              href="/sample-papers"
+              className="bg-emerald-900/60 hover:bg-emerald-900 text-white border border-white/20 px-7 py-3.5 rounded-full font-semibold text-base transition-all text-center"
+            >
+              Sample Papers
+            </Link>
           </div>
         </div>
       </section>
 
       {/* Exam Dates Section */}
-      <section id="exam-dates" className="py-16 md:py-24 bg-white w-full border-t border-slate-100">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-800 mb-4">
-              <span className="flex h-2 w-2 rounded-full bg-emerald-600 mr-2"></span>
-              2026 Schedule
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Upcoming Exam Dates</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Register early to secure your preferred date and testing location. Slots fill up quickly.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* March Card */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-6 text-xl font-bold group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                Mar
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">March 23–25</h3>
-              <p className="text-slate-500 mb-4">Spring 2026 Session. Ideal for those who have completed their syllabus review.</p>
-              <div className="mt-auto w-full border-t border-slate-100 pt-4 flex flex-col gap-2">
-                <a
-                  href="https://www.pharmacycouncil.org.au/pharmacist/exam-information/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                  Verify on APC website
-                </a>
-                <p className="text-[11px] text-slate-400">✓ Last verified: March 2026</p>
-              </div>
-            </div>
-
-            {/* July Card */}
-            <div className="bg-white rounded-3xl p-8 border border-emerald-200 shadow-xl relative transition-all duration-300 transform hover:-translate-y-2 group flex flex-col items-center text-center ring-2 ring-emerald-500 ring-offset-4 ring-offset-slate-50">
-              <div className="absolute top-0 right-0 -mt-3 -mr-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm animate-pulse">
-                Filling Fast
-              </div>
-              <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-6 text-xl font-bold group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all">
-                Jul
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">July 13–15</h3>
-              <p className="text-slate-500 mb-4">Summer 2026 Session. The most popular testing window. High demand expected.</p>
-              <div className="mt-auto w-full border-t border-slate-100 pt-4 flex flex-col gap-2">
-                <a
-                  href="https://www.pharmacycouncil.org.au/pharmacist/exam-information/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                  Verify on APC website
-                </a>
-                <p className="text-[11px] text-slate-400">✓ Last verified: March 2026</p>
-              </div>
-            </div>
-
-            {/* November Card */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group flex flex-col items-center text-center">
-              <div className="w-16 h-16 bg-purple-50 text-purple-600 rounded-full flex items-center justify-center mb-6 text-xl font-bold group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all">
-                Nov
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">November 23–25</h3>
-              <p className="text-slate-500 mb-4">Fall 2026 Session. Perfect target for candidates needing extra preparation time.</p>
-              <div className="mt-auto w-full border-t border-slate-100 pt-4 flex flex-col gap-2">
-                <a
-                  href="https://www.pharmacycouncil.org.au/pharmacist/exam-information/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-purple-600 hover:text-purple-700 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                  Verify on APC website
-                </a>
-                <p className="text-[11px] text-slate-400">✓ Last verified: March 2026</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <VerifiedExamDates />
 
       {/* Syllabus Breakdown Section */}
       <section id="syllabus" className="py-16 md:py-24 bg-white w-full border-t border-slate-100">

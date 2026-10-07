@@ -8,12 +8,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     '',
     '/blog',
+    '/about',
+    '/opra-quiz',
     '/sample-papers',
+    '/terms',
+    '/privacy',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1.0 : 0.8,
+    priority: route === '' ? 1.0 : route === '/opra-quiz' ? 0.9 : (route === '/terms' || route === '/privacy') ? 0.4 : 0.8,
   }));
 
   // Dynamic Blog Content

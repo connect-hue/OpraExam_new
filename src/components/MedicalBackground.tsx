@@ -1,16 +1,6 @@
-"use client";
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 export default function MedicalBackground() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.04]">
       {/* Abstract Grid/Pattern to feel clinical and precise */}

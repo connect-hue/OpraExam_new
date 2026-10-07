@@ -30,16 +30,6 @@ const Navbar: FC = () => {
             <Link href="/blog" className="text-slate-600 hover:text-emerald-600 font-medium transition-colors">
               Blog
             </Link>
-            {/* Pro Mock Test — monetisation CTA */}
-            <a
-              href="https://gumroad.com/l/opra-pro-mock-test-pack"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-emerald-700 hover:text-emerald-600 font-semibold transition-colors flex items-center gap-1"
-            >
-              <span className="text-xs bg-emerald-100 text-emerald-700 rounded-full px-2 py-0.5 font-bold uppercase tracking-wide">Pro</span>
-              Mock Tests
-            </a>
           </nav>
 
           <div className="hidden md:flex items-center">
@@ -86,15 +76,6 @@ const Navbar: FC = () => {
             <Link href="/blog" onClick={() => setIsOpen(false)} className="block px-3 py-3 rounded-md text-base font-medium text-slate-700 hover:text-emerald-600 hover:bg-emerald-50">
               Blog
             </Link>
-            <a
-              href="https://gumroad.com/l/opra-pro-mock-test-pack"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setIsOpen(false)}
-              className="block px-3 py-3 rounded-md text-base font-semibold text-emerald-700 hover:bg-emerald-50"
-            >
-              🏆 Pro Mock Test Pack
-            </a>
             <Link href="/opra-quiz" onClick={() => setIsOpen(false)} className="block px-3 py-3 mt-4 text-center rounded-md font-medium bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm">
               Free OPRA Quiz
             </Link>
