@@ -10,19 +10,53 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 export const metadata: Metadata = {
   metadataBase: new URL("https://opraexam.in"),
   title: {
-    default: "OPRA Exam Guide 2026 | Syllabus, Fees & Preparation",
+    default: "OPRA Exam Guide 2026 | Syllabus, Fees & Preparation Australia",
     template: "%s | OPRA Exam Guide 2026",
   },
-  description: "Comprehensive guide for the OPRA exam Australia (Overseas Pharmacist Readiness Assessment). Get details on syllabus, fees, dates, and preparation materials.",
-  keywords: ["OPRA exam Australia", "pharmacist readiness assessment", "OPRA syllabus", "OPRA exam fees", "OPRA exam dates", "Australia pharmacy exam"],
+  description: "Complete guide for the OPRA exam Australia (Overseas Pharmacist Readiness Assessment). Access 2026 syllabus, exam dates, fees, APC document evaluation & mock tests.",
+  keywords: [
+    "OPRA exam Australia",
+    "OPRA exam syllabus 2026",
+    "OPRA exam fees",
+    "OPRA exam dates 2026",
+    "pharmacist readiness assessment",
+    "APC skills assessment",
+    "KAPS vs OPRA exam",
+    "Australian pharmacy council exam",
+    "how to become pharmacist in Australia",
+    "OPRA sample papers"
+  ],
+  authors: [{ name: "OPRA Exam Editorial Team", url: "https://opraexam.in/about" }],
+  creator: "OPRA Exam Guide",
+  publisher: "OPRA Exam Guide",
+  alternates: {
+    canonical: "./",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     type: "website",
     locale: "en_AU",
     url: "https://opraexam.in",
     siteName: "OPRA Exam Guide",
-    title: "OPRA Exam Guide 2026 | Syllabus, Fees & Preparation",
-    description: "Start your journey to becoming a registered pharmacist in Australia. Comprehensive guide for OPRA exam preparation.",
+    title: "OPRA Exam Guide 2026 | Syllabus, Fees & Preparation Australia",
+    description: "Start your journey to becoming a registered pharmacist in Australia. Comprehensive guide for OPRA exam preparation, syllabus & mock papers.",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "OPRA Exam Guide 2026 | Australian Pharmacist Readiness Assessment",
+    description: "Prepare for the Australian OPRA pharmacist exam with full syllabus breakdown, mock tests, and APC evaluation guidance.",
+  },
+  category: "education",
 };
 
 export default function RootLayout({
