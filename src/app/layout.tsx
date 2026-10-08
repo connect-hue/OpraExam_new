@@ -7,8 +7,8 @@ import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://opraexam.in';
-const gaId = process.env.NEXT_PUBLIC_GA_ID;
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in';
+const gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.GA_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
