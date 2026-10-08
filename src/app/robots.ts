@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://opraexam.in';
   return {
     rules: [
       {
@@ -9,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/'],
       },
     ],
-    sitemap: 'https://opraexam.in/sitemap.xml',
+    sitemap: `${siteUrl.replace(/\/$/, '')}/sitemap.xml`,
   };
 }

@@ -8,9 +8,11 @@ export type LeadData = {
   email: string;
   phone: string;
   qualification: string;
+  educationQualification?: string;
   program?: string;
   source?: string;
   tag?: string;
+  city?: string;
 };
 
 export type LeadFormProps = {
@@ -117,7 +119,8 @@ export default function LeadForm({
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formattedPhone,
-        qualification: finalQualification,
+        qualification: 'Pharmacy',
+        educationQualification: finalQualification,
         program: formData.program || 'OPRA for Australia',
         source: source || 'OPRAExam',
         tag: tag || 'opraexam',

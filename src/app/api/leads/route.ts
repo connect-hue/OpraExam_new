@@ -4,7 +4,10 @@ interface LeadRequestBody {
   name: string;
   email: string;
   phone: string;
-  qualification: string;
+  qualification?: string;
+  educationQualification?: string;
+  education_qualification?: string;
+  educationalQualification?: string;
   source?: string;
   program?: string;
   tag?: string;
@@ -14,9 +17,21 @@ interface LeadRequestBody {
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as LeadRequestBody;
-    const { name, email, phone, qualification, source, program, tag, city } = body;
+    const {
+      name,
+      email,
+      phone,
+      qualification,
+      educationQualification,
+      education_qualification,
+      educationalQualification,
+      source,
+      program,
+      tag,
+      city,
+    } = body;
 
-    // Validation: Required fields as specified by user
+    // Validation: Required fields
     if (!name || !name.trim()) {
       return NextResponse.json(
         { success: false, error: 'Full name is required.' },
@@ -46,46 +61,57 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!qualification || !qualification.trim()) {
+    const selectedEducation =
+      educationQualification?.trim() ||
+      education_qualification?.trim() ||
+      educationalQualification?.trim() ||
+      qualification?.trim() ||
+      '';
+
+    if (!selectedEducation) {
       return NextResponse.json(
         { success: false, error: 'Qualification is required.' },
         { status: 400 }
       );
     }
 
-    // Prepare payload according to Pharmlly API specifications
+    // Prepare payload according to Pharmlly API specifications:
+    // Qualification category is set to 'Pharmacy', while the user's selected degree is stored in education qualification.
     const pharmllyPayload = {
       name: name.trim(),
       email: email.trim().toLowerCase(),
       phone: phone.trim(),
       source: source || 'OPRAExam',
-      qualification: qualification.trim(),
-      program: program || 'OPRA Exam Preparation',
+      qualification: 'Pharmacy',
+      educationQualification: selectedEducation,
+      education_qualification: selectedEducation,
+      educationalQualification: selectedEducation,
+      program: program || 'OPRA for Australia',
       tag: tag || 'opraexam',
+      upsert: true,
+      updateIfExists: true,
       ...(city && { city: city.trim() }),
     };
 
-    const baseUrl = process.env.PHARMLLY_API_BASE_URL || 'https://pharmlly.com';
+    const baseUrl = process.env.PHARMLLY_API_BASE_URL;
     const accessKey = process.env.PHARMLLY_ACCESS_KEY;
     const secretKey = process.env.PHARMLLY_SECRET_KEY;
 
-    // If API credentials are not yet configured in environment variables (e.g. initial dev setup)
-    if (!accessKey || !secretKey) {
-      console.warn(
-        '[Pharmlly API] Warning: PHARMLLY_ACCESS_KEY or PHARMLLY_SECRET_KEY is not defined in environment variables. Simulating successful response in development mode.'
+    // Check that all required environment variables are provided
+    if (!baseUrl || !accessKey || !secretKey) {
+      console.error(
+        '[Pharmlly API Error] Missing environment configuration. Ensure PHARMLLY_API_BASE_URL, PHARMLLY_ACCESS_KEY, and PHARMLLY_SECRET_KEY are set.'
       );
       return NextResponse.json(
         {
-          success: true,
-          leadId: 'MOCK_DEV_' + Date.now(),
-          message: 'Lead captured successfully (Development mode: API keys not configured).',
-          isMock: true,
+          success: false,
+          error: 'Server configuration error: Missing API environment variables.',
         },
-        { status: 201 }
+        { status: 500 }
       );
     }
 
-    // Call Pharmlly API
+    // Call Pharmlly API to register lead / resubmission
     const response = await fetch(`${baseUrl.replace(/\/$/, '')}/api/leads`, {
       method: 'POST',
       headers: {
@@ -97,25 +123,84 @@ export async function POST(request: Request) {
     });
 
     const data = await response.json().catch(() => null);
+    const leadId = data?.leadId || data?.lead?._id;
 
+    // Explicitly update the Lead Details in Pharmlly database to ensure fields (Qualification, Education Qualification, Program, Name, Phone) update in the CRM UI
+    if (leadId) {
+      try {
+        await fetch(`${baseUrl.replace(/\/$/, '')}/api/leads/${leadId}`, {
+          method: 'PATCH',
+          headers: {
+            'x-api-access-key': accessKey,
+            'x-api-secret-key': secretKey,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            updates: {
+              qualification: 'Pharmacy',
+              Qualification: 'Pharmacy',
+              program: program || 'OPRA for Australia',
+              'Interested Program': program || 'OPRA for Australia',
+              'First Name': name.trim(),
+              firstName: name.trim(),
+              'Lead Name': name.trim(),
+              name: name.trim(),
+              'Phone Number': phone.trim(),
+              phone: phone.trim(),
+              source: source || 'OPRAExam',
+              'Lead Source': source || 'OPRAExam',
+              tag: tag || 'opraexam',
+              'Education Qualification': selectedEducation,
+              educationQualification: selectedEducation,
+              education_qualification: selectedEducation,
+              educationalQualification: selectedEducation,
+              data: {
+                education_qualification: selectedEducation,
+                educationQualification: selectedEducation,
+                'Education Qualification': selectedEducation,
+                educationalQualification: selectedEducation,
+              },
+              ...(city && { city: city.trim(), City: city.trim() }),
+            },
+          }),
+        });
+      } catch (patchErr) {
+        console.warn('[Pharmlly PATCH Warning] Could not patch lead details:', patchErr);
+      }
+    }
+
+    // 201: Newly created lead
     if (response.status === 201) {
       return NextResponse.json(
         {
           success: true,
-          leadId: data?.leadId,
+          leadId: leadId,
           message: data?.message || 'Lead created successfully on Pharmlly.',
         },
         { status: 201 }
       );
     }
 
+    // 200: Existing lead updated
+    if (response.status === 200 || data?.action === 'updated') {
+      return NextResponse.json(
+        {
+          success: true,
+          isUpdated: true,
+          leadId: leadId,
+          message: data?.message || 'Lead updated successfully on Pharmlly.',
+        },
+        { status: 200 }
+      );
+    }
+
+    // 409: Duplicate lead fallback
     if (response.status === 409) {
-      // 409 Conflict: Lead already exists in Pharmlly
       return NextResponse.json(
         {
           success: true,
           isDuplicate: true,
-          leadId: data?.leadId,
+          leadId: leadId,
           message: 'Thank you! Your information is already registered. Our OPRA counselor will reach out shortly.',
         },
         { status: 200 }

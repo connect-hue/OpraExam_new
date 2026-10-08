@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { blogPosts } from '@/data/blogPosts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://opraexam.in';
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
 
   // Static Routes
   const routes = [

@@ -7,8 +7,11 @@ import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://opraexam.in';
+const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://opraexam.in"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "OPRA Exam Guide 2026 | Syllabus, Fees & Preparation Australia",
     template: "%s | OPRA Exam Guide 2026",
@@ -26,7 +29,7 @@ export const metadata: Metadata = {
     "how to become pharmacist in Australia",
     "OPRA sample papers"
   ],
-  authors: [{ name: "OPRA Exam Editorial Team", url: "https://opraexam.in/about" }],
+  authors: [{ name: "OPRA Exam Editorial Team", url: `${siteUrl}/about` }],
   creator: "OPRA Exam Guide",
   publisher: "OPRA Exam Guide",
   alternates: {
@@ -46,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_AU",
-    url: "https://opraexam.in",
+    url: siteUrl,
     siteName: "OPRA Exam Guide",
     title: "OPRA Exam Guide 2026 | Syllabus, Fees & Preparation Australia",
     description: "Start your journey to becoming a registered pharmacist in Australia. Comprehensive guide for OPRA exam preparation, syllabus & mock papers.",
@@ -74,25 +77,29 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": "OPRA Exam Guide",
-              "url": "https://opraexam.in",
+              "url": siteUrl,
               "description": "Comprehensive operational guide and study resources for the Australian OPRA pharmacist exam."
             })
           }}
         />
       </head>
       <body className="font-sans min-h-screen flex flex-col bg-slate-50 text-slate-900">
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-Y9JT8RR30Q"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-Y9JT8RR30Q');
-          `}
-        </Script>
+        {gaId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${gaId}');
+              `}
+            </Script>
+          </>
+        )}
         <Navbar />
         <main className="flex-1 w-full flex flex-col items-center">
           {children}
