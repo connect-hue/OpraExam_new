@@ -2,9 +2,21 @@ import Link from 'next/link';
 import MedicalBackground from '@/components/MedicalBackground';
 import VerifiedExamDates from '@/components/VerifiedExamDates';
 import LeadForm from '@/components/LeadForm';
-import { faqs } from '@/data/faqs';
+import { getAllFaqs } from '@/lib/db/faqs';
+import { getSiteContent } from '@/lib/db/siteContent';
+import { getPublishedBlogs } from '@/lib/db/blogs';
 
-export default function Home() {
+export const revalidate = 60; // revalidate at most once every minute
+
+export default async function Home() {
+  const [faqs, content, allBlogs] = await Promise.all([
+    getAllFaqs(),
+    getSiteContent(),
+    getPublishedBlogs(),
+  ]);
+
+  const latestBlogs = allBlogs.slice(0, 3);
+
   return (
     <div className="flex flex-col w-full h-full bg-white relative">
       {/* Hero Section with LeadForm */}
@@ -17,25 +29,24 @@ export default function Home() {
             <div className="lg:col-span-7 flex flex-col items-start text-left">
               <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50/90 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-emerald-800 mb-6 shadow-2xs backdrop-blur-xs">
                 <span className="flex h-2 w-2 rounded-full bg-emerald-600 mr-2 animate-pulse"></span>
-                Registration for 2026 OPRA Exam is Open
+                {content.hero.badgeText}
               </div>
               
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.15]">
-                How to Pass the <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">OPRA Exam</span> in Australia
+                {content.hero.headingPrefix}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500">
+                  {content.hero.headingHighlight}
+                </span>
+                {content.hero.headingSuffix}
               </h1>
               
               <p className="text-base sm:text-lg lg:text-xl text-slate-600 mb-8 leading-relaxed font-normal max-w-2xl">
-                The Overseas Pharmacist Readiness Assessment (OPRA) is the mandatory exam for international pharmacists. Master the clinical syllabus, access high-yield AMH materials, and unlock your Australian pharmacy career.
+                {content.hero.description}
               </p>
 
               {/* Key Highlights */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full mb-8">
-                {[
-                  "Official 2026 OPRA Syllabus & Domain Weights",
-                  "120-Question Authentic Mock Practice Papers",
-                  "AMH Clinical Therapeutics & Calculation Guides",
-                  "1-on-1 APC Eligibility & Documentation Advice"
-                ].map((perk, idx) => (
+                {content.hero.perks.map((perk, idx) => (
                   <div key={idx} className="flex items-center gap-2.5 bg-white/80 backdrop-blur-xs border border-emerald-100 rounded-xl px-3.5 py-2.5 shadow-2xs">
                     <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,11 +66,11 @@ export default function Home() {
                     <div className="w-8 h-8 rounded-full bg-teal-600 text-white font-bold text-xs flex items-center justify-center ring-2 ring-white">PS</div>
                     <div className="w-8 h-8 rounded-full bg-slate-800 text-white font-bold text-xs flex items-center justify-center ring-2 ring-white">+5k</div>
                   </div>
-                  <span className="font-semibold text-slate-700">5,000+ Pharmacists Guided</span>
+                  <span className="font-semibold text-slate-700">{content.hero.candidatesGuided}</span>
                 </div>
                 <div className="flex items-center gap-1 text-amber-500 font-semibold">
                   <span>★★★★★</span>
-                  <span className="text-slate-600 font-medium">4.9/5 Candidate Satisfaction</span>
+                  <span className="text-slate-600 font-medium">{content.hero.satisfactionRating}</span>
                 </div>
               </div>
             </div>
@@ -84,22 +95,17 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 tracking-tight">
-                What is the OPRA Exam?
+                {content.about.title}
               </h2>
               <div className="w-20 h-1.5 bg-emerald-500 rounded-full mb-8 opacity-80"></div>
               <p className="text-lg text-slate-700 font-medium mb-4 leading-relaxed">
-                The Overseas Pharmacist Readiness Assessment (OPRA) is a mandatory clinical examination administered by the Australian Pharmacy Council (APC).
+                {content.about.highlight}
               </p>
               <p className="text-lg text-slate-600 mb-6 leading-relaxed">
-                It officially replaces the legacy KAPS exam and serves as the primary gateway for all internationally qualified pharmacists seeking provisional registration to practice in Australia.
+                {content.about.description}
               </p>
               <ul className="space-y-4">
-                {[
-                  "Mandatory for international pharmacist registration in Australia.",
-                  "Tests advanced clinical alignment with the Australian Medicines Handbook (AMH).",
-                  "Passing grants eligibility for Provisional Registration & Internship.",
-                  "Recognized by the Department of Home Affairs for Skills Assessment visas."
-                ].map((item, idx) => (
+                {content.about.points.map((item, idx) => (
                   <li key={idx} className="flex items-start group">
                     <svg className="h-6 w-6 text-emerald-500 mr-3 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -247,55 +253,42 @@ export default function Home() {
       <section id="syllabus" className="py-16 md:py-24 bg-white w-full border-t border-slate-100">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">Syllabus Breakdown</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Master the key domains tested in the OPRA exam to ensure your success.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{content.syllabus.title}</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">{content.syllabus.subtitle}</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl border border-slate-100 transition-all duration-300 transform hover:-translate-y-2 group">
-              <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">Pharmaceutical Chemistry</h3>
-              <p className="text-slate-600 leading-relaxed mb-4">
-                Organic chemistry, stereochemistry, drug metabolism, analytical chemistry, and physical pharmacy principles.
-              </p>
-              <div className="mt-auto inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-                ~30% of Exam Weight
-              </div>
-            </div>
+            {content.syllabus.domains.map((dom, idx) => {
+              const iconColor =
+                dom.color === 'blue'
+                  ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white'
+                  : dom.color === 'purple'
+                  ? 'bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white'
+                  : 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white';
+              const badgeColor =
+                dom.color === 'blue'
+                  ? 'bg-blue-50 text-blue-700'
+                  : dom.color === 'purple'
+                  ? 'bg-purple-50 text-purple-700'
+                  : 'bg-emerald-50 text-emerald-700';
 
-            <div className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl border border-slate-100 transition-all duration-300 transform hover:-translate-y-2 group">
-              <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">Pharmaceutics & Therapeutics</h3>
-              <p className="text-slate-600 leading-relaxed mb-4">
-                Formulation, biopharmaceutics, pharmacokinetics, and evidence-based clinical application of medicines.
-              </p>
-              <div className="mt-auto inline-block bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-sm font-semibold">
-                ~40% of Exam Weight
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl border border-slate-100 transition-all duration-300 transform hover:-translate-y-2 group">
-              <div className="w-14 h-14 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-purple-600 transition-colors">Pharmacology & Physiology</h3>
-              <p className="text-slate-600 leading-relaxed mb-4">
-                Mechanism of action, adverse effects, body systems, pathology, and fundamental pharmacological concepts.
-              </p>
-              <div className="mt-auto inline-block bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
-                ~30% of Exam Weight
-              </div>
-            </div>
+              return (
+                <div key={idx} className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl border border-slate-100 transition-all duration-300 transform hover:-translate-y-2 group">
+                  <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 ${iconColor}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">{dom.title}</h3>
+                  <p className="text-slate-600 leading-relaxed mb-4">
+                    {dom.description}
+                  </p>
+                  <div className={`mt-auto inline-block px-3 py-1 rounded-full text-sm font-semibold ${badgeColor}`}>
+                    {dom.weight}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -329,7 +322,7 @@ export default function Home() {
           
           <div className="space-y-6">
             {faqs.map((faq, index) => (
-              <details key={index} className="group bg-slate-50 p-6 rounded-2xl border border-slate-200 cursor-pointer open:bg-white open:border-emerald-200 open:shadow-md transition-all">
+              <details key={faq._id || index} className="group bg-slate-50 p-6 rounded-2xl border border-slate-200 cursor-pointer open:bg-white open:border-emerald-200 open:shadow-md transition-all">
                 <summary className="font-bold text-lg text-slate-900 flex justify-between items-center outline-none">
                   {faq.question}
                   <span className="text-emerald-500 group-open:rotate-180 transition-transform ml-4 shrink-0">
@@ -364,21 +357,17 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Link href="/blog/opra-exam-preparation-guide-2026" className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
-              <div className="text-emerald-600 font-semibold text-sm mb-3">8 min read</div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">OPRA Exam Preparation Guide 2026</h3>
-              <p className="text-slate-600 line-clamp-3">The ultimate 2026 preparation guide for the Overseas Pharmacist Readiness Assessment...</p>
-            </Link>
-            <Link href="/blog/how-to-pass-opra-exam-first-try" className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
-              <div className="text-emerald-600 font-semibold text-sm mb-3">6 min read</div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">How to Pass the OPRA Exam on Your First Try</h3>
-              <p className="text-slate-600 line-clamp-3">Expert tips and actionable study strategies to help you pass the Australian OPRA exam...</p>
-            </Link>
-            <Link href="/blog/understanding-opra-exam-syllabus" className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group">
-              <div className="text-emerald-600 font-semibold text-sm mb-3">7 min read</div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">Understanding the OPRA Exam Syllabus</h3>
-              <p className="text-slate-600 line-clamp-3">A deep dive into the official OPRA exam syllabus and the exact clinical domains tested...</p>
-            </Link>
+            {latestBlogs.map((post) => (
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group flex flex-col">
+                <div className="text-emerald-600 font-semibold text-sm mb-3">{post.readTime}</div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">{post.title}</h3>
+                <p className="text-slate-600 line-clamp-3 mb-4">{post.description}</p>
+                <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                  <span>{post.date}</span>
+                  <span className="font-semibold text-emerald-600 group-hover:underline">Read Guide &rarr;</span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

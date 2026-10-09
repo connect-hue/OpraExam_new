@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
-import { blogPosts } from '@/data/blogPosts';
+import { getPublishedBlogs } from '@/lib/db/blogs';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
 
   // Static Routes
@@ -21,12 +21,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Dynamic Blog Content
-  const blogRoutes = blogPosts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date).toISOString(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+  const blogPosts = await getPublishedBlogs();
+  const blogRoutes = blogPosts.map((post) => {
+    let lastMod = new Date().toISOString();
+    try {
+      const parsed = new Date(post.date);
+      if (!isNaN(parsed.getTime())) {
+        lastMod = parsed.toISOString();
+      }
+    } catch {
+      lastMod = new Date().toISOString();
+    }
+
+    return {
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: lastMod,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    };
+  });
 
   return [...routes, ...blogRoutes];
 }

@@ -1,14 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { blogPosts } from '@/data/blogPosts';
+import { getPublishedBlogs } from '@/lib/db/blogs';
 
 export const metadata: Metadata = {
   title: 'OPRA Exam Preparation Blog & Articles | Expert Tips',
   description: 'Read the latest operational guidelines, study tips, and comprehensive syllabus guides to pass the Australian OPRA pharmacist exam.',
 };
 
-export default function BlogIndexPage() {
+export const revalidate = 60;
+
+export default async function BlogIndexPage() {
+  const blogPosts = await getPublishedBlogs();
+
   return (
     <div className="bg-slate-50 min-h-screen py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -44,7 +48,7 @@ export default function BlogIndexPage() {
               <div className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
                 <div className="flex items-center">
                   <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center mr-3 font-bold text-sm">
-                    {post.author.charAt(0)}
+                    {(post.author || 'O').charAt(0)}
                   </div>
                   <div className="text-sm">
                     <p className="text-slate-900 font-bold leading-none">{post.author}</p>

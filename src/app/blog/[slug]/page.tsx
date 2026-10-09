@@ -3,11 +3,20 @@ import TableOfContents from "@/components/TableOfContents";
 import InlineCTA from "@/components/InlineCTA";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPostBySlug, blogPosts } from "@/data/blogPosts";
+import { getBlogBySlug, getPublishedBlogs } from "@/lib/db/blogs";
+
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const posts = await getPublishedBlogs();
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getBlogBySlug(slug);
 
   if (!post) {
     return {
@@ -32,7 +41,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const [post, allPosts] = await Promise.all([
+    getBlogBySlug(slug),
+    getPublishedBlogs(),
+  ]);
 
   if (!post) {
     notFound();
@@ -100,7 +112,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               <div className="flex flex-wrap items-center gap-6 text-slate-600 font-medium pb-2">
                 <div className="flex items-center">
                   <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mr-3 font-extrabold text-lg shadow-inner">
-                    {post.author.charAt(0)}
+                    {(post.author || 'O').charAt(0)}
                   </div>
                   <span className="text-slate-900 font-bold">{post.author}</span>
                 </div>
@@ -113,7 +125,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 </div>
                 <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-slate-200"></div>
                 <div className="flex items-center text-sm">
-                  <svg className="w-4 h-4 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <svg className="w-4 h-4 mr-2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                   {post.readTime}
                 </div>
               </div>
@@ -181,7 +193,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <h3 className="text-xl font-bold text-slate-900 mb-6">Continue Reading</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {post.relatedSlugs.map((s) => {
-                    const related = blogPosts.find((p: { slug: string }) => p.slug === s);
+                    const related = allPosts.find((p) => p.slug === s);
                     if (!related) return null;
                     return (
                       <Link key={s} href={`/blog/${s}`} className="group block bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl p-5 transition-all">
