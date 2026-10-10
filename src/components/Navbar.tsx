@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import { FC, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const Navbar: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Hide public navbar on admin pages
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-emerald-100 bg-white/80 backdrop-blur-md shadow-sm">

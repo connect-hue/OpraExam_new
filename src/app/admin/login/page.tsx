@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background Decorative Rings */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-teal-500/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -135,15 +135,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Quick Notice */}
-          <div className="mt-6 pt-6 border-t border-slate-700/60 text-center">
-            <p className="text-xs text-slate-400">
-              Default development PIN: <code className="bg-slate-900 text-emerald-400 px-2 py-0.5 rounded font-mono">opra2026admin</code>
-            </p>
-            <p className="text-[11px] text-slate-500 mt-1">
-              Configure <code className="text-slate-400">ADMIN_SECRET_PIN</code> in <code className="text-slate-400">.env.local</code> to change this.
-            </p>
-          </div>
         </div>
 
         {/* Footer */}

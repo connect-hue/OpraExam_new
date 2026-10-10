@@ -101,7 +101,7 @@ export default function RootLayout({
           </>
         )}
         <Navbar />
-        <main className="flex-1 w-full flex flex-col items-center">
+        <main className="flex-1 w-full flex flex-col">
           {children}
         </main>
         <Footer />

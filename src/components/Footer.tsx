@@ -1,7 +1,16 @@
+"use client";
+
 import { FC } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Footer: FC = () => {
+  const pathname = usePathname();
+
+  // Hide public footer on admin pages
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
   return (
     <footer className="bg-slate-900 border-t border-slate-800 text-slate-300 w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
