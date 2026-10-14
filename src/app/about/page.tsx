@@ -17,7 +17,7 @@ const authors = [
         credential: "Registered Pharmacist, Australia (AHPRA #PHY0002341187)",
         opraSession: "Passed OPRA — July 2024 session",
         country: "Originally from India • Now practising in Melbourne, VIC",
-        bio: "Priya completed her MPharm at the University of Mumbai before relocating to Australia. After passing OPRA on her first attempt in July 2024, she joined OPRAExam.in to share the preparation strategies that worked for her — particularly her AMH-first study system that she credits for her strong Paper 2 performance.",
+        bio: "Priya completed her MPharm at the University of Mumbai before relocating to Australia. After passing OPRA on her first attempt in July 2024, she joined OPRAExam.in to share the preparation strategies that worked for her — particularly her AMH-first study system that she credits for her strong clinical therapeutics performance.",
         linkedin: "https://linkedin.com/in/priya-sharma-pharmacist",
         initials: "PS",
         color: "bg-emerald-100 text-emerald-700",
@@ -110,7 +110,7 @@ export default function AboutPage() {
                         </p>
                         <p>
                             We each spent the first month of preparation studying from the wrong resources. When
-                            we finally understood that every answer in OPRA Paper 2 can be traced to a specific
+                            we finally understood that clinical answers in OPRA can be traced to a specific
                             section of the Australian Medicines Handbook, our scores improved dramatically.
                         </p>
                         <p>

@@ -7,13 +7,13 @@ import LeadForm from '@/components/LeadForm';
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Official OPRA Exam Syllabus 2026 | Domain Weights, Papers & Topics',
-  description: 'Complete 2026 OPRA exam syllabus breakdown for Australian pharmacist registration. Explore Paper 1 & Paper 2 domains, AMH clinical guidelines, calculations, and weightages.',
+  title: 'Official OPRA Exam Syllabus 2026 | Domain Weights, Exam Format & Topics',
+  description: 'Complete OPRA exam syllabus breakdown for Australian pharmacist registration. 120 multiple-choice questions in 2 hours and 30 minutes covering biomedical, pharmaceutical, and clinical sciences.',
   keywords: [
     'OPRA exam syllabus',
     'OPRA exam syllabus 2026',
-    'OPRA paper 1 syllabus',
-    'OPRA paper 2 syllabus',
+    'OPRA exam format',
+    'OPRA exam duration',
     'Australian pharmacy council syllabus',
     'AMH pharmacy therapeutics',
     'OPRA exam domains',
@@ -29,19 +29,19 @@ export const metadata: Metadata = {
 const syllabusFaqs = [
   {
     q: 'How is the OPRA exam syllabus different from the retired KAPS exam?',
-    a: 'While KAPS focused heavily on theoretical drug memorization and basic sciences, OPRA places much greater weight (~70%+) on applied clinical therapeutics, Australian Medicines Handbook (AMH) guidelines, patient communication, and evidence-based pharmacotherapy case studies.',
+    a: 'While KAPS focused heavily on theoretical drug memorization and basic sciences across two separate papers, OPRA is a single 120-question, 2.5-hour exam that places much greater weight on applied clinical therapeutics, Australian Medicines Handbook (AMH) guidelines, patient communication, and evidence-based pharmacotherapy case studies.',
   },
   {
-    q: 'What is the structure of Paper 1 and Paper 2?',
-    a: 'Both papers contain 120 multiple-choice questions (MCQs) each, lasting 3 hours per paper (total 240 questions in 6 hours). Paper 1 emphasizes Pharmaceutical Chemistry and Pharmacology/Physiology. Paper 2 concentrates on Pharmaceutics and Clinical Therapeutics.',
+    q: 'What is the structure and format of the OPRA exam?',
+    a: 'The OPRA exam consists of 120 multiple-choice questions (MCQs) completed in a single sitting of 2 hours and 30 minutes. It is a computer-based examination conducted at approved test centres by APC and PearsonVUE outside Australia. It assesses knowledge of biomedical, pharmaceutical, and clinical sciences.',
   },
   {
     q: 'Are calculations tested on the OPRA exam?',
-    a: 'Yes, pharmaceutical calculations are rigorously tested primarily in Paper 2, covering creatinine clearance (Cockcroft-Gault), pharmacokinetics (half-life, clearance, volume of distribution), posology, infusion rates, and percentage/mEq concentrations.',
+    a: 'Yes, pharmaceutical calculations are rigorously tested across the clinical and pharmaceutical science domains, covering creatinine clearance (Cockcroft-Gault), pharmacokinetics (half-life, clearance, volume of distribution), posology, infusion rates, and percentage/mEq concentrations.',
   },
   {
     q: 'What is the passing score for the OPRA exam?',
-    a: 'Candidates must achieve a scaled pass mark across both papers and satisfy minimum competence thresholds across core domains. The exact passing standard is determined through Australian Pharmacy Council (APC) psychometric standards.',
+    a: 'Candidates must achieve a scaled pass mark and satisfy competency thresholds across core domains. Passing OPRA is one step in the pathway towards pharmacist registration. Candidates must also meet the applicable registration requirements of the Pharmacy Board of Australia.',
   },
   {
     q: 'Which reference books and guidelines must I study for the OPRA syllabus?',
@@ -58,7 +58,7 @@ export default async function SyllabusPage() {
       weight: '~30% of Total Weight',
       badgeColor: 'bg-blue-100 text-blue-800 border-blue-200',
       iconBg: 'bg-blue-50 text-blue-600',
-      paper: 'Tested in Paper 1',
+      paper: 'Biomedical Sciences Domain',
       overview: 'Evaluates chemical structure comprehension, stereochemical influence on drug efficacy, formulation stability, and physico-chemical foundations of drug delivery.',
       topics: [
         'Structure-Activity Relationships (SAR) of key drug classes',
@@ -74,7 +74,7 @@ export default async function SyllabusPage() {
       weight: '~40% of Total Weight',
       badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
       iconBg: 'bg-emerald-50 text-emerald-600',
-      paper: 'Tested in Paper 2',
+      paper: 'Pharmaceutical & Clinical Sciences Domain',
       overview: 'The highest weighted domain in OPRA. Emphasizes clinical disease state management, Australian Medicines Handbook protocols, dosage formulations, and calculation precision.',
       topics: [
         'Cardiovascular & Renal: Hypertension, Heart Failure, DOAC anticoagulation, CKD dosing',
@@ -91,11 +91,11 @@ export default async function SyllabusPage() {
       weight: '~30% of Total Weight',
       badgeColor: 'bg-purple-100 text-purple-800 border-purple-200',
       iconBg: 'bg-purple-50 text-purple-600',
-      paper: 'Tested in Paper 1',
+      paper: 'Biomedical & Clinical Sciences Domain',
       overview: 'Assesses pharmacological mechanisms, physiological feedback loops, CYP450 enzyme interactions, toxicological mechanisms, and adverse effect profiles.',
       topics: [
         'Autonomic Nervous System: Sympathetic vs parasympathetic receptor pharmacology',
-        'Central Nervous System: SSRIs, SNRIs, antipsychotics, antiepileptics, sedatives',
+        'Central Nervous System: SSRIs, SNRIs, receptor pathways, antiepileptics, sedatives',
         'Pharmacokinetics: Volume of distribution, bioequivalence, clearance, half-life formulas',
         'CYP450 Enzyme Pathways: Inducers, inhibitors, and severe clinical drug-drug interactions',
         'Immunology & Oncology: Targeted biologics, monoclonal antibodies, immunosuppressants',
@@ -165,16 +165,16 @@ export default async function SyllabusPage() {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-slate-800 text-left">
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-xs">
-                <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">240</div>
-                <div className="text-xs sm:text-sm text-slate-300 font-medium">Total MCQs</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">120</div>
+                <div className="text-xs sm:text-sm text-slate-300 font-medium">MCQ Questions</div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-xs">
-                <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">2 Papers</div>
-                <div className="text-xs sm:text-sm text-slate-300 font-medium">3 Hours Each</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">2h 30m</div>
+                <div className="text-xs sm:text-sm text-slate-300 font-medium">Total Duration</div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-xs">
-                <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">3 Domains</div>
-                <div className="text-xs sm:text-sm text-slate-300 font-medium">Balanced Weight</div>
+                <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">PearsonVUE</div>
+                <div className="text-xs sm:text-sm text-slate-300 font-medium">Computer-Based</div>
               </div>
               <div className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-xs">
                 <div className="text-2xl sm:text-3xl font-extrabold text-emerald-400">AMH</div>
@@ -184,111 +184,111 @@ export default async function SyllabusPage() {
           </div>
         </div>
 
-        {/* Paper 1 vs Paper 2 Architecture Section */}
+        {/* OPRA Exam Format Overview Section */}
         <section className="mb-16">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-              Two Papers, One Exam Day
+              OPRA Exam Format
             </h2>
             <p className="text-slate-600 text-base sm:text-lg">
-              The OPRA examination is split into two distinct 3-hour computer-based testing papers delivered through Pearson VUE. Both papers must be attempted on the same day.
+              The Overseas Pharmacist Readiness Assessment (OPRA) is conducted by the Australian Pharmacy Council (APC). It is a computer-based, multiple-choice examination for eligible overseas-qualified pharmacists.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Paper 1 */}
+            {/* Exam Specifications */}
             <div className="bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col">
               <div className="flex items-center justify-between mb-6">
-                <span className="bg-blue-50 text-blue-700 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full border border-blue-200">
-                  Paper 1 • Morning Session
+                <span className="bg-emerald-50 text-emerald-700 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                  Key Specifications
                 </span>
-                <span className="text-slate-500 text-sm font-medium">120 Questions • 180 Mins</span>
+                <span className="text-slate-500 text-sm font-medium">120 MCQs • 2 Hours 30 Mins</span>
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-3">
-                Pharmaceutical Chemistry & Pharmacology
+                Exam Architecture
               </h3>
               <p className="text-slate-600 mb-6 leading-relaxed">
-                Tests foundational pharmaceutical sciences, drug structure relationships, mechanism of action, receptor dynamics, and physiological organ-system pharmacology.
+                The OPRA examination is delivered in a single computer-based sitting through authorized Pearson VUE test centres worldwide and approved test centres by the APC.
               </p>
 
               <div className="space-y-3.5 mb-8 flex-1">
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     ✓
                   </div>
                   <span className="text-sm font-medium text-slate-700">
-                    Medicinal chemistry, SAR, chemical stereoisomerism & degradation
+                    <strong>Questions:</strong> 120 multiple-choice questions
                   </span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     ✓
                   </div>
                   <span className="text-sm font-medium text-slate-700">
-                    Receptor-effector coupling, enzyme inhibition, agonists/antagonists
+                    <strong>Duration:</strong> 2 hours and 30 minutes
                   </span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     ✓
                   </div>
                   <span className="text-sm font-medium text-slate-700">
-                    Physiological homeostasis, pathophysiology, and adverse drug reactions
+                    <strong>Delivery:</strong> At approved test centres by APC and the ones outside Australia, conducted by PearsonVUE
                   </span>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-slate-100 flex items-center justify-between text-sm">
-                <span className="text-slate-500 font-medium">Approx. Weight:</span>
-                <span className="text-blue-700 font-extrabold">50% of Total Score</span>
+                <span className="text-slate-500 font-medium">Exam Fee:</span>
+                <span className="text-emerald-700 font-extrabold">AUD $2,245 per attempt</span>
               </div>
             </div>
 
-            {/* Paper 2 */}
+            {/* Purpose & Pathway */}
             <div className="bg-white rounded-3xl p-8 sm:p-10 border border-emerald-200 ring-2 ring-emerald-500/20 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col">
               <div className="flex items-center justify-between mb-6">
-                <span className="bg-emerald-50 text-emerald-700 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full border border-emerald-200">
-                  Paper 2 • Afternoon Session
+                <span className="bg-blue-50 text-blue-700 text-xs sm:text-sm font-bold px-3 py-1.5 rounded-full border border-blue-200">
+                  Assessment Scope
                 </span>
-                <span className="text-slate-500 text-sm font-medium">120 Questions • 180 Mins</span>
+                <span className="text-slate-500 text-sm font-medium">Registration Pathway</span>
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-3">
-                Pharmaceutics & Clinical Therapeutics
+                Purpose & Registration Pathway
               </h3>
               <p className="text-slate-600 mb-6 leading-relaxed">
-                Tests practical clinical scenarios, Australian Medicines Handbook therapy guidelines, drug formulation selection, dosage modifications, and calculations.
+                Assesses knowledge of the biomedical, pharmaceutical and clinical sciences relevant to pharmacy practice in Australia.
               </p>
 
               <div className="space-y-3.5 mb-8 flex-1">
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
                     ✓
                   </div>
                   <span className="text-sm font-medium text-slate-700">
-                    Case-based primary care scenarios based on Australian AMH monographs
+                    <strong>Biomedical Sciences:</strong> Medicinal chemistry, pharmacokinetics, and autonomic/organ physiology
                   </span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
                     ✓
                   </div>
                   <span className="text-sm font-medium text-slate-700">
-                    Complex clinical calculations: CrCl, infusion rates, pediatric dosing
+                    <strong>Pharmaceutical & Clinical Sciences:</strong> Formulation, clinical disease management, and calculations
                   </span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
                     ✓
                   </div>
                   <span className="text-sm font-medium text-slate-700">
-                    Formulation biopharmaceutics, stability, and patient counseling
+                    <strong>Registration Pathway:</strong> Passing OPRA is one step in the pathway towards pharmacist registration. Candidates must also meet the applicable registration requirements of the Pharmacy Board of Australia.
                   </span>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-slate-100 flex items-center justify-between text-sm">
-                <span className="text-slate-500 font-medium">Approx. Weight:</span>
-                <span className="text-emerald-700 font-extrabold">50% of Total Score</span>
+                <span className="text-slate-500 font-medium">Clinical Standard:</span>
+                <span className="text-blue-700 font-extrabold">Australian Medicines Handbook (AMH)</span>
               </div>
             </div>
           </div>

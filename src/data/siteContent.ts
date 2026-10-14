@@ -29,28 +29,30 @@ export type SiteContent = {
 
 export const defaultSiteContent: SiteContent = {
   hero: {
-    badgeText: "Registration for 2026 OPRA Exam is Open",
+    badgeText: "Registration for November 2026 OPRA Exam is Open",
     headingPrefix: "How to Pass the ",
     headingHighlight: "OPRA Exam",
     headingSuffix: " in Australia",
-    description: "OPRA is part of the APC Knowledge Stream for eligible overseas-qualified pharmacists. It is not the only possible assessment pathway for every applicant. Master the clinical syllabus and unlock your Australian pharmacy career.",
+    description: "The Overseas Pharmacist Readiness Assessment (OPRA) is conducted by the Australian Pharmacy Council (APC). It is a computer-based, multiple-choice examination for eligible overseas-qualified pharmacists.",
     perks: [
-      "Official 2026 OPRA Syllabus & Domain Weights",
-      "120-Question Authentic Mock Practice Papers",
-      "AMH Clinical Therapeutics & Calculation Guides",
+      "120 Multiple-Choice Questions (2 Hours 30 Minutes)",
+      "Computer-Based at Approved APC & PearsonVUE Test Centres",
+      "Biomedical, Pharmaceutical & Clinical Sciences",
       "1-on-1 APC Eligibility & Documentation Advice"
     ],
     candidatesGuided: "5,000+ Pharmacists Guided",
     satisfactionRating: "4.9/5 Candidate Satisfaction"
   },
   about: {
-    title: "What is the OPRA Exam?",
-    highlight: "The Overseas Pharmacist Readiness Assessment (OPRA) is a clinical examination administered by the Australian Pharmacy Council (APC) as part of their Knowledge Stream.",
-    description: "It officially replaces the legacy KAPS exam and is one pathway for internationally qualified pharmacists seeking to practise in Australia. Not every applicant will follow this route — eligibility depends on your individual APC assessment outcome.",
+    title: "OPRA Exam Format",
+    highlight: "The Overseas Pharmacist Readiness Assessment (OPRA) is conducted by the Australian Pharmacy Council (APC). It is a computer-based, multiple-choice examination for eligible overseas-qualified pharmacists.",
+    description: "Assesses knowledge of the biomedical, pharmaceutical and clinical sciences relevant to pharmacy practice. Passing OPRA is one step in the pathway towards pharmacist registration. Candidates must also meet the applicable registration requirements of the Pharmacy Board of Australia.",
     points: [
-      "One pathway within the APC assessment process for eligible overseas-qualified pharmacists.",
-      "Assesses biomedical, pharmaceutical and clinical sciences — not country-specific legislation or practice standards.",
-      "Passing OPRA is one step towards applying for provisional registration. You must also meet the Pharmacy Board of Australia's registration requirements."
+      "Questions: 120 multiple-choice questions",
+      "Duration: 2 hours and 30 minutes",
+      "Delivery: At approved test centres by APC and the ones outside Australia, conducted by PearsonVUE",
+      "Purpose: Assesses knowledge of the biomedical, pharmaceutical and clinical sciences relevant to pharmacy practice.",
+      "Passing OPRA is one step in the pathway towards pharmacist registration. Candidates must also meet the applicable registration requirements of the Pharmacy Board of Australia."
     ]
   },
   syllabus: {

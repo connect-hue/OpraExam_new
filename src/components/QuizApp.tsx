@@ -251,7 +251,7 @@ const questions: Question[] = [
       "90 mL"
     ],
     answer: 1,
-    explanation: "Using the dilution equation C1V1 = C2V2: (9%) × V1 = (0.9%) × 200 mL → V1 = (0.9 × 200) / 9 = 20 mL. Therefore, 20 mL of the 9% stock solution is diluted to 200 mL total volume with sterile water. Dilution calculations are a high-frequency topic in OPRA Paper 1. <strong>AMH reference: Pharmaceutical calculations.</strong>"
+    explanation: "Using the dilution equation C1V1 = C2V2: (9%) × V1 = (0.9%) × 200 mL → V1 = (0.9 × 200) / 9 = 20 mL. Therefore, 20 mL of the 9% stock solution is diluted to 200 mL total volume with sterile water. Dilution calculations are a high-frequency topic in the OPRA exam. <strong>AMH reference: Pharmaceutical calculations.</strong>"
   },
   {
     id: 19,

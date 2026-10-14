@@ -71,7 +71,7 @@ export default function SamplePapersPage() {
                     </svg>
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-800 group-hover:text-emerald-700 mb-1">Official Sample Paper 1</h4>
+                    <h4 className="font-bold text-slate-800 group-hover:text-emerald-700 mb-1">Official Sample Exam Paper</h4>
                     <p className="text-sm text-slate-500 line-clamp-2">Complete set of 120 multiple-choice questions covering all core domains.</p>
                   </div>
                 </a>

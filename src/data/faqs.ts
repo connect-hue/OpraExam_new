@@ -34,7 +34,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "What is the exact format of the OPRA exam?",
-    answer: "The OPRA exam consists of two multiple-choice question (MCQ) papers completed on the same day. Each paper contains 120 questions, and candidates are given exactly 3 hours per paper. All questions count towards the final score."
+    answer: "The OPRA exam consists of 120 multiple-choice questions (MCQs) completed in a single sitting of 2 hours and 30 minutes. It is a computer-based assessment conducted at approved test centres. Outside Australia, it is delivered through Pearson VUE. All questions count towards the final score."
   },
   {
     question: "Does the OPRA exam have negative marking?",
@@ -42,7 +42,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "What is the syllabus for the OPRA exam?",
-    answer: "Paper 1 (~120 questions) comprehensively covers Pharmaceutical Chemistry, Pharmacology, and Physiology. Paper 2 (~120 questions) focuses entirely on Pharmaceutics and Therapeutics, requiring strict adherence to Australian clinical guidelines."
+    answer: "The OPRA exam assesses knowledge of the biomedical, pharmaceutical and clinical sciences relevant to pharmacy practice in Australia. Refer to the APC's official published content domains for the most current breakdown."
   },
   {
     question: "Can I use a calculator during the OPRA exam?",

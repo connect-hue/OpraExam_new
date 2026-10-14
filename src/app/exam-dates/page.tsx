@@ -131,24 +131,28 @@ export default function ExamDatesPage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-              OPRA Exam Dates 2026: <br />
+              OPRA Exam Dates (2026–2027): <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
                 Official Schedule & Deadlines
               </span>
             </h1>
 
             <p className="text-slate-300 text-base sm:text-lg lg:text-xl leading-relaxed mb-8 max-w-3xl">
-              Stay ahead of strict registration cutoffs. The APC conducts the Overseas Pharmacist Readiness Assessment three times per year. Missing a deadline postpones your registration by 4 to 6 months.
+              Stay ahead of strict registration cutoffs. The APC conducts the Overseas Pharmacist Readiness Assessment multiple times per year. OPRA exam fee: AUD $2,245 per attempt. Missing a deadline postpones your registration by 4 to 6 months.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-sm text-slate-300">
+              <div className="flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/40 px-4 py-2 rounded-full backdrop-blur-xs text-emerald-200">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>November 2026 Registration: <strong>OPEN (Closes 19 Oct 2026)</strong></span>
+              </div>
               <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-xs">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                <span>Next Window: <strong>July 13–17, 2026</strong></span>
+                <span className="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+                <span>Exam: <strong>23–25 November 2026</strong></span>
               </div>
               <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-xs">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                <span>Registration Closes: <strong>31 May 2026</strong></span>
+                <span>Exam Fee: <strong>AUD $2,245</strong></span>
               </div>
               <a
                 href={APC_URL}
@@ -191,7 +195,7 @@ export default function ExamDatesPage() {
               </span>
               <h3 className="font-bold text-slate-900 text-lg mb-2">APC Document Evaluation</h3>
               <p className="text-sm text-slate-600 leading-relaxed flex-1">
-                Submit degree transcripts, syllabus equivalence, and identity proofs to the Australian Pharmacy Council for formal international assessment (Fee ~AUD $1,310).
+                Submit degree transcripts, syllabus equivalence, and identity proofs to the Australian Pharmacy Council for formal international assessment. Verify the current Document Evaluation fee on the <a href="https://www.pharmacycouncil.org.au/candidates/fees/" target="_blank" rel="noopener noreferrer" className="text-emerald-600 underline">APC fees page</a>.
               </p>
             </div>
 
@@ -215,9 +219,9 @@ export default function ExamDatesPage() {
               <span className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-1">
                 Exam Week
               </span>
-              <h3 className="font-bold text-slate-900 text-lg mb-2">Sit Paper 1 & Paper 2</h3>
+              <h3 className="font-bold text-slate-900 text-lg mb-2">Sit the OPRA Exam</h3>
               <p className="text-sm text-slate-600 leading-relaxed flex-1">
-                Arrive 30 minutes early at the Pearson VUE center. Complete 120 MCQs in the morning (3 hours) and 120 MCQs in the afternoon (3 hours).
+                Arrive at the approved Pearson VUE centre on your scheduled date. Complete 120 multiple-choice questions in 2 hours and 30 minutes. The exam is computer-based.
               </p>
             </div>
 
@@ -295,7 +299,7 @@ export default function ExamDatesPage() {
                     <td className="py-4 pr-6 text-slate-300">
                       APC Eligibility & Document Evaluation (One-time)
                     </td>
-                    <td className="py-4 text-right font-bold text-emerald-400">AUD $1,310</td>
+                    <td className="py-4 text-right font-bold text-emerald-400"><a href="https://www.pharmacycouncil.org.au/candidates/fees/" target="_blank" rel="noopener noreferrer" className="underline hover:text-emerald-300">Verify on APC</a></td>
                   </tr>
                   <tr>
                     <td className="py-4 pr-6 font-semibold text-white">Stage 2</td>
@@ -345,7 +349,7 @@ export default function ExamDatesPage() {
                     ✓
                   </div>
                   <span className="text-slate-700 font-semibold text-sm">
-                    Free evaluation of degree eligibility before paying $1,310 APC fee
+                    Free evaluation of degree eligibility before paying APC evaluation fees
                   </span>
                 </div>
                 <div className="flex items-center gap-3">

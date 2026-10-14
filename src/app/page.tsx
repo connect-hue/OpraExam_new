@@ -105,14 +105,26 @@ export default async function Home() {
                 {content.about.description}
               </p>
               <ul className="space-y-4">
-                {content.about.points.map((item, idx) => (
-                  <li key={idx} className="flex items-start group">
-                    <svg className="h-6 w-6 text-emerald-500 mr-3 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-slate-700 font-medium">{item}</span>
-                  </li>
-                ))}
+                {content.about.points.map((item, idx) => {
+                  const parts = item.split(': ');
+                  return (
+                    <li key={idx} className="flex items-start group">
+                      <svg className="h-6 w-6 text-emerald-500 mr-3 flex-shrink-0 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span className="text-slate-700 font-medium">
+                        {parts.length > 1 ? (
+                          <>
+                            <strong className="text-slate-900 font-bold">{parts[0]}:</strong>{' '}
+                            {parts.slice(1).join(': ')}
+                          </>
+                        ) : (
+                          item
+                        )}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
             <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 shadow-xl relative overflow-hidden group">
@@ -120,19 +132,19 @@ export default async function Home() {
                <div className="grid grid-cols-2 gap-6 relative z-10">
                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center transform transition-transform hover:-translate-y-1 duration-300">
                    <div className="text-4xl font-extrabold text-emerald-600 mb-2">120</div>
-                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Questions / Paper</div>
+                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">MCQ Questions</div>
                  </div>
                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center transform transition-transform hover:-translate-y-1 duration-300 delay-75">
-                   <div className="text-4xl font-extrabold text-emerald-600 mb-2">100%</div>
-                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">MCQ Format</div>
+                   <div className="text-4xl font-extrabold text-emerald-600 mb-2">2h 30m</div>
+                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Duration</div>
                  </div>
                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center transform transition-transform hover:-translate-y-1 duration-300 delay-100">
-                   <div className="text-4xl font-extrabold text-emerald-600 mb-2">1</div>
-                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Exam Paper</div>
+                   <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 mb-2">PearsonVUE</div>
+                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Computer-Based</div>
                  </div>
                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center transform transition-transform hover:-translate-y-1 duration-300 delay-150">
-                   <div className="text-4xl font-extrabold text-emerald-600 mb-2">2.5 hrs</div>
-                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Duration</div>
+                   <div className="text-3xl font-extrabold text-emerald-600 mb-2">$2,245</div>
+                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Exam Fee (AUD)</div>
                  </div>
                </div>
             </div>
@@ -161,7 +173,7 @@ export default async function Home() {
                 <div className="absolute top-0 right-0 -mt-3 -mr-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Critical Step</div>
                 <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4 border-4 border-white shadow-sm shadow-emerald-200">2</div>
                 <h3 className="font-bold text-slate-900 mb-2">Pass the OPRA Exam</h3>
-                <p className="text-sm text-slate-600">Register and complete the 120-question OPRA exam (one 2.5-hour paper). Passing is one step towards applying for provisional registration — you must also meet the Pharmacy Board of Australia's requirements.</p>
+                <p className="text-sm text-slate-600">Register and complete the 120 multiple-choice questions in 2 hours and 30 minutes. Computer-based exam conducted at approved test centres by APC and PearsonVUE outside Australia. Passing OPRA is one step in the pathway towards pharmacist registration — candidates must also meet the applicable registration requirements of the Pharmacy Board of Australia.</p>
               </div>
               <div className="bg-emerald-600 p-6 rounded-2xl shadow-lg border border-emerald-500 text-center relative transform hover:-translate-y-1 transition-transform">
                 <div className="w-12 h-12 bg-white text-emerald-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4 border-4 border-emerald-500 shadow-sm shadow-emerald-800">3</div>
@@ -197,7 +209,7 @@ export default async function Home() {
                 </li>
                 <li className="flex items-start">
                   <svg className="h-6 w-6 text-emerald-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  <span><strong>Expanded Therapeutics:</strong> Paper 2 now heavily features complex patient counseling scenarios, drug-drug interaction management, and dosage adjustments.</span>
+                  <span><strong>Single Computer-Based Exam:</strong> Replaces the old two-paper structure with 120 multiple-choice questions in 2 hours and 30 minutes, emphasizing clinical judgment, patient counseling, and Australian clinical practice.</span>
                 </li>
               </ul>
             </div>
@@ -223,7 +235,7 @@ export default async function Home() {
               Fast-Track Preparation
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
-              Ready to verify your eligibility for the 2026 OPRA Exam?
+              Ready to verify your eligibility for the OPRA Exam?
             </h3>
             <p className="text-emerald-100 text-base leading-relaxed">
               Connect with OPRA mentors to get a full transcript evaluation and comprehensive APC skills assessment roadmap.
@@ -253,13 +265,13 @@ export default async function Home() {
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
               <div>
                 <div className="inline-flex items-center rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-bold text-teal-800 mb-3">
-                  APC Schedule 2026
+                  APC Schedule 2026–2027
                 </div>
                 <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
                   Upcoming OPRA Exam Dates & Deadlines
                 </h2>
                 <p className="text-slate-600 mt-2 text-base">
-                  APC administers 3 exam sessions annually. Missing registration windows can delay your Australian license by 6 months.
+                  OPRA exam fee: AUD $2,245 per attempt. APC conducts sessions across 2026 and 2027. Missing registration windows can delay your Australian license by 4 to 6 months.
                 </p>
               </div>
 
@@ -271,7 +283,7 @@ export default async function Home() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {examSessions.map((session) => (
                 <div
                   key={session.session}
