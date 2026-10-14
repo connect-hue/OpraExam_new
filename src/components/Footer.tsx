@@ -28,11 +28,11 @@ const Footer: FC = () => {
             <h3 className="text-white font-semibold mb-4 text-lg">Quick Links</h3>
             <ul className="space-y-3 text-sm">
               <li><Link href="/" className="hover:text-emerald-400 transition-colors">Home</Link></li>
+              <li><Link href="/syllabus" className="hover:text-emerald-400 transition-colors">Syllabus Breakdown</Link></li>
+              <li><Link href="/exam-dates" className="hover:text-emerald-400 transition-colors">2026 Exam Dates</Link></li>
+              <li><Link href="/blog" className="hover:text-emerald-400 transition-colors">Blog & Guides</Link></li>
               <li><Link href="/sample-papers" className="hover:text-emerald-400 transition-colors">Sample Papers</Link></li>
-              <li><Link href="/#enquiry" className="hover:text-emerald-400 transition-colors">Get Study Pack</Link></li>
-              <li><Link href="/#syllabus" className="hover:text-emerald-400 transition-colors">Syllabus</Link></li>
-              <li><Link href="/#exam-dates" className="hover:text-emerald-400 transition-colors">Exam Dates</Link></li>
-              <li><Link href="/opra-quiz" className="hover:text-emerald-400 transition-colors">Free Quiz</Link></li>
+              <li><Link href="/opra-quiz" className="hover:text-emerald-400 transition-colors">Free Diagnostic Quiz</Link></li>
             </ul>
           </div>
           <div>

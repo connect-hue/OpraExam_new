@@ -18,11 +18,11 @@ export const faqs: FAQ[] = [
   },
   {
     question: "What is the passing score for the OPRA exam?",
-    answer: "To pass the OPRA exam, candidates must achieve a scaled score that meets the strict competency threshold set by the APC. Because scoring is probabilistically scaled based on exam difficulty, there is no exact raw percentage required. However, consistently aiming for 65-70% accuracy in mock exams is widely considered a safe benchmark."
+    answer: "The OPRA exam uses a scaled scoring system based on the competency threshold set by the APC. Because scoring is probabilistically adjusted based on exam difficulty, there is no fixed raw percentage pass mark. Any specific percentage figure (such as 65–70%) represents internal preparation guidance only and is not an official APC benchmark."
   },
   {
     question: "How much does the OPRA exam cost?",
-    answer: "As of the most recent APC fee schedule, the OPRA exam costs approximately $2,230 AUD per attempt. This fee is strictly for the examination and does not include the preliminary Document Evaluation fee (approximately $1,310 AUD)."
+    answer: "As of the current APC fee schedule, the OPRA exam costs AUD $2,245 per attempt. This fee is strictly for the examination itself. The Document Evaluation (eligibility assessment) fee is charged separately — verify the current figure directly on the APC fees page before applying."
   },
   {
     question: "Where can I take the OPRA exam?",
@@ -30,7 +30,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "Is the OPRA exam available online at home?",
-    answer: "Under exceptional and heavily vetted circumstances, online proctoring via OnVUE may be permitted by the APC. However, standard registration mandates attending a physical Pearson VUE testing hub to ensure exam integrity and security."
+    answer: "The OPRA exam is a computer-based assessment delivered at approved Pearson VUE test centres. The official APC exam guide confirms that candidates must attend an authorised physical testing location. Online or at-home proctoring is not listed as an available option by the APC."
   },
   {
     question: "What is the exact format of the OPRA exam?",
@@ -62,7 +62,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "How long is the OPRA exam valid for?",
-    answer: "Once you successfully pass the OPRA exam, your results are completely valid for a period of 3 years. You must secure your internship and move towards General Registration within this timeframe."
+    answer: "The validity period of OPRA results is subject to APC and Pharmacy Board of Australia policy, which can change. Always verify the current validity requirements directly with the APC and Ahpra before making planning decisions, as exam-result validity is separate from other assessment or migration requirements."
   },
   {
     question: "What are the best books for OPRA exam preparation?",
@@ -82,6 +82,6 @@ export const faqs: FAQ[] = [
   },
   {
     question: "Can I migrate to Australia after passing OPRA?",
-    answer: "Yes, passing the OPRA exam generally allows you to apply for a formal Skills Assessment letter from the APC. This letter is a critical prerequisite for lodging various skilled migration visa applications (such as Subclass 189, 190, or 491) with the Australian Department of Home Affairs."
+    answer: "Passing the OPRA exam and obtaining a migration skills assessment are distinct processes. A skills assessment for migration purposes is conducted separately by the APC and has its own requirements and application process. Passing OPRA alone does not automatically make you eligible for a migration skills assessment letter. Refer directly to the APC's migration assessment page for current requirements."
   }
 ];

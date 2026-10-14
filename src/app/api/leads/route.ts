@@ -125,48 +125,48 @@ export async function POST(request: Request) {
     const data = await response.json().catch(() => null);
     const leadId = data?.leadId || data?.lead?._id;
 
-    // Explicitly update the Lead Details in Pharmlly database to ensure fields (Qualification, Education Qualification, Program, Name, Phone) update in the CRM UI
+    // Fire-and-forget PATCH to update CRM fields — do NOT await this.
+    // The user gets their success response immediately after the POST above.
+    // The PATCH still runs in the background to keep the CRM up to date.
     if (leadId) {
-      try {
-        await fetch(`${baseUrl.replace(/\/$/, '')}/api/leads/${leadId}`, {
-          method: 'PATCH',
-          headers: {
-            'x-api-access-key': accessKey,
-            'x-api-secret-key': secretKey,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            updates: {
-              qualification: 'Pharmacy',
-              Qualification: 'Pharmacy',
-              program: program || 'OPRA for Australia',
-              'Interested Program': program || 'OPRA for Australia',
-              'First Name': name.trim(),
-              firstName: name.trim(),
-              'Lead Name': name.trim(),
-              name: name.trim(),
-              'Phone Number': phone.trim(),
-              phone: phone.trim(),
-              source: source || 'OPRAExam',
-              'Lead Source': source || 'OPRAExam',
-              tag: tag || 'opraexam',
-              'Education Qualification': selectedEducation,
-              educationQualification: selectedEducation,
+      fetch(`${baseUrl.replace(/\/$/, '')}/api/leads/${leadId}`, {
+        method: 'PATCH',
+        headers: {
+          'x-api-access-key': accessKey,
+          'x-api-secret-key': secretKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          updates: {
+            qualification: 'Pharmacy',
+            Qualification: 'Pharmacy',
+            program: program || 'OPRA for Australia',
+            'Interested Program': program || 'OPRA for Australia',
+            'First Name': name.trim(),
+            firstName: name.trim(),
+            'Lead Name': name.trim(),
+            name: name.trim(),
+            'Phone Number': phone.trim(),
+            phone: phone.trim(),
+            source: source || 'OPRAExam',
+            'Lead Source': source || 'OPRAExam',
+            tag: tag || 'opraexam',
+            'Education Qualification': selectedEducation,
+            educationQualification: selectedEducation,
+            education_qualification: selectedEducation,
+            educationalQualification: selectedEducation,
+            data: {
               education_qualification: selectedEducation,
+              educationQualification: selectedEducation,
+              'Education Qualification': selectedEducation,
               educationalQualification: selectedEducation,
-              data: {
-                education_qualification: selectedEducation,
-                educationQualification: selectedEducation,
-                'Education Qualification': selectedEducation,
-                educationalQualification: selectedEducation,
-              },
-              ...(city && { city: city.trim(), City: city.trim() }),
             },
-          }),
-        });
-      } catch (patchErr) {
-        console.warn('[Pharmlly PATCH Warning] Could not patch lead details:', patchErr);
-      }
+            ...(city && { city: city.trim(), City: city.trim() }),
+          },
+        }),
+      }).catch((patchErr) =>
+        console.warn('[Pharmlly PATCH Warning] Background patch failed:', patchErr)
+      );
     }
 
     // 201: Newly created lead

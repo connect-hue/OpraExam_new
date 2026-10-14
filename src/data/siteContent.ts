@@ -33,7 +33,7 @@ export const defaultSiteContent: SiteContent = {
     headingPrefix: "How to Pass the ",
     headingHighlight: "OPRA Exam",
     headingSuffix: " in Australia",
-    description: "The Overseas Pharmacist Readiness Assessment (OPRA) is the mandatory exam for international pharmacists. Master the clinical syllabus, access high-yield AMH materials, and unlock your Australian pharmacy career.",
+    description: "OPRA is part of the APC Knowledge Stream for eligible overseas-qualified pharmacists. It is not the only possible assessment pathway for every applicant. Master the clinical syllabus and unlock your Australian pharmacy career.",
     perks: [
       "Official 2026 OPRA Syllabus & Domain Weights",
       "120-Question Authentic Mock Practice Papers",
@@ -45,12 +45,12 @@ export const defaultSiteContent: SiteContent = {
   },
   about: {
     title: "What is the OPRA Exam?",
-    highlight: "The Overseas Pharmacist Readiness Assessment (OPRA) is a mandatory clinical examination administered by the Australian Pharmacy Council (APC).",
-    description: "It officially replaces the legacy KAPS exam and serves as the primary gateway for all internationally qualified pharmacists seeking provisional registration to practice in Australia.",
+    highlight: "The Overseas Pharmacist Readiness Assessment (OPRA) is a clinical examination administered by the Australian Pharmacy Council (APC) as part of their Knowledge Stream.",
+    description: "It officially replaces the legacy KAPS exam and is one pathway for internationally qualified pharmacists seeking to practise in Australia. Not every applicant will follow this route — eligibility depends on your individual APC assessment outcome.",
     points: [
-      "Mandatory for international pharmacist registration in Australia.",
-      "Tests advanced clinical alignment with the Australian Medicines Handbook (AMH).",
-      "Passing grants eligibility for Provisional Registration & Internship."
+      "One pathway within the APC assessment process for eligible overseas-qualified pharmacists.",
+      "Assesses biomedical, pharmaceutical and clinical sciences — not country-specific legislation or practice standards.",
+      "Passing OPRA is one step towards applying for provisional registration. You must also meet the Pharmacy Board of Australia's registration requirements."
     ]
   },
   syllabus: {
@@ -60,19 +60,19 @@ export const defaultSiteContent: SiteContent = {
       {
         title: "Pharmaceutical Chemistry",
         description: "Organic chemistry, stereochemistry, drug metabolism, analytical chemistry, and physical pharmacy principles.",
-        weight: "~30% of Exam Weight",
+        weight: "Biomedical Sciences Domain",
         color: "blue"
       },
       {
         title: "Pharmaceutics & Therapeutics",
         description: "Formulation, biopharmaceutics, pharmacokinetics, and evidence-based clinical application of medicines.",
-        weight: "~40% of Exam Weight",
+        weight: "Pharmaceutical Sciences Domain",
         color: "emerald"
       },
       {
         title: "Pharmacology & Physiology",
         description: "Mechanism of action, adverse effects, body systems, pathology, and fundamental pharmacological concepts.",
-        weight: "~30% of Exam Weight",
+        weight: "Clinical Sciences Domain",
         color: "purple"
       }
     ]

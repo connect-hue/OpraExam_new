@@ -7,6 +7,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static Routes
   const routes = [
     '',
+    '/syllabus',
+    '/exam-dates',
     '/blog',
     '/about',
     '/opra-quiz',
@@ -17,7 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
     changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1.0 : route === '/opra-quiz' ? 0.9 : (route === '/terms' || route === '/privacy') ? 0.4 : 0.8,
+    priority: route === '' ? 1.0 : (route === '/syllabus' || route === '/exam-dates' || route === '/opra-quiz') ? 0.9 : (route === '/terms' || route === '/privacy') ? 0.4 : 0.8,
   }));
 
   // Dynamic Blog Content

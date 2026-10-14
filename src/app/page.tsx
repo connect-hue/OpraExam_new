@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import MedicalBackground from '@/components/MedicalBackground';
-import VerifiedExamDates from '@/components/VerifiedExamDates';
 import LeadForm from '@/components/LeadForm';
 import { getAllFaqs } from '@/lib/db/faqs';
 import { getSiteContent } from '@/lib/db/siteContent';
 import { getPublishedBlogs } from '@/lib/db/blogs';
+import { examSessions } from '@/components/VerifiedExamDates';
 
 export const revalidate = 60; // revalidate at most once every minute
 
@@ -120,19 +120,19 @@ export default async function Home() {
                <div className="grid grid-cols-2 gap-6 relative z-10">
                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center transform transition-transform hover:-translate-y-1 duration-300">
                    <div className="text-4xl font-extrabold text-emerald-600 mb-2">120</div>
-                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Questions</div>
+                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Questions / Paper</div>
                  </div>
                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center transform transition-transform hover:-translate-y-1 duration-300 delay-75">
                    <div className="text-4xl font-extrabold text-emerald-600 mb-2">100%</div>
                    <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">MCQ Format</div>
                  </div>
                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center transform transition-transform hover:-translate-y-1 duration-300 delay-100">
-                   <div className="text-4xl font-extrabold text-emerald-600 mb-2">2</div>
-                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Papers</div>
+                   <div className="text-4xl font-extrabold text-emerald-600 mb-2">1</div>
+                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Exam Paper</div>
                  </div>
                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center transform transition-transform hover:-translate-y-1 duration-300 delay-150">
-                   <div className="text-4xl font-extrabold text-emerald-600 mb-2">3 hrs</div>
-                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Per Paper</div>
+                   <div className="text-4xl font-extrabold text-emerald-600 mb-2">2.5 hrs</div>
+                   <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Duration</div>
                  </div>
                </div>
             </div>
@@ -161,17 +161,17 @@ export default async function Home() {
                 <div className="absolute top-0 right-0 -mt-3 -mr-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Critical Step</div>
                 <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4 border-4 border-white shadow-sm shadow-emerald-200">2</div>
                 <h3 className="font-bold text-slate-900 mb-2">Pass the OPRA Exam</h3>
-                <p className="text-sm text-slate-600">Register and clear the 240-question OPRA exam to prove your clinical alignment with Australian standards.</p>
+                <p className="text-sm text-slate-600">Register and complete the 120-question OPRA exam (one 2.5-hour paper). Passing is one step towards applying for provisional registration — you must also meet the Pharmacy Board of Australia's requirements.</p>
               </div>
               <div className="bg-emerald-600 p-6 rounded-2xl shadow-lg border border-emerald-500 text-center relative transform hover:-translate-y-1 transition-transform">
                 <div className="w-12 h-12 bg-white text-emerald-600 rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4 border-4 border-emerald-500 shadow-sm shadow-emerald-800">3</div>
                 <h3 className="font-bold text-white mb-2">IELTS/OET & Internship</h3>
-                <p className="text-sm text-emerald-100">Clear your English proficiency test and complete supervised pharmacy internship hours in Australia.</p>
+                <p className="text-sm text-emerald-100">Prove English proficiency (IELTS/OET/PTE), obtain provisional registration, complete an APC-accredited intern training program, and fulfil all supervised practice requirements.</p>
               </div>
               <div className="bg-white p-6 rounded-2xl shadow-md border border-emerald-100 text-center relative">
                 <div className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-xl mx-auto mb-4 border-4 border-white shadow-sm shadow-emerald-200">4</div>
                 <h3 className="font-bold text-slate-900 mb-2">Ahpra General Registration</h3>
-                <p className="text-sm text-slate-600">Pass the final Pharmacy Board (Ahpra) oral/written exams to achieve your independent practicing license.</p>
+                <p className="text-sm text-slate-600">Complete the required registration examinations and apply to the Pharmacy Board of Australia (Ahpra) for general registration to practise independently.</p>
               </div>
             </div>
           </div>
@@ -207,8 +207,8 @@ export default async function Home() {
               </div>
               <h4 className="text-xl font-bold mb-6 text-center text-slate-100">Which exam is right for you?</h4>
               <p className="text-slate-400 text-center mb-8">The KAPS exam is strictly obsolete. Do not buy outdated KAPS materials. You must study explicitly for the newly formulated OPRA syllabus.</p>
-              <Link href="#syllabus" className="block w-full text-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-colors">
-                View Valid OPRA Syllabus
+              <Link href="/syllabus" className="block w-full text-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-colors">
+                View Valid OPRA Syllabus →
               </Link>
             </div>
           </div>
@@ -246,46 +246,129 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Exam Dates Section */}
-      <VerifiedExamDates />
-
-      {/* Syllabus Breakdown Section */}
-      <section id="syllabus" className="py-16 md:py-24 bg-white w-full border-t border-slate-100">
+      {/* Dedicated Exam Dates Teaser / Snapshot Card */}
+      <section className="py-16 md:py-20 bg-slate-50 w-full border-t border-slate-100">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">{content.syllabus.title}</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">{content.syllabus.subtitle}</p>
+          <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-md">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+              <div>
+                <div className="inline-flex items-center rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-xs font-bold text-teal-800 mb-3">
+                  APC Schedule 2026
+                </div>
+                <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Upcoming OPRA Exam Dates & Deadlines
+                </h2>
+                <p className="text-slate-600 mt-2 text-base">
+                  APC administers 3 exam sessions annually. Missing registration windows can delay your Australian license by 6 months.
+                </p>
+              </div>
+
+              <Link
+                href="/exam-dates"
+                className="inline-flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-full font-bold text-sm transition-all shadow-sm hover:shadow-md shrink-0"
+              >
+                View Full Exam Schedule &rarr;
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {examSessions.map((session) => (
+                <div
+                  key={session.session}
+                  className="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-lg font-bold text-slate-900">{session.session}</span>
+                      <span
+                        className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                          session.status === 'open'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : session.status === 'upcoming'
+                            ? 'bg-amber-100 text-amber-800'
+                            : 'bg-slate-200 text-slate-600'
+                        }`}
+                      >
+                        {session.status === 'open' ? 'Registration Open' : session.status === 'upcoming' ? 'Upcoming' : 'Closed'}
+                      </span>
+                    </div>
+
+                    <div className="text-sm space-y-1.5 text-slate-600 mb-4">
+                      <div>
+                        <span className="font-medium text-slate-500">Exam Window: </span>
+                        <strong className="text-slate-800">{session.examDate}</strong>
+                      </div>
+                      <div>
+                        <span className="font-medium text-slate-500">Registration Closes: </span>
+                        <strong className="text-slate-800">{session.registrationClose}</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Link
+                    href="/exam-dates"
+                    className="text-xs font-bold text-teal-700 hover:text-teal-800 pt-3 border-t border-slate-200/60 inline-flex items-center"
+                  >
+                    Check deadlines & test centers &rarr;
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Syllabus Teaser Section */}
+      <section className="py-16 md:py-20 bg-white w-full border-t border-slate-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div>
+              <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 mb-3">
+                Curriculum Breakdown
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+                {content.syllabus.title}
+              </h2>
+              <p className="text-slate-600 mt-2 text-base max-w-2xl">
+                {content.syllabus.subtitle}
+              </p>
+            </div>
+
+            <Link
+              href="/syllabus"
+              className="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-full font-bold text-sm transition-all shadow-sm hover:shadow-md shrink-0"
+            >
+              Explore Full Syllabus & Topics &rarr;
+            </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {content.syllabus.domains.map((dom, idx) => {
-              const iconColor =
-                dom.color === 'blue'
-                  ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white'
-                  : dom.color === 'purple'
-                  ? 'bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white'
-                  : 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white';
               const badgeColor =
                 dom.color === 'blue'
-                  ? 'bg-blue-50 text-blue-700'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200'
                   : dom.color === 'purple'
-                  ? 'bg-purple-50 text-purple-700'
-                  : 'bg-emerald-50 text-emerald-700';
+                  ? 'bg-purple-50 text-purple-700 border-purple-200'
+                  : 'bg-emerald-50 text-emerald-700 border-emerald-200';
 
               return (
-                <div key={idx} className="bg-white rounded-2xl p-8 shadow-md hover:shadow-xl border border-slate-100 transition-all duration-300 transform hover:-translate-y-2 group">
-                  <div className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-300 ${iconColor}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                    </svg>
+                <div key={idx} className="bg-slate-50 rounded-2xl p-8 border border-slate-200 flex flex-col justify-between hover:shadow-lg transition-all">
+                  <div>
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold border mb-4 ${badgeColor}`}>
+                      {dom.weight}
+                    </span>
+                    <h3 className="text-xl font-bold text-slate-900 mb-3">{dom.title}</h3>
+                    <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                      {dom.description}
+                    </p>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">{dom.title}</h3>
-                  <p className="text-slate-600 leading-relaxed mb-4">
-                    {dom.description}
-                  </p>
-                  <div className={`mt-auto inline-block px-3 py-1 rounded-full text-sm font-semibold ${badgeColor}`}>
-                    {dom.weight}
-                  </div>
+                  <Link
+                    href="/syllabus"
+                    className="text-xs font-bold text-emerald-600 hover:text-emerald-700 pt-4 border-t border-slate-200 inline-flex items-center group"
+                  >
+                    View detailed sub-topics & competencies
+                    <span className="ml-1 group-hover:translate-x-1 transition-transform">&rarr;</span>
+                  </Link>
                 </div>
               );
             })}
@@ -294,8 +377,7 @@ export default async function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-16 md:py-24 bg-white w-full border-t border-slate-100 relative">
-        {/* Inject FAQPage Schema for AI Search / Google Snippets */}
+      <section id="faq" className="py-16 md:py-24 bg-slate-50 w-full border-t border-slate-100 relative">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -322,7 +404,7 @@ export default async function Home() {
           
           <div className="space-y-6">
             {faqs.map((faq, index) => (
-              <details key={faq._id || index} className="group bg-slate-50 p-6 rounded-2xl border border-slate-200 cursor-pointer open:bg-white open:border-emerald-200 open:shadow-md transition-all">
+              <details key={faq._id || index} className="group bg-white p-6 rounded-2xl border border-slate-200 cursor-pointer open:border-emerald-200 open:shadow-md transition-all">
                 <summary className="font-bold text-lg text-slate-900 flex justify-between items-center outline-none">
                   {faq.question}
                   <span className="text-emerald-500 group-open:rotate-180 transition-transform ml-4 shrink-0">
@@ -338,15 +420,15 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Latest Blog & Resources Section */}
-      <section className="py-16 md:py-24 bg-slate-50 w-full border-t border-slate-100">
+      {/* Latest Blog & Resources Teaser Section */}
+      <section className="py-16 md:py-24 bg-white w-full border-t border-slate-100">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="flex flex-col md:flex-row justify-between items-end mb-12">
             <div>
               <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-800 mb-4">
                 Strategy & Tips
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">OPRA Exam Resources</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">Latest OPRA Articles</h2>
             </div>
             <Link href="/blog" className="text-emerald-600 hover:text-emerald-700 font-semibold group flex items-center mt-4 md:mt-0 transition-colors">
               View All Articles
@@ -358,11 +440,11 @@ export default async function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {latestBlogs.map((post) => (
-              <Link key={post.slug} href={`/blog/${post.slug}`} className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group flex flex-col">
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="bg-slate-50 rounded-3xl p-8 border border-slate-200 shadow-xs hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 group flex flex-col">
                 <div className="text-emerald-600 font-semibold text-sm mb-3">{post.readTime}</div>
                 <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors line-clamp-2">{post.title}</h3>
                 <p className="text-slate-600 line-clamp-3 mb-4">{post.description}</p>
-                <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <div className="mt-auto pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500">
                   <span>{post.date}</span>
                   <span className="font-semibold text-emerald-600 group-hover:underline">Read Guide &rarr;</span>
                 </div>

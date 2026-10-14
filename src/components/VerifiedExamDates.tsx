@@ -5,7 +5,7 @@
 
 import React from "react";
 
-type ExamSession = {
+export type ExamSession = {
     session: string;          // e.g. "March 2026"
     registrationOpen: string; // e.g. "1 November 2025"
     registrationClose: string;// e.g. "31 January 2026"
@@ -15,7 +15,7 @@ type ExamSession = {
     lastVerified: string;     // ISO date string e.g. "2026-03-20"
 };
 
-const examSessions: ExamSession[] = [
+export const examSessions: ExamSession[] = [
     {
         session: "March 2026",
         registrationOpen: "1 November 2025",
@@ -36,16 +36,16 @@ const examSessions: ExamSession[] = [
     },
     {
         session: "November 2026",
-        registrationOpen: "1 July 2026",
-        registrationClose: "30 September 2026",
-        examDate: "9–13 November 2026",
-        resultsDate: "Mid December 2026",
+        registrationOpen: "18 August 2026",
+        registrationClose: "19 October 2026",
+        examDate: "23–25 November 2026",
+        resultsDate: "22 December 2026",
         status: "upcoming",
-        lastVerified: "2026-03-20",
+        lastVerified: "2026-10-14",
     },
 ];
 
-const APC_URL = "https://www.pharmacycouncil.org.au/candidates/opra/";
+export const APC_URL = "https://www.pharmacycouncil.org.au/candidates/opra/";
 
 const statusConfig = {
     open: {
@@ -187,7 +187,7 @@ export default function VerifiedExamDates() {
                 <div className="bg-white rounded-2xl border border-slate-200 p-5 flex flex-col sm:flex-row sm:items-center gap-4">
                     <div className="flex-1 text-sm text-slate-600">
                         <span className="font-bold text-slate-800">Current OPRA fees (APC 2026):</span>{" "}
-                        Exam — AUD $2,230 per attempt &nbsp;|&nbsp; Document Evaluation — approx. AUD $1,310.{" "}
+                        Exam — AUD $2,245 per attempt &nbsp;|&nbsp; Document Evaluation — verify current fee on APC website.{" "}
                         <a
                             href="https://www.pharmacycouncil.org.au/candidates/fees/"
                             target="_blank"
