@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { COUNTRY_CODES } from '@/data/countryCodes';
 
 type Domain = 'Pharmacology' | 'Pharmaceutics' | 'Chemistry';
 
@@ -297,8 +298,12 @@ export default function QuizApp() {
   const [isQuizFinished, setIsQuizFinished] = useState(false);
 
   // Lead capture
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [countryCode, setCountryCode] = useState('+91');
   const [country, setCountry] = useState('Australia');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [formError, setFormError] = useState('');
 
@@ -324,14 +329,46 @@ export default function QuizApp() {
     }
   };
 
-  const handleLeadSubmit = (e: React.FormEvent) => {
+  const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !email.includes('@')) {
+    if (!name.trim()) {
+      setFormError('Please enter your full name.');
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       setFormError('Please enter a valid email address.');
       return;
     }
+    if (!phone.trim()) {
+      setFormError('Please enter your contact phone number.');
+      return;
+    }
     setFormError('');
-    setIsFormSubmitted(true);
+    setIsSubmitting(true);
+
+    try {
+      const fullPhone = `${countryCode} ${phone.trim()}`;
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          phone: fullPhone,
+          qualification: 'Bachelor of Pharmacy (B.Pharm)',
+          educationQualification: 'Bachelor of Pharmacy (B.Pharm)',
+          program: 'OPRA for Australia',
+          source: 'OPRAQuiz',
+          tag: 'opra-quiz',
+          city: country,
+        }),
+      });
+    } catch (err) {
+      console.warn('Failed to submit lead to API:', err);
+    } finally {
+      setIsSubmitting(false);
+      setIsFormSubmitted(true);
+    }
   };
 
   const handleRetake = () => {
@@ -341,7 +378,9 @@ export default function QuizApp() {
     setShowExplanation(false);
     setIsQuizFinished(false);
     setIsFormSubmitted(false);
+    setName('');
     setEmail('');
+    setPhone('');
   };
 
   // ─── RESULTS ───────────────────────────────────────────────────────────────
@@ -507,48 +546,102 @@ export default function QuizApp() {
           </div>
           <h2 className="text-2xl font-bold text-slate-800 mb-2">Almost there!</h2>
           <p className="text-slate-500 text-sm">
-            Enter your email to see your full score, domain breakdown, and personalised answer explanations.
+            Enter your details to reveal your full score, domain breakdown, and personalized clinical answer explanations.
           </p>
         </div>
 
-        <form onSubmit={handleLeadSubmit} className="space-y-5">
+        <form onSubmit={handleLeadSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label htmlFor="quiz-name" className="block text-sm font-semibold text-slate-700 mb-1">
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="quiz-name"
+              required
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm"
+              placeholder="e.g. Rahul Sharma"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="quiz-email" className="block text-sm font-semibold text-slate-700 mb-1">
               Email Address
             </label>
             <input
               type="email"
-              id="email"
+              id="quiz-email"
+              required
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm"
               placeholder="pharmacist@example.com"
             />
           </div>
+
           <div>
-            <label htmlFor="country" className="block text-sm font-semibold text-slate-700 mb-1.5">
+            <label htmlFor="quiz-phone" className="block text-sm font-semibold text-slate-700 mb-1">
+              WhatsApp / Phone Number
+            </label>
+            <div className="flex gap-2">
+              <select
+                aria-label="Country calling code"
+                value={countryCode}
+                onChange={e => setCountryCode(e.target.value)}
+                className="w-32 px-2.5 py-3 rounded-xl border border-slate-300 bg-white text-xs font-semibold focus:ring-2 focus:ring-emerald-500 outline-none"
+              >
+                {COUNTRY_CODES.map((c, i) => (
+                  <option key={i} value={c.code}>
+                    {c.code} ({c.name})
+                  </option>
+                ))}
+              </select>
+              <input
+                type="tel"
+                id="quiz-phone"
+                required
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+                className="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm"
+                placeholder="9876543210"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="quiz-target-state" className="block text-sm font-semibold text-slate-700 mb-1">
               Target Registration State
             </label>
             <select
-              id="country"
+              id="quiz-target-state"
               value={country}
               onChange={e => setCountry(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-sm"
             >
-              <option>Australia</option>
+              <option>Australia (VIC - Melbourne)</option>
+              <option>Australia (NSW - Sydney)</option>
+              <option>Australia (QLD - Brisbane)</option>
+              <option>Australia (WA - Perth)</option>
+              <option>Australia (SA - Adelaide)</option>
+              <option>Australia (Other State/Territory)</option>
               <option>New Zealand</option>
             </select>
           </div>
-          {formError && <p className="text-red-500 text-sm">{formError}</p>}
+
+          {formError && <p className="text-red-500 text-xs font-medium">{formError}</p>}
+
           <button
             type="submit"
-            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-full shadow-md hover:shadow-lg transition-all"
+            disabled={isSubmitting}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white font-bold py-4 rounded-full shadow-md hover:shadow-lg transition-all text-base mt-2"
           >
-            Reveal My Score & Review Answers →
+            {isSubmitting ? 'Submitting & Analyzing...' : 'Reveal My Score & Review Answers →'}
           </button>
         </form>
         <p className="text-xs text-slate-400 text-center mt-4">
-          No spam. We&apos;ll send you a free AMH case study every Monday.
+          🔒 Your details are 100% confidential. You&apos;ll also receive a free AMH study guide.
         </p>
       </div>
     );

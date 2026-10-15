@@ -6,6 +6,8 @@ import LeadForm from '@/components/LeadForm';
 
 export const revalidate = 60;
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
+
 export const metadata: Metadata = {
   title: 'Official OPRA Exam Syllabus 2026 | Domain Weights, Exam Format & Topics',
   description: 'Complete OPRA exam syllabus breakdown for Australian pharmacist registration. 120 multiple-choice questions in 2 hours and 30 minutes covering biomedical, pharmaceutical, and clinical sciences.',
@@ -19,10 +21,21 @@ export const metadata: Metadata = {
     'OPRA exam domains',
     'KAPS vs OPRA syllabus',
   ],
+  alternates: {
+    canonical: `${siteUrl}/syllabus`,
+  },
   openGraph: {
     title: 'Official OPRA Exam Syllabus 2026 | Australian Pharmacy Council',
     description: 'Detailed syllabus, domain weights, and clinical competencies required to pass the OPRA exam in Australia.',
+    url: `${siteUrl}/syllabus`,
     type: 'website',
+    images: [`${siteUrl}/og-image.jpg`],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Official OPRA Exam Syllabus 2026 | Domain Weights & Blueprint',
+    description: 'Complete OPRA exam syllabus breakdown for Australian pharmacist registration. 120 MCQs in 2.5 hours.',
+    images: [`${siteUrl}/og-image.jpg`],
   },
 };
 
@@ -104,9 +117,32 @@ export default async function SyllabusPage() {
     },
   ];
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Syllabus',
+        item: `${siteUrl}/syllabus`,
+      },
+    ],
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen py-10 lg:py-16">
-      {/* Schema Injection */}
+      {/* Schema Injections */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

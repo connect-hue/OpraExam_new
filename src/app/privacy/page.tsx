@@ -1,9 +1,14 @@
 import { Metadata } from "next";
 import Link from "next/link";
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
+
 export const metadata: Metadata = {
   title: "Privacy Policy | OPRA Exam Guide",
   description: "Learn how OPRA Exam Guide (opraexam.in) collects, protects, and handles your personal information when using our educational website.",
+  alternates: {
+    canonical: `${siteUrl}/privacy`,
+  },
 };
 
 export default function PrivacyPage() {

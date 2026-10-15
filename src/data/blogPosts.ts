@@ -476,6 +476,83 @@ export const blogPosts: BlogPost[] = [
       { question: 'How many calculation questions are in the OPRA exam?', answer: 'The APC does not specify the exact number of calculation questions. Most candidates report approximately 15–25 calculation-based questions across the 120-question paper, though this varies by session.' },
       { question: 'Can I use my own scratch paper in the OPRA exam?', answer: 'No. You are not permitted to bring any external paper into the testing room. The Pearson VUE center provides an erasable whiteboard notepad and marker for all working. Bring nothing into the room other than your IDs.' },
     ]
+  },
+  // ─────────────────────────────────────────────────────────────────────────
+  // 14. Australian Pharmacist PR Visa Pathway
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    slug: 'australian-pharmacist-pr-visa-pathway-guide-2026',
+    title: 'Australian Pharmacist PR & Skilled Migration Visa Pathway Guide 2026',
+    description: 'Complete step-by-step roadmap to obtaining Permanent Residency (PR) in Australia as an overseas pharmacist. Discover ANZSCO 251511, points calculation, state nomination, and OPRA requirements.',
+    author: 'Dr. Priya Sharma',
+    date: 'March 25, 2026',
+    readTime: '9 min read',
+    keywords: 'pharmacist PR Australia, pharmacist visa Australia, subclass 190 pharmacist, subclass 491 pharmacist, ANZSCO 251511, Australian permanent residency pharmacist',
+    relatedSlugs: ['australian-pharmacist-general-registration', 'opra-document-evaluation-process', 'opra-exam-preparation-guide-2026'],
+    content: [
+      { type: 'h2', text: 'Permanent Residency (PR) for Pharmacists in Australia' },
+      { type: 'p', text: 'For international pharmacists, taking the OPRA exam is often the single most critical milestone towards obtaining Australian Permanent Residency (PR). Retail Pharmacist (ANZSCO 251513) and Hospital Pharmacist (ANZSCO 251511) are officially classified as priority healthcare occupations on Australia\'s Medium and Long-term Strategic Skills List (MLTSSL).' },
+      { type: 'alert', alertType: 'info', text: 'Passing the OPRA exam and fulfilling APC skills assessment enables you to claim critical points towards Australian General Skilled Migration visas including Subclass 189, Subclass 190, and Subclass 491.' },
+      { type: 'h2', text: 'Top Skilled Visa Options for Overseas Pharmacists' },
+      { type: 'h3', text: '1. Subclass 189 (Skilled Independent Visa)' },
+      { type: 'p', text: 'A point-tested permanent residence visa that does not require state nomination or an employer sponsor. You can live and work anywhere in Australia from day one. Competition for invitations is high, typically requiring 75–85+ points.' },
+      { type: 'h3', text: '2. Subclass 190 (Skilled Nominated Visa)' },
+      { type: 'p', text: 'Grants direct PR upon arrival with an additional 5 points awarded for state nomination. States like Victoria, New South Wales, Queensland, and Western Australia actively nominate pharmacists who have completed APC assessments and secured provisional registration.' },
+      { type: 'h3', text: '3. Subclass 491 (Skilled Work Regional Provisional Visa)' },
+      { type: 'p', text: 'Provides a massive 15-point boost for regional state nomination. Allows a 5-year pathway transitioning into permanent residency (Subclass 191) after 3 years of living and working in designated regional areas.' },
+      { type: 'cta' },
+      { type: 'h2', text: 'Step-by-Step Roadmap from OPRA to Australian PR' },
+      { type: 'list', items: [
+        '<strong>Step 1:</strong> APC Document Evaluation and eligibility confirmation.',
+        '<strong>Step 2:</strong> Pass the 120-question computer-based OPRA exam.',
+        '<strong>Step 3:</strong> Clear English proficiency (Proficient: 7+ in IELTS or B in OET = 10 pts; Superior: 8+ in IELTS or A in OET = 20 pts).',
+        '<strong>Step 4:</strong> Submit an Expression of Interest (EOI) via SkillSelect and state nomination portals.',
+        '<strong>Step 5:</strong> Receive Invitation to Apply (ITA) and lodge your formal PR visa application with the Department of Home Affairs.',
+      ]},
+    ],
+    faqs: [
+      { question: 'Is pharmacy on Australia\'s Skilled Occupation List in 2026?', answer: 'Yes. Both Hospital Pharmacist (ANZSCO 251511) and Retail Pharmacist (ANZSCO 251513) are on the Medium and Long-term Strategic Skills List (MLTSSL), making pharmacists eligible for independent, state-sponsored, and employer-sponsored permanent visas.' },
+      { question: 'How many PR points do I need as a pharmacist?', answer: 'The statutory minimum is 65 points. However, to receive a competitive Invitation to Apply (ITA) for Subclass 190 or 189, most pharmacy applicants target between 75 to 85 points by combining Superior English (20 points), age (25–30 points), degree qualifications (15 points), and state nomination (5–15 points).' },
+      { question: 'Can I apply for PR before completing my internship hours in Australia?', answer: 'Yes, in certain migration streams. If you hold an approved APC Skills Assessment letter confirming you have passed OPRA and your qualifications are assessed, certain regional state nomination programs allow offshore or early-stage EOI lodgement while you coordinate your provisional supervised practice.' },
+    ]
+  },
+  // ─────────────────────────────────────────────────────────────────────────
+  // 15. Australian Pharmacist Salary Guide 2026
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    slug: 'australian-pharmacist-salary-guide-2026',
+    title: 'Australian Pharmacist Salary Guide 2026: Hospital vs Community Pay',
+    description: 'Detailed salary benchmarks for pharmacists in Australia across Victoria, NSW, Queensland, and Western Australia. Compare intern pharmacist, community, and clinical hospital pharmacist hourly rates.',
+    author: 'Rahul Nair',
+    date: 'March 25, 2026',
+    readTime: '8 min read',
+    keywords: 'pharmacist salary Australia, hospital pharmacist pay Australia, community pharmacist hourly rate Australia, intern pharmacist salary, pharmacist salary Melbourne Sydney',
+    relatedSlugs: ['australian-pharmacist-general-registration', 'australian-pharmacist-pr-visa-pathway-guide-2026', 'opra-exam-preparation-guide-2026'],
+    content: [
+      { type: 'h2', text: 'How Much Do Pharmacists Earn in Australia?' },
+      { type: 'p', text: 'Australia is globally recognised as offering some of the highest and most stable compensation packages for healthcare professionals. Following your OPRA exam and registration pathway, understanding earning expectations helps plan your career and relocation.' },
+      { type: 'h2', text: 'Average Salary by Practice Setting (2026 Benchmarks)' },
+      { type: 'h3', text: '1. Community Pharmacist (Retail)' },
+      { type: 'p', text: 'Base hourly rates under the Pharmacy Industry Award start at approximately AUD $38–$45 per hour for newly registered pharmacists. In high-demand regional pharmacies and metropolitan chains, experienced community pharmacists routinely command <strong>AUD $85,000 to $115,000+ per year</strong>, with pharmacy managers earning up to $130,000.' },
+      { type: 'h3', text: '2. Hospital Clinical Pharmacist' },
+      { type: 'p', text: 'Public hospital enterprise bargaining agreements (EBAs) offer structured step-by-step career ladders. Grade 1 and Grade 2 clinical hospital pharmacists earn between <strong>AUD $90,000 to $125,000</strong> plus penalty rates for on-call, weekend, and public holiday shifts, rising to $145,000+ for Senior/Specialist pharmacists.' },
+      { type: 'h3', text: '3. Intern Pharmacist (During Supervised Practice)' },
+      { type: 'p', text: 'During your mandatory 1,824 supervised practice hours following OPRA, intern pharmacists are paid full-time wages under the Pharmacy Industry Award (typically <strong>AUD $55,000 to $65,000</strong> per annum), ensuring financial independence from day one.' },
+      { type: 'alert', alertType: 'tip', text: 'Regional and remote pharmacy positions (Northern Territory, regional Queensland, and rural Western Australia) frequently offer substantial relocation bonuses (AUD $5,000–$20,000) and subsidised housing packages.' },
+      { type: 'cta' },
+      { type: 'h2', text: 'State-by-State Earning Comparison' },
+      { type: 'list', items: [
+        '<strong>Victoria (Melbourne):</strong> Average community rate $42–$48/hr; hospital base $88,000–$120,000.',
+        '<strong>New South Wales (Sydney):</strong> Average community rate $44–$50/hr; hospital base $92,000–$126,000.',
+        '<strong>Queensland (Brisbane & Regional):</strong> Average community rate $45–$55/hr; excellent regional incentives.',
+        '<strong>Western Australia (Perth & Mining Towns):</strong> Strongest hourly rates for community locums ($55–$70/hr).',
+      ]},
+    ],
+    faqs: [
+      { question: 'Do overseas pharmacists get paid during their internship in Australia?', answer: 'Yes. All intern pharmacists in Australia are legally employed under the Fair Work Ombudsman\'s Pharmacy Industry Award and receive full hourly wages, superannuation (11.5%+), and paid leave throughout their 1,824-hour training period.' },
+      { question: 'What is the highest-paying pharmacy specialty in Australia?', answer: 'Specialist clinical hospital pharmacists (e.g., Critical Care, Oncology, Infectious Diseases, Antimicrobial Stewardship) and regional Pharmacy Managers/Partners command the highest packages, often exceeding AUD $140,000–$160,000+ per year.' },
+      { question: 'Is superannuation included in Australian pharmacist salaries?', answer: 'In Australia, statutory superannuation (pension/retirement fund contribution) of 11.5%–12% is paid by the employer on top of your base gross salary.' },
+    ]
   }
 ];
 

@@ -18,14 +18,14 @@ export default async function EditBlogPostPage({
 
   if (!blog) {
     return (
-      <div className="rounded-3xl bg-slate-950/60 border border-slate-800 p-12 text-center max-w-lg mx-auto">
-        <h2 className="text-xl font-bold text-white mb-2">Article Not Found</h2>
-        <p className="text-xs text-slate-400 mb-6">
+      <div className="rounded-3xl bg-white border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-sm">
+        <h2 className="text-xl font-bold text-slate-900 mb-2">Article Not Found</h2>
+        <p className="text-xs text-slate-500 mb-6">
           The requested blog post could not be located in the database.
         </p>
         <Link
           href="/admin/blogs"
-          className="inline-flex px-4 py-2 rounded-xl bg-slate-800 text-white text-xs font-semibold hover:bg-slate-700 transition-colors"
+          className="inline-flex px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-semibold hover:bg-slate-200 border border-slate-200 transition-colors"
         >
           &larr; Back to Articles
         </Link>

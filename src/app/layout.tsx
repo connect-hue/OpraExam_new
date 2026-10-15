@@ -53,11 +53,20 @@ export const metadata: Metadata = {
     siteName: "OPRA Exam Guide",
     title: "OPRA Exam Guide 2026 | Syllabus, Fees & Preparation Australia",
     description: "Start your journey to becoming a registered pharmacist in Australia. Comprehensive guide for OPRA exam preparation, syllabus & mock papers.",
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "OPRA Exam Guide 2026 Australia",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "OPRA Exam Guide 2026 | Australian Pharmacist Readiness Assessment",
     description: "Prepare for the Australian OPRA pharmacist exam with full syllabus breakdown, mock tests, and APC evaluation guidance.",
+    images: [`${siteUrl}/og-image.jpg`],
   },
   category: "education",
 };
@@ -78,8 +87,17 @@ export default function RootLayout({
               "@type": "WebSite",
               "name": "OPRA Exam Guide",
               "url": siteUrl,
-              "description": "Comprehensive operational guide and study resources for the Australian OPRA pharmacist exam."
-            })
+              "description": "Comprehensive operational guide and study resources for the Australian OPRA pharmacist exam.",
+              "publisher": {
+                "@type": "Organization",
+                "name": "OPRA Exam Guide",
+                "url": siteUrl,
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": `${siteUrl}/logo.png`,
+                },
+              },
+            }),
           }}
         />
       </head>

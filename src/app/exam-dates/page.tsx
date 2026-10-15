@@ -6,6 +6,8 @@ import LeadForm from '@/components/LeadForm';
 
 export const revalidate = 60;
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
+
 export const metadata: Metadata = {
   title: 'OPRA Exam Dates 2026 | APC Official Schedule, Windows & Deadlines',
   description: 'Check official 2026 OPRA exam dates, registration opening & closing deadlines, test windows, and results release dates verified against the Australian Pharmacy Council (APC).',
@@ -18,10 +20,21 @@ export const metadata: Metadata = {
     'OPRA test window November 2026',
     'Pearson VUE OPRA test centers',
   ],
+  alternates: {
+    canonical: `${siteUrl}/exam-dates`,
+  },
   openGraph: {
     title: 'OPRA Exam Dates 2026 | Australian Pharmacy Council Official Schedule',
     description: 'Verified schedule for the 2026 Overseas Pharmacist Readiness Assessment (OPRA) exam sessions.',
+    url: `${siteUrl}/exam-dates`,
     type: 'website',
+    images: [`${siteUrl}/og-image.jpg`],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'OPRA Exam Dates 2026 | Official Schedule & Deadlines',
+    description: 'Verified schedule for 2026 OPRA exam sessions, registration windows, and Pearson VUE test centers.',
+    images: [`${siteUrl}/og-image.jpg`],
   },
 };
 
@@ -82,9 +95,60 @@ const testCenters = [
 ];
 
 export default function ExamDatesPage() {
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Exam Dates',
+        item: `${siteUrl}/exam-dates`,
+      },
+    ],
+  };
+
+  const eventSchemas = examSessions.map((session) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `OPRA Examination Session (${session.session})`,
+    description: `Official Australian Pharmacy Council Overseas Pharmacist Readiness Assessment (${session.session} sitting). Test window: ${session.examDate}. Results: ${session.resultsDate}.`,
+    startDate: session.year === 2026 ? '2026-11-23T09:00:00+11:00' : `${session.year}-03-22T09:00:00+11:00`,
+    endDate: session.year === 2026 ? '2026-11-25T17:00:00+11:00' : `${session.year}-03-24T17:00:00+11:00`,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: {
+      '@type': 'Place',
+      name: 'Pearson VUE Professional Test Centres',
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'AU',
+      },
+    },
+    organizer: {
+      '@type': 'Organization',
+      name: 'Australian Pharmacy Council (APC)',
+      url: APC_URL,
+    },
+  }));
+
   return (
     <div className="bg-slate-50 min-h-screen py-10 lg:py-16">
-      {/* Schema Injection */}
+      {/* Schema Injections */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchemas) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

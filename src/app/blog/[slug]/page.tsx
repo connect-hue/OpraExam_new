@@ -7,6 +7,11 @@ import { getBlogBySlug, getPublishedBlogs } from "@/lib/db/blogs";
 
 export const revalidate = 60;
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
+
+const slugify = (text?: string) =>
+  text ? text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '') : undefined;
+
 export async function generateStaticParams() {
   const posts = await getPublishedBlogs();
   return posts.map((post) => ({
@@ -25,17 +30,37 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
+  const postUrl = `${siteUrl}/blog/${slug}`;
+
   return {
     title: `${post.title} | OPRA Success Strategy`,
     description: post.description,
     keywords: post.keywords,
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
       type: 'article',
+      url: postUrl,
       publishedTime: post.date,
       authors: [post.author],
-    }
+      images: [
+        {
+          url: `${siteUrl}/og-image.jpg`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+      images: [`${siteUrl}/og-image.jpg`],
+    },
   };
 }
 
@@ -50,27 +75,64 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound();
   }
 
+  const postUrl = `${siteUrl}/blog/${post.slug}`;
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: `${siteUrl}/blog`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: postUrl,
+      },
+    ],
+  };
+
   const blogPostingSchema = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": post.title,
-    "author": { "@type": "Person", "name": post.author },
-    "datePublished": post.date,
-    "description": post.description,
-    "publisher": {
-      "@type": "Organization",
-      "name": "OPRA Exam",
-      "url": "https://opraexam.in"
-    }
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    author: { '@type': 'Person', name: post.author },
+    datePublished: post.date,
+    dateModified: post.date,
+    description: post.description,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': postUrl,
+    },
+    image: [`${siteUrl}/og-image.jpg`],
+    publisher: {
+      '@type': 'Organization',
+      name: 'OPRA Exam Guide',
+      url: siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/logo.png`,
+      },
+    },
   };
 
   const faqSchema = post.faqs && post.faqs.length > 0 ? {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": post.faqs.map(faq => ({
-      "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: post.faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer }
     }))
   } : null;
 
@@ -82,9 +144,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="bg-white min-h-screen py-10 lg:py-16">
-      {/* BlogPosting JSON-LD */}
+      {/* Schema Injections */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingSchema) }} />
-      {/* FAQPage JSON-LD */}
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -134,8 +196,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             {/* Prose Content */}
             <div className="prose prose-lg prose-slate prose-a:text-emerald-600 hover:prose-a:text-emerald-500 prose-headings:text-slate-900 prose-img:rounded-2xl max-w-none pb-12">
               {post.content.map((block, idx) => {
-                if (block.type === 'h2') return <h2 key={idx} id={block.id} className="scroll-mt-32">{block.text}</h2>;
-                if (block.type === 'h3') return <h3 key={idx} id={block.id} className="scroll-mt-32">{block.text}</h3>;
+                if (block.type === 'h2') {
+                  const headingId = block.id || slugify(block.text);
+                  return <h2 key={idx} id={headingId} className="scroll-mt-32">{block.text}</h2>;
+                }
+                if (block.type === 'h3') {
+                  const headingId = block.id || slugify(block.text);
+                  return <h3 key={idx} id={headingId} className="scroll-mt-32">{block.text}</h3>;
+                }
                 if (block.type === 'p') return <p key={idx} className="leading-relaxed text-slate-700" dangerouslySetInnerHTML={{ __html: block.text || "" }} />;
                 if (block.type === 'cta') return <InlineCTA key={idx} />;
                 if (block.type === 'list' && block.items) {
@@ -164,6 +232,58 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 }
                 return null;
               })}
+            </div>
+
+            {/* E-E-A-T Clinical Reviewer & Lead Funnel Card */}
+            <div className="my-10 p-6 sm:p-8 bg-gradient-to-br from-emerald-50/90 to-teal-50/60 rounded-3xl border border-emerald-200/80 shadow-xs not-prose">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-emerald-200/60">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-xl shadow-md shrink-0">
+                    {(post.author || 'P').charAt(0)}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-bold text-slate-900 text-base">{post.author}</h4>
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        <svg className="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                        </svg>
+                        AHPRA Registered
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-600 mt-0.5">
+                      Clinical Pharmacy Reviewer • Practising in Australia
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  href="/about"
+                  className="text-xs font-bold text-emerald-700 hover:text-emerald-800 underline underline-offset-2 shrink-0"
+                >
+                  View Pharmacist Profile →
+                </Link>
+              </div>
+
+              <div className="pt-5">
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-5">
+                  This educational guide has been clinically reviewed and verified against current Australian Medicines Handbook (AMH) monographs and Australian Pharmacy Council (APC) blueprints.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <Link
+                    href="/sample-papers#download-pack"
+                    className="inline-flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all text-center"
+                  >
+                    Download Free 120-Question Mock Pack
+                  </Link>
+                  <Link
+                    href="/opra-quiz"
+                    className="inline-flex items-center justify-center bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs sm:text-sm px-6 py-3 rounded-full border border-slate-200 transition-all text-center"
+                  >
+                    Take Free 5-Min Diagnostic Quiz →
+                  </Link>
+                </div>
+              </div>
             </div>
 
             {/* FAQ Section */}

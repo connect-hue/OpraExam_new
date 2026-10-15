@@ -56,10 +56,10 @@ export default function AdminContentPage() {
   return (
     <form onSubmit={handleSave} className="space-y-8">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">Homepage Content Editor</h1>
-          <p className="text-slate-400 text-xs mt-1">
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Homepage Content Editor</h1>
+          <p className="text-slate-500 text-xs mt-1">
             Customize hero banners, headlines, perks, stats, and syllabus domains displayed on the main landing page.
           </p>
         </div>
@@ -67,7 +67,7 @@ export default function AdminContentPage() {
         <button
           type="submit"
           disabled={saving || loading}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-400 hover:to-indigo-400 text-white font-bold text-xs shadow-lg shadow-blue-500/25 transition-all disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-blue-600/25 transition-all disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save All Changes'}
         </button>
@@ -78,35 +78,35 @@ export default function AdminContentPage() {
         <div
           className={`p-4 rounded-2xl text-xs flex items-center justify-between ${
             message.type === 'success'
-              ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
-              : 'bg-red-500/10 border border-red-500/30 text-red-300'
+              ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+              : 'bg-red-50 border border-red-200 text-red-800'
           }`}
         >
           <span>{message.text}</span>
-          <button type="button" onClick={() => setMessage(null)} className="text-slate-400 hover:text-white">✕</button>
+          <button type="button" onClick={() => setMessage(null)} className="text-slate-400 hover:text-slate-700">✕</button>
         </div>
       )}
 
       {loading ? (
-        <div className="p-12 text-center text-slate-400 text-xs">
+        <div className="p-12 text-center text-slate-500 text-xs">
           Loading site content...
         </div>
       ) : (
         <>
           {/* Section 1: Hero Section */}
-          <div className="rounded-3xl bg-slate-950/60 border border-slate-800 p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+          <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="border-b border-slate-100 pb-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                 Hero Section
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 The top-of-page banner, value propositions, and headline.
               </p>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Announcement Badge Text
               </label>
               <input
@@ -118,13 +118,13 @@ export default function AdminContentPage() {
                     hero: { ...content.hero, badgeText: e.target.value },
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   Heading Prefix
                 </label>
                 <input
@@ -136,12 +136,12 @@ export default function AdminContentPage() {
                       hero: { ...content.hero, headingPrefix: e.target.value },
                     })
                   }
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   Heading Highlight (Gradient Text)
                 </label>
                 <input
@@ -153,12 +153,12 @@ export default function AdminContentPage() {
                       hero: { ...content.hero, headingHighlight: e.target.value },
                     })
                   }
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   Heading Suffix
                 </label>
                 <input
@@ -170,13 +170,13 @@ export default function AdminContentPage() {
                       hero: { ...content.hero, headingSuffix: e.target.value },
                     })
                   }
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Main Hero Subtitle / Description
               </label>
               <textarea
@@ -188,19 +188,19 @@ export default function AdminContentPage() {
                     hero: { ...content.hero, description: e.target.value },
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs leading-relaxed focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs leading-relaxed focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
               ></textarea>
             </div>
 
             {/* Perks */}
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
                 4 Key Value Highlights (Checklist pills)
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {content.hero.perks.map((perk, i) => (
                   <div key={i} className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono text-slate-500 w-4">#{i + 1}</span>
+                    <span className="text-[11px] font-mono text-slate-400 w-4">#{i + 1}</span>
                     <input
                       type="text"
                       value={perk}
@@ -212,7 +212,7 @@ export default function AdminContentPage() {
                           hero: { ...content.hero, perks: newPerks },
                         });
                       }}
-                      className="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                      className="flex-1 px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs focus:ring-1 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                     />
                   </div>
                 ))}
@@ -222,7 +222,7 @@ export default function AdminContentPage() {
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   Candidates Metric
                 </label>
                 <input
@@ -234,12 +234,12 @@ export default function AdminContentPage() {
                       hero: { ...content.hero, candidatesGuided: e.target.value },
                     })
                   }
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   Satisfaction Metric
                 </label>
                 <input
@@ -251,23 +251,23 @@ export default function AdminContentPage() {
                       hero: { ...content.hero, satisfactionRating: e.target.value },
                     })
                   }
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                 />
               </div>
             </div>
           </div>
 
           {/* Section 2: About OPRA Section */}
-          <div className="rounded-3xl bg-slate-950/60 border border-slate-800 p-6 sm:p-8 space-y-5">
-            <div className="border-b border-slate-800 pb-4">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+          <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 space-y-5 shadow-sm">
+            <div className="border-b border-slate-100 pb-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
                 About OPRA Exam Section
               </h2>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Section Heading
               </label>
               <input
@@ -279,12 +279,12 @@ export default function AdminContentPage() {
                     about: { ...content.about, title: e.target.value },
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Highlight Paragraph
               </label>
               <textarea
@@ -296,12 +296,12 @@ export default function AdminContentPage() {
                     about: { ...content.about, highlight: e.target.value },
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs leading-relaxed focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs leading-relaxed focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
               ></textarea>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Detailed Description
               </label>
               <textarea
@@ -313,18 +313,18 @@ export default function AdminContentPage() {
                     about: { ...content.about, description: e.target.value },
                   })
                 }
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs leading-relaxed focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs leading-relaxed focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
               ></textarea>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
                 Key Points (Checkmarks)
               </label>
               <div className="space-y-2">
                 {content.about.points.map((pt, i) => (
                   <div key={i} className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono text-slate-500 w-4">#{i + 1}</span>
+                    <span className="text-[11px] font-mono text-slate-400 w-4">#{i + 1}</span>
                     <input
                       type="text"
                       value={pt}
@@ -336,7 +336,7 @@ export default function AdminContentPage() {
                           about: { ...content.about, points: newPts },
                         });
                       }}
-                      className="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                      className="flex-1 px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs focus:ring-1 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                     />
                   </div>
                 ))}
@@ -345,17 +345,17 @@ export default function AdminContentPage() {
           </div>
 
           {/* Section 3: Syllabus Breakdown */}
-          <div className="rounded-3xl bg-slate-950/60 border border-slate-800 p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+          <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="border-b border-slate-100 pb-4">
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
                 Syllabus Breakdown Section
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   Section Title
                 </label>
                 <input
@@ -367,12 +367,12 @@ export default function AdminContentPage() {
                       syllabus: { ...content.syllabus, title: e.target.value },
                     })
                   }
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   Subtitle
                 </label>
                 <input
@@ -384,7 +384,7 @@ export default function AdminContentPage() {
                       syllabus: { ...content.syllabus, subtitle: e.target.value },
                     })
                   }
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none shadow-xs"
                 />
               </div>
             </div>
@@ -392,10 +392,10 @@ export default function AdminContentPage() {
             {/* Domains */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {content.syllabus.domains.map((dom, i) => (
-                <div key={i} className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-                  <span className="text-xs font-bold text-purple-400">Domain #{i + 1}</span>
+                <div key={i} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+                  <span className="text-xs font-bold text-purple-700">Domain #{i + 1}</span>
                   <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Title</label>
+                    <label className="block text-[11px] text-slate-600 font-semibold mb-1">Title</label>
                     <input
                       type="text"
                       value={dom.title}
@@ -407,11 +407,11 @@ export default function AdminContentPage() {
                           syllabus: { ...content.syllabus, domains: copy },
                         });
                       }}
-                      className="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-white text-xs font-semibold"
+                      className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-xs font-semibold shadow-xs"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Weight</label>
+                    <label className="block text-[11px] text-slate-600 font-semibold mb-1">Weight</label>
                     <input
                       type="text"
                       value={dom.weight}
@@ -423,11 +423,11 @@ export default function AdminContentPage() {
                           syllabus: { ...content.syllabus, domains: copy },
                         });
                       }}
-                      className="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-white text-xs"
+                      className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-xs shadow-xs"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">Description</label>
+                    <label className="block text-[11px] text-slate-600 font-semibold mb-1">Description</label>
                     <textarea
                       rows={3}
                       value={dom.description}
@@ -439,7 +439,7 @@ export default function AdminContentPage() {
                           syllabus: { ...content.syllabus, domains: copy },
                         });
                       }}
-                      className="w-full px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-lg text-white text-xs leading-relaxed"
+                      className="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed shadow-xs"
                     ></textarea>
                   </div>
                 </div>

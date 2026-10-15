@@ -43,7 +43,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-emerald-50/50 to-teal-50/40 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background Decorative Rings */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-teal-500/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -52,25 +52,25 @@ export default function AdminLoginPage() {
         {/* Brand / Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-emerald-600/20 group-hover:scale-105 transition-transform">
               OP
             </div>
-            <span className="text-2xl font-black tracking-tight text-white">
-              OPRA<span className="text-emerald-400">Exam</span>
+            <span className="text-2xl font-black tracking-tight text-slate-900">
+              OPRA<span className="text-emerald-600">Exam</span>
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Admin Portal</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Admin Portal</h1>
+          <p className="text-slate-500 text-sm mt-1">
             Enter your secret master PIN to manage FAQs, Blogs, and Content
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-8 shadow-2xl shadow-black/50">
+        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-8 shadow-2xl shadow-emerald-950/5">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-start gap-3">
-                <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-3">
+                <svg className="w-5 h-5 shrink-0 mt-0.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
                 <span>{error}</span>
@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
             )}
 
             <div>
-              <label htmlFor="pin-input" className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2">
+              <label htmlFor="pin-input" className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
                 Secret Passcode / PIN
               </label>
               <div className="relative">
@@ -89,12 +89,12 @@ export default function AdminLoginPage() {
                   onChange={(e) => setPin(e.target.value)}
                   placeholder="Enter admin PIN..."
                   autoFocus
-                  className="w-full px-4 py-3.5 bg-slate-900/90 border border-slate-700 rounded-2xl text-white placeholder-slate-500 text-base focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all pr-12"
+                  className="w-full px-4 py-3.5 bg-slate-50 border border-slate-300 rounded-2xl text-slate-900 placeholder-slate-400 text-base focus:outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all pr-12 shadow-xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPin(!showPin)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors"
                   aria-label={showPin ? 'Hide PIN' : 'Show PIN'}
                 >
                   {showPin ? (
@@ -114,7 +114,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-base shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-base shadow-lg shadow-emerald-600/25 hover:shadow-emerald-600/35 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -139,7 +139,7 @@ export default function AdminLoginPage() {
 
         {/* Footer */}
         <div className="text-center mt-6">
-          <Link href="/" className="text-xs text-slate-400 hover:text-emerald-400 transition-colors inline-flex items-center gap-1">
+          <Link href="/" className="text-xs text-slate-500 hover:text-emerald-600 transition-colors inline-flex items-center gap-1 font-medium">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>

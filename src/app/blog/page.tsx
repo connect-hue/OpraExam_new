@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { getPublishedBlogs } from '@/lib/db/blogs';
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
+
 export const metadata: Metadata = {
   title: 'OPRA Exam Preparation Blog & Articles | Expert Tips & Guides',
   description: 'Read the latest operational guidelines, study tips, and comprehensive syllabus guides to pass the Australian OPRA pharmacist exam.',
@@ -13,10 +15,21 @@ export const metadata: Metadata = {
     'OPRA sample questions',
     'APC exam preparation',
   ],
+  alternates: {
+    canonical: `${siteUrl}/blog`,
+  },
   openGraph: {
     title: 'OPRA Exam Preparation Blog & Articles | Expert Tips',
     description: 'Expert strategies, detailed syllabus breakdowns, and insider tips to pass the Overseas Pharmacist Readiness Assessment.',
+    url: `${siteUrl}/blog`,
     type: 'website',
+    images: [`${siteUrl}/og-image.jpg`],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'OPRA Exam Preparation Blog & Articles | Expert Guides',
+    description: 'Expert strategies and comprehensive syllabus guides to pass the Australian OPRA pharmacist exam.',
+    images: [`${siteUrl}/og-image.jpg`],
   },
 };
 
@@ -27,8 +40,31 @@ export default async function BlogIndexPage() {
   const featuredPost = blogPosts[0];
   const remainingPosts = blogPosts.slice(1);
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: `${siteUrl}/blog`,
+      },
+    ],
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen py-10 lg:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Breadcrumb */}
         <nav aria-label="breadcrumb" className="mb-8 text-sm text-slate-500 font-medium">

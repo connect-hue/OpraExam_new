@@ -184,16 +184,16 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
   return (
     <form onSubmit={handleSave} className="space-y-6">
       {/* Top action header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-          <div className="flex items-center gap-2 text-xs text-slate-400 mb-1">
-            <Link href="/admin/blogs" className="hover:text-white transition-colors">
+          <div className="flex items-center gap-2 text-xs text-slate-500 mb-1">
+            <Link href="/admin/blogs" className="hover:text-slate-900 transition-colors">
               &larr; Back to Blogs
             </Link>
             <span>/</span>
             <span>{isNew ? 'New Article' : formData.slug}</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">
+          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
             {isNew ? 'Write New Blog Article' : 'Edit Article'}
           </h1>
         </div>
@@ -201,14 +201,14 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
         <div className="flex items-center gap-3">
           <Link
             href="/admin/blogs"
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 transition-all disabled:opacity-50"
           >
             {saving ? 'Saving...' : isNew ? 'Publish Article' : 'Save Changes'}
           </button>
@@ -220,24 +220,24 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
         <div
           className={`p-4 rounded-2xl text-xs flex items-center justify-between ${
             message.type === 'success'
-              ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-300'
-              : 'bg-red-500/10 border border-red-500/30 text-red-300'
+              ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
+              : 'bg-red-50 border border-red-200 text-red-800'
           }`}
         >
           <span>{message.text}</span>
-          <button type="button" onClick={() => setMessage(null)} className="text-slate-400 hover:text-white">✕</button>
+          <button type="button" onClick={() => setMessage(null)} className="text-slate-400 hover:text-slate-700">✕</button>
         </div>
       )}
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
         <button
           type="button"
           onClick={() => setActiveTab('blocks')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
             activeTab === 'blocks'
-              ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
           }`}
         >
           Content Blocks ({formData.content.length})
@@ -247,8 +247,8 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
           onClick={() => setActiveTab('meta')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
             activeTab === 'meta'
-              ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
           }`}
         >
           SEO & Metadata
@@ -258,8 +258,8 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
           onClick={() => setActiveTab('faqs')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
             activeTab === 'faqs'
-              ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
           }`}
         >
           Article FAQs ({formData.faqs.length})
@@ -269,8 +269,8 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
           onClick={() => setActiveTab('preview')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
             activeTab === 'preview'
-              ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800'
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-xs'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
           }`}
         >
           Live Preview
@@ -281,9 +281,9 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
       {activeTab === 'blocks' && (
         <div className="space-y-6">
           {/* Quick Header Fields */}
-          <div className="rounded-3xl bg-slate-950/60 border border-slate-800 p-6 space-y-4">
+          <div className="rounded-3xl bg-white border border-slate-200 p-6 space-y-4 shadow-sm">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Article Title *
               </label>
               <input
@@ -292,17 +292,17 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                 value={formData.title}
                 onChange={(e) => handleTitleChange(e.target.value)}
                 placeholder="e.g. OPRA Exam Preparation Guide 2026: Everything You Need to Know"
-                className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white text-base font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-base font-bold focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   URL Slug (/blog/[slug]) *
                 </label>
                 <div className="flex items-center">
-                  <span className="bg-slate-900 border border-r-0 border-slate-700 px-3 py-2.5 rounded-l-xl text-slate-500 text-xs font-mono">
+                  <span className="bg-slate-100 border border-r-0 border-slate-300 px-3 py-2.5 rounded-l-xl text-slate-500 text-xs font-mono">
                     /blog/
                   </span>
                   <input
@@ -310,13 +310,13 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                     required
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    className="w-full px-3 py-2.5 bg-slate-900 border border-slate-700 rounded-r-xl text-white text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-r-xl text-slate-900 text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                   Short Excerpt / Description
                 </label>
                 <input
@@ -324,54 +324,54 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Summary for search engines and article cards..."
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
                 />
               </div>
             </div>
           </div>
 
           {/* Add Block Toolbar */}
-          <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold text-slate-400 mr-2">Add Block:</span>
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-wrap items-center gap-2 shadow-xs">
+            <span className="text-xs font-bold text-slate-600 mr-2">Add Block:</span>
             <button
               type="button"
               onClick={() => addBlock('h2')}
-              className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-emerald-600/30 text-slate-200 hover:text-emerald-300 rounded-lg border border-slate-700 transition-colors"
+              className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
             >
               + H2 Heading
             </button>
             <button
               type="button"
               onClick={() => addBlock('h3')}
-              className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-emerald-600/30 text-slate-200 hover:text-emerald-300 rounded-lg border border-slate-700 transition-colors"
+              className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
             >
               + H3 Subheading
             </button>
             <button
               type="button"
               onClick={() => addBlock('p')}
-              className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-emerald-600/30 text-slate-200 hover:text-emerald-300 rounded-lg border border-slate-700 transition-colors"
+              className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
             >
               + Paragraph
             </button>
             <button
               type="button"
               onClick={() => addBlock('alert')}
-              className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-emerald-600/30 text-slate-200 hover:text-emerald-300 rounded-lg border border-slate-700 transition-colors"
+              className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
             >
               + Alert Box
             </button>
             <button
               type="button"
               onClick={() => addBlock('list')}
-              className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-emerald-600/30 text-slate-200 hover:text-emerald-300 rounded-lg border border-slate-700 transition-colors"
+              className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
             >
               + Bullet List
             </button>
             <button
               type="button"
               onClick={() => addBlock('cta')}
-              className="text-xs px-3 py-1.5 bg-slate-800 hover:bg-emerald-600/30 text-slate-200 hover:text-emerald-300 rounded-lg border border-slate-700 transition-colors"
+              className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
             >
               + CTA Banner
             </button>
@@ -382,14 +382,14 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
             {formData.content.map((block, index) => (
               <div
                 key={index}
-                className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 space-y-3 relative group"
+                className="rounded-2xl bg-white border border-slate-200 p-4 space-y-3 relative group shadow-xs"
               >
-                <div className="flex items-center justify-between pb-2 border-b border-slate-800/80">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono bg-slate-800 text-slate-400 px-2 py-0.5 rounded">
+                    <span className="text-[11px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
                       #{index + 1}
                     </span>
-                    <span className="text-xs font-bold uppercase text-emerald-400">
+                    <span className="text-xs font-bold uppercase text-emerald-700">
                       {block.type === 'h2' && 'Section Heading (H2)'}
                       {block.type === 'h3' && 'Subheading (H3)'}
                       {block.type === 'p' && 'Paragraph'}
@@ -404,7 +404,7 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                       type="button"
                       disabled={index === 0}
                       onClick={() => moveBlock(index, 'up')}
-                      className="p-1 rounded text-slate-400 hover:text-white disabled:opacity-30"
+                      className="p-1 rounded text-slate-400 hover:text-slate-800 disabled:opacity-30"
                       title="Move up"
                     >
                       ▲
@@ -413,7 +413,7 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                       type="button"
                       disabled={index === formData.content.length - 1}
                       onClick={() => moveBlock(index, 'down')}
-                      className="p-1 rounded text-slate-400 hover:text-white disabled:opacity-30"
+                      className="p-1 rounded text-slate-400 hover:text-slate-800 disabled:opacity-30"
                       title="Move down"
                     >
                       ▼
@@ -421,7 +421,7 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                     <button
                       type="button"
                       onClick={() => removeBlock(index)}
-                      className="p-1 rounded text-red-400 hover:bg-red-500/20"
+                      className="p-1 rounded text-red-500 hover:bg-red-50"
                       title="Remove block"
                     >
                       ✕
@@ -433,22 +433,22 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                 {(block.type === 'h2' || block.type === 'h3') && (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div className="md:col-span-2">
-                      <label className="block text-[11px] text-slate-400 mb-1">Heading Text</label>
+                      <label className="block text-[11px] text-slate-600 font-semibold mb-1">Heading Text</label>
                       <input
                         type="text"
                         value={block.text || ''}
                         onChange={(e) => updateBlock(index, { text: e.target.value })}
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] text-slate-400 mb-1">Anchor ID (TOC)</label>
+                      <label className="block text-[11px] text-slate-600 font-semibold mb-1">Anchor ID (TOC)</label>
                       <input
                         type="text"
                         value={block.id || ''}
                         onChange={(e) => updateBlock(index, { id: e.target.value })}
                         placeholder="e.g. exam-structure"
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
                       />
                     </div>
                   </div>
@@ -456,14 +456,14 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
 
                 {block.type === 'p' && (
                   <div>
-                    <label className="block text-[11px] text-slate-400 mb-1">
+                    <label className="block text-[11px] text-slate-600 font-semibold mb-1">
                       Paragraph Content (HTML links & formatting supported)
                     </label>
                     <textarea
                       rows={3}
                       value={block.text || ''}
                       onChange={(e) => updateBlock(index, { text: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
                     ></textarea>
                   </div>
                 )}
@@ -471,9 +471,9 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                 {block.type === 'alert' && (
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <label className="text-[11px] text-slate-400">Alert Style:</label>
+                      <label className="text-[11px] text-slate-600 font-semibold">Alert Style:</label>
                       {(['tip', 'warning', 'info'] as const).map((at) => (
-                        <label key={at} className="inline-flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
+                        <label key={at} className="inline-flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
                           <input
                             type="radio"
                             name={`alert-${index}`}
@@ -488,14 +488,14 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                       rows={2}
                       value={block.text || ''}
                       onChange={(e) => updateBlock(index, { text: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
                     ></textarea>
                   </div>
                 )}
 
                 {block.type === 'list' && (
                   <div className="space-y-2">
-                    <label className="block text-[11px] text-slate-400">Bullet Items (one per line)</label>
+                    <label className="block text-[11px] text-slate-600 font-semibold">Bullet Items (one per line)</label>
                     <textarea
                       rows={4}
                       value={(block.items || []).join('\n')}
@@ -504,13 +504,13 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                           items: e.target.value.split('\n').filter((item) => item.trim().length > 0),
                         })
                       }
-                      className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
                     ></textarea>
                   </div>
                 )}
 
                 {block.type === 'cta' && (
-                  <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-xs text-emerald-300">
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 font-medium">
                     Lead capture banner widget will be automatically inserted here.
                   </div>
                 )}
@@ -522,59 +522,59 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
 
       {/* Tab 2: SEO & Meta */}
       {activeTab === 'meta' && (
-        <div className="rounded-3xl bg-slate-950/60 border border-slate-800 p-6 space-y-5">
+        <div className="rounded-3xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Author
               </label>
               <input
                 type="text"
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Publish Date
               </label>
               <input
                 type="text"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
                 Read Time
               </label>
               <input
                 type="text"
                 value={formData.readTime}
                 onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
               Keywords (comma-separated for SEO)
             </label>
             <input
               type="text"
               value={formData.keywords}
               onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
-              className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
               Related Article Slugs (comma-separated)
             </label>
             <input
@@ -587,19 +587,19 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                 })
               }
               placeholder="e.g. how-to-pass-opra-exam-first-try, is-the-opra-exam-hard"
-              className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none font-mono"
+              className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none font-mono shadow-xs"
             />
           </div>
 
-          <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
+          <div className="pt-4 border-t border-slate-100 flex items-center gap-3">
             <input
               type="checkbox"
               id="published-toggle"
               checked={formData.published}
               onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-              className="w-4 h-4 rounded text-emerald-500 focus:ring-emerald-500"
+              className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
             />
-            <label htmlFor="published-toggle" className="text-xs font-semibold text-slate-200 cursor-pointer">
+            <label htmlFor="published-toggle" className="text-xs font-semibold text-slate-800 cursor-pointer">
               Visible on Public Website (Published)
             </label>
           </div>
@@ -610,51 +610,51 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
       {activeTab === 'faqs' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               FAQs added here render automatically at the end of this blog post and generate Google FAQPage Schema.
             </p>
             <button
               type="button"
               onClick={addFaq}
-              className="text-xs font-bold px-3 py-1.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl hover:bg-emerald-500/30 transition-colors"
+              className="text-xs font-bold px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-xl hover:bg-emerald-100 transition-colors shadow-xs"
             >
               + Add FAQ to Post
             </button>
           </div>
 
           {formData.faqs.length === 0 ? (
-            <div className="rounded-2xl bg-slate-950/60 border border-slate-800 p-8 text-center text-xs text-slate-400">
+            <div className="rounded-2xl bg-white border border-slate-200 p-8 text-center text-xs text-slate-500 shadow-xs">
               No FAQs added to this article yet. Click &quot;+ Add FAQ to Post&quot; above.
             </div>
           ) : (
             formData.faqs.map((faq, i) => (
-              <div key={i} className="rounded-2xl bg-slate-950/60 border border-slate-800 p-4 space-y-3">
+              <div key={i} className="rounded-2xl bg-white border border-slate-200 p-4 space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono text-slate-400">FAQ #{i + 1}</span>
+                  <span className="text-[11px] font-mono text-slate-500">FAQ #{i + 1}</span>
                   <button
                     type="button"
                     onClick={() => removeFaq(i)}
-                    className="text-red-400 hover:text-red-300 text-xs"
+                    className="text-red-500 hover:text-red-700 text-xs font-semibold"
                   >
                     Remove
                   </button>
                 </div>
                 <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">Question</label>
+                  <label className="block text-[11px] text-slate-600 font-semibold mb-1">Question</label>
                   <input
                     type="text"
                     value={faq.question}
                     onChange={(e) => updateFaq(i, 'question', e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs focus:ring-1 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">Answer</label>
+                  <label className="block text-[11px] text-slate-600 font-semibold mb-1">Answer</label>
                   <textarea
                     rows={2}
                     value={faq.answer}
                     onChange={(e) => updateFaq(i, 'answer', e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs leading-relaxed focus:ring-1 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed focus:ring-1 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
                   ></textarea>
                 </div>
               </div>
@@ -665,7 +665,7 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
 
       {/* Tab 4: Live Preview */}
       {activeTab === 'preview' && (
-        <div className="rounded-3xl bg-white text-slate-900 p-8 sm:p-12 shadow-2xl space-y-6 max-w-4xl mx-auto">
+        <div className="rounded-3xl bg-white text-slate-900 p-8 sm:p-12 shadow-sm border border-slate-200 space-y-6 max-w-4xl mx-auto">
           <div className="text-sm font-semibold text-emerald-600 bg-emerald-50 inline-block px-3 py-1 rounded-full">
             {formData.readTime} &bull; {formData.date}
           </div>

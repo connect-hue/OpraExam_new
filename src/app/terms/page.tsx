@@ -1,9 +1,14 @@
 import { Metadata } from "next";
 import Link from "next/link";
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
+
 export const metadata: Metadata = {
   title: "Terms of Service | OPRA Exam Guide",
   description: "Terms and conditions governing your use of the OPRA Exam Guide (opraexam.in) educational website, resources, and study tools.",
+  alternates: {
+    canonical: `${siteUrl}/terms`,
+  },
 };
 
 export default function TermsPage() {

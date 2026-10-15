@@ -1,10 +1,28 @@
 import { Metadata } from "next";
 import Link from "next/link";
 
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
+
 export const metadata: Metadata = {
     title: "About Us | OPRA Exam Guide",
     description:
         "Meet the pharmacists behind OPRAExam.in — internationally qualified pharmacists who passed OPRA and built the resource they wished had existed.",
+    alternates: {
+        canonical: `${siteUrl}/about`,
+    },
+    openGraph: {
+        title: "About Us | OPRA Exam Guide",
+        description: "Meet the registered pharmacists behind OPRAExam.in Australia.",
+        url: `${siteUrl}/about`,
+        type: "website",
+        images: [`${siteUrl}/og-image.jpg`],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "About Us | OPRA Exam Guide",
+        description: "Meet the registered pharmacists behind OPRAExam.in Australia.",
+        images: [`${siteUrl}/og-image.jpg`],
+    },
 };
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -62,8 +80,32 @@ export default function AboutPage() {
         },
     }));
 
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: siteUrl,
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "About Us",
+                item: `${siteUrl}/about`,
+            },
+        ],
+    };
+
     return (
         <div className="bg-white min-h-screen">
+            {/* Breadcrumb JSON-LD */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
             {/* Person JSON-LD */}
             {personSchemas.map((schema, i) => (
                 <script

@@ -66,7 +66,7 @@ export default function AdminShell({ children }: AdminShellProps) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-900 text-slate-100 flex">
+    <div className="min-h-screen w-full bg-slate-50 text-slate-900 flex">
       {/* Desktop Sidebar Spacer - holds the 80px rail space so content doesn't shift */}
       <div className="hidden lg:block w-20 shrink-0" />
 
@@ -80,17 +80,17 @@ export default function AdminShell({ children }: AdminShellProps) {
             setIsHovered(false);
           }
         }}
-        className={`hidden lg:flex lg:flex-col fixed top-0 bottom-0 left-0 z-40 bg-slate-950/95 backdrop-blur-xl border-r border-slate-800 shrink-0 select-none transition-all duration-300 ease-in-out overflow-x-hidden ${
+        className={`hidden lg:flex lg:flex-col fixed top-0 bottom-0 left-0 z-40 bg-white/95 backdrop-blur-xl border-r border-slate-200 shrink-0 select-none transition-all duration-300 ease-in-out overflow-x-hidden ${
           isHovered
-            ? 'w-72 shadow-2xl shadow-emerald-950/20'
-            : 'w-20 shadow-lg'
+            ? 'w-72 shadow-2xl shadow-slate-300/50'
+            : 'w-20 shadow-xs'
         }`}
       >
         {/* Brand */}
-        <div className="h-20 px-3.5 flex items-center border-b border-slate-800/80 overflow-hidden shrink-0">
+        <div className="h-20 px-3.5 flex items-center border-b border-slate-100 overflow-hidden shrink-0">
           <Link href="/admin" className="flex items-center min-w-max group/brand">
             <div className="w-[52px] h-12 flex items-center justify-center shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-black text-lg shadow-md shadow-emerald-500/20 group-hover/brand:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white font-black text-lg shadow-md shadow-emerald-600/20 group-hover/brand:scale-105 transition-transform">
                 OP
               </div>
             </div>
@@ -101,8 +101,8 @@ export default function AdminShell({ children }: AdminShellProps) {
                   : 'opacity-0 max-w-0 pointer-events-none'
               }`}
             >
-              <span className="font-extrabold text-lg tracking-tight text-white block leading-tight">
-                OPRA<span className="text-emerald-400">Admin</span>
+              <span className="font-extrabold text-lg tracking-tight text-slate-900 block leading-tight">
+                OPRA<span className="text-emerald-600">Admin</span>
               </span>
               <span className="text-[11px] text-slate-400 uppercase tracking-widest font-semibold block">
                 Control Panel
@@ -116,7 +116,7 @@ export default function AdminShell({ children }: AdminShellProps) {
           {/* Management Heading / Divider */}
           <div className="pt-2 pb-1.5 px-1 overflow-hidden">
             <div
-              className={`text-[11px] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap overflow-hidden transition-all duration-300 ${
+              className={`text-[11px] font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap overflow-hidden transition-all duration-300 ${
                 isHovered
                   ? 'opacity-100 max-w-[180px] delay-75 block'
                   : 'opacity-0 max-w-0 hidden'
@@ -125,7 +125,7 @@ export default function AdminShell({ children }: AdminShellProps) {
               Management
             </div>
             <div
-              className={`h-px bg-slate-800/80 mx-1 transition-opacity duration-300 ${
+              className={`h-px bg-slate-200 mx-1 transition-opacity duration-300 ${
                 isHovered ? 'hidden' : 'block'
               }`}
             />
@@ -144,16 +144,16 @@ export default function AdminShell({ children }: AdminShellProps) {
                 title={item.name}
                 className={`flex items-center h-12 rounded-xl text-sm font-semibold transition-all group/item overflow-hidden ${
                   isActive
-                    ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent'
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent'
                 }`}
               >
                 <div className="w-[52px] h-12 flex items-center justify-center shrink-0">
                   <span
                     className={
                       isActive
-                        ? 'text-emerald-400'
-                        : 'text-slate-400 group-hover/item:text-white transition-colors'
+                        ? 'text-emerald-600'
+                        : 'text-slate-500 group-hover/item:text-slate-900 transition-colors'
                     }
                   >
                     {item.icon}
@@ -175,7 +175,7 @@ export default function AdminShell({ children }: AdminShellProps) {
           {/* Quick Links Heading / Divider */}
           <div className="pt-5 pb-1.5 px-1 overflow-hidden">
             <div
-              className={`text-[11px] font-bold uppercase tracking-wider text-slate-500 whitespace-nowrap overflow-hidden transition-all duration-300 ${
+              className={`text-[11px] font-bold uppercase tracking-wider text-slate-400 whitespace-nowrap overflow-hidden transition-all duration-300 ${
                 isHovered
                   ? 'opacity-100 max-w-[180px] delay-75 block'
                   : 'opacity-0 max-w-0 hidden'
@@ -184,7 +184,7 @@ export default function AdminShell({ children }: AdminShellProps) {
               Quick Links
             </div>
             <div
-              className={`h-px bg-slate-800/80 mx-1 transition-opacity duration-300 ${
+              className={`h-px bg-slate-200 mx-1 transition-opacity duration-300 ${
                 isHovered ? 'hidden' : 'block'
               }`}
             />
@@ -194,11 +194,11 @@ export default function AdminShell({ children }: AdminShellProps) {
             href="/"
             target="_blank"
             title="View Public Site"
-            className="flex items-center h-12 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent transition-all group/quick overflow-hidden"
+            className="flex items-center h-12 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent transition-all group/quick overflow-hidden"
           >
             <div className="w-[52px] h-12 flex items-center justify-center shrink-0">
               <svg
-                className="w-5 h-5 text-slate-400 group-hover/quick:text-emerald-400 transition-colors"
+                className="w-5 h-5 text-slate-400 group-hover/quick:text-emerald-600 transition-colors"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -219,7 +219,7 @@ export default function AdminShell({ children }: AdminShellProps) {
               }`}
             >
               <span>View Public Site</span>
-              <span className="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded group-hover/quick:bg-emerald-500/20 group-hover/quick:text-emerald-400 transition-colors ml-2">
+              <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded group-hover/quick:bg-emerald-100 group-hover/quick:text-emerald-700 transition-colors ml-2 font-mono">
                 ↗
               </span>
             </div>
@@ -229,11 +229,11 @@ export default function AdminShell({ children }: AdminShellProps) {
             href="/blog"
             target="_blank"
             title="View Blog Page"
-            className="flex items-center h-12 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent transition-all group/quick overflow-hidden"
+            className="flex items-center h-12 rounded-xl text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent transition-all group/quick overflow-hidden"
           >
             <div className="w-[52px] h-12 flex items-center justify-center shrink-0">
               <svg
-                className="w-5 h-5 text-slate-400 group-hover/quick:text-emerald-400 transition-colors"
+                className="w-5 h-5 text-slate-400 group-hover/quick:text-emerald-600 transition-colors"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -254,7 +254,7 @@ export default function AdminShell({ children }: AdminShellProps) {
               }`}
             >
               <span>View Blog Page</span>
-              <span className="text-xs bg-slate-800 text-slate-400 px-2 py-0.5 rounded group-hover/quick:bg-emerald-500/20 group-hover/quick:text-emerald-400 transition-colors ml-2">
+              <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded group-hover/quick:bg-emerald-100 group-hover/quick:text-emerald-700 transition-colors ml-2 font-mono">
                 ↗
               </span>
             </div>
@@ -262,12 +262,12 @@ export default function AdminShell({ children }: AdminShellProps) {
         </nav>
 
         {/* Footer / Logout */}
-        <div className="p-3.5 border-t border-slate-800/80 bg-slate-950/40 shrink-0">
+        <div className="p-3.5 border-t border-slate-200/80 bg-slate-50/50 shrink-0">
           <button
             onClick={handleLogout}
             disabled={loggingOut}
             title={loggingOut ? 'Logging out...' : 'Sign Out'}
-            className="w-full h-12 flex items-center rounded-xl text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-all disabled:opacity-50 overflow-hidden"
+            className="w-full h-12 flex items-center rounded-xl text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 border border-transparent hover:border-red-200 transition-all disabled:opacity-50 overflow-hidden"
           >
             <div className="w-[52px] h-12 flex items-center justify-center shrink-0">
               <svg
@@ -298,20 +298,20 @@ export default function AdminShell({ children }: AdminShellProps) {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 bg-slate-900">
+      <div className="flex-1 flex flex-col min-w-0 bg-slate-50">
         {/* Top Navbar */}
-        <header className="h-20 bg-slate-950/60 backdrop-blur-md border-b border-slate-800 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30">
+        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+              className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               aria-label="Toggle menu"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
-            <div className="text-sm font-medium text-slate-400 hidden sm:block">
+            <div className="text-sm font-semibold text-slate-700 hidden sm:block">
               OPRA Exam Platform Administration
             </div>
           </div>
@@ -320,10 +320,10 @@ export default function AdminShell({ children }: AdminShellProps) {
             <Link
               href="/"
               target="_blank"
-              className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800/90 text-slate-300 hover:text-white hover:bg-slate-700/80 border border-slate-700 transition-colors"
+              className="hidden sm:inline-flex items-center gap-2 text-xs font-semibold px-3.5 py-2 rounded-xl bg-white text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-slate-200 shadow-xs transition-colors"
             >
               <span>Live Website</span>
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
             </Link>
@@ -331,7 +331,7 @@ export default function AdminShell({ children }: AdminShellProps) {
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="text-xs font-semibold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg border border-red-500/20 transition-all flex items-center gap-1.5"
+              className="text-xs font-semibold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg border border-red-200 transition-all flex items-center gap-1.5"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -345,15 +345,15 @@ export default function AdminShell({ children }: AdminShellProps) {
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-50 lg:hidden flex">
             <div
-              className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+              className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"
               onClick={() => setMobileMenuOpen(false)}
             ></div>
-            <div className="relative w-72 bg-slate-950 border-r border-slate-800 p-6 flex flex-col z-10">
-              <div className="flex items-center justify-between pb-6 border-b border-slate-800">
-                <span className="font-bold text-white text-lg">OPRA Admin</span>
+            <div className="relative w-72 bg-white border-r border-slate-200 p-6 flex flex-col z-10 shadow-2xl">
+              <div className="flex items-center justify-between pb-6 border-b border-slate-100">
+                <span className="font-bold text-slate-900 text-lg">OPRA Admin</span>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-slate-400 hover:text-white"
+                  className="text-slate-400 hover:text-slate-700 text-lg"
                 >
                   ✕
                 </button>
@@ -364,7 +364,7 @@ export default function AdminShell({ children }: AdminShellProps) {
                     key={item.name}
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 text-sm font-semibold"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100 text-sm font-semibold transition-colors"
                   >
                     {item.icon}
                     {item.name}

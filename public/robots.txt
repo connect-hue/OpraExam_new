@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://opraexam.in/sitemap.xml
