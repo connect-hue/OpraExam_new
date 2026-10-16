@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BlogPostContent, BlogPostFaq } from '@/data/blogPosts';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 interface BlogFormData {
   _id?: string;
@@ -41,8 +42,7 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
     content: initialData?.content && initialData.content.length > 0
       ? initialData.content
       : [
-          { type: 'h2', id: 'introduction', text: 'Introduction to this Guide' },
-          { type: 'p', text: 'Write the opening paragraph here with background and key insights.' },
+          { type: 'text', text: '<h2>Introduction</h2><p>Write or paste your article content here with full headings, formatting, and paragraphs...</p>' },
         ],
     faqs: initialData?.faqs || [],
     relatedSlugs: initialData?.relatedSlugs || [],
@@ -75,13 +75,22 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
     if (type === 'h2' || type === 'h3') {
       newBlock.text = 'New Heading';
       newBlock.id = 'new-heading-' + Date.now();
-    } else if (type === 'p') {
-      newBlock.text = 'New paragraph text...';
+    } else if (type === 'p' || type === 'text') {
+      newBlock.type = 'text';
+      newBlock.text = '<p>Write or paste your article text and content here...</p>';
     } else if (type === 'alert') {
       newBlock.alertType = 'tip';
       newBlock.text = 'Important tip or insight...';
     } else if (type === 'list') {
       newBlock.items = ['First point', 'Second point', 'Third point'];
+    } else if (type === 'table') {
+      newBlock.caption = 'Comparison / Summary Table';
+      newBlock.tableHeaders = ['Category / Feature', 'Standard Pathway', 'OPRA Requirement'];
+      newBlock.tableRows = [
+        ['Eligibility', 'Overseas B.Pharm / M.Pharm degree', 'Verified through APC Stage 1 Assessment'],
+        ['Exam Structure', 'Computer-based test (120 MCQs)', 'Minimum 75% scaled pass score in each domain'],
+        ['Attempts Allowed', 'Multiple re-sits permitted', 'Up to 3 attempts within a 2-year window'],
+      ];
     } else if (type === 'cta') {
       // CTA has no text needed
     }
@@ -96,6 +105,82 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
     setFormData((prev) => {
       const copy = [...prev.content];
       copy[index] = { ...copy[index], ...updates };
+      return { ...prev, content: copy };
+    });
+  };
+
+  // Table block helpers
+  const addTableColumn = (blockIndex: number) => {
+    setFormData((prev) => {
+      const copy = [...prev.content];
+      const block = { ...copy[blockIndex] };
+      const headers = [...(block.tableHeaders || ['Column 1', 'Column 2'])];
+      headers.push(`Column ${headers.length + 1}`);
+      const rows = (block.tableRows || []).map((row) => [...row, '']);
+      block.tableHeaders = headers;
+      block.tableRows = rows;
+      copy[blockIndex] = block;
+      return { ...prev, content: copy };
+    });
+  };
+
+  const removeTableColumn = (blockIndex: number, colIndex?: number) => {
+    setFormData((prev) => {
+      const copy = [...prev.content];
+      const block = { ...copy[blockIndex] };
+      const currentHeaders = block.tableHeaders || [];
+      if (currentHeaders.length <= 1) return prev;
+      const targetIndex = typeof colIndex === 'number' ? colIndex : currentHeaders.length - 1;
+      block.tableHeaders = currentHeaders.filter((_, i) => i !== targetIndex);
+      block.tableRows = (block.tableRows || []).map((row) => row.filter((_, i) => i !== targetIndex));
+      copy[blockIndex] = block;
+      return { ...prev, content: copy };
+    });
+  };
+
+  const updateTableHeader = (blockIndex: number, colIndex: number, val: string) => {
+    setFormData((prev) => {
+      const copy = [...prev.content];
+      const block = { ...copy[blockIndex] };
+      const headers = [...(block.tableHeaders || [])];
+      headers[colIndex] = val;
+      block.tableHeaders = headers;
+      copy[blockIndex] = block;
+      return { ...prev, content: copy };
+    });
+  };
+
+  const addTableRow = (blockIndex: number) => {
+    setFormData((prev) => {
+      const copy = [...prev.content];
+      const block = { ...copy[blockIndex] };
+      const colCount = (block.tableHeaders || []).length || 2;
+      const newRow = new Array(colCount).fill('');
+      block.tableRows = [...(block.tableRows || []), newRow];
+      copy[blockIndex] = block;
+      return { ...prev, content: copy };
+    });
+  };
+
+  const updateTableCell = (blockIndex: number, rowIndex: number, colIndex: number, val: string) => {
+    setFormData((prev) => {
+      const copy = [...prev.content];
+      const block = { ...copy[blockIndex] };
+      const rows = (block.tableRows || []).map((r) => [...r]);
+      if (!rows[rowIndex]) rows[rowIndex] = [];
+      rows[rowIndex][colIndex] = val;
+      block.tableRows = rows;
+      copy[blockIndex] = block;
+      return { ...prev, content: copy };
+    });
+  };
+
+  const removeTableRow = (blockIndex: number, rowIndex: number) => {
+    setFormData((prev) => {
+      const copy = [...prev.content];
+      const block = { ...copy[blockIndex] };
+      block.tableRows = (block.tableRows || []).filter((_, i) => i !== rowIndex);
+      copy[blockIndex] = block;
       return { ...prev, content: copy };
     });
   };
@@ -349,10 +434,10 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
             </button>
             <button
               type="button"
-              onClick={() => addBlock('p')}
-              className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
+              onClick={() => addBlock('text')}
+              className="text-xs px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition-colors shadow-xs flex items-center gap-1"
             >
-              + Paragraph
+              <span>+ Text Box</span>
             </button>
             <button
               type="button"
@@ -367,6 +452,13 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
               className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
             >
               + Bullet List
+            </button>
+            <button
+              type="button"
+              onClick={() => addBlock('table')}
+              className="text-xs px-3 py-1.5 bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 rounded-lg border border-slate-200 hover:border-emerald-300 transition-colors shadow-xs"
+            >
+              + Table
             </button>
             <button
               type="button"
@@ -392,9 +484,10 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                     <span className="text-xs font-bold uppercase text-emerald-700">
                       {block.type === 'h2' && 'Section Heading (H2)'}
                       {block.type === 'h3' && 'Subheading (H3)'}
-                      {block.type === 'p' && 'Paragraph'}
+                      {(block.type === 'p' || block.type === 'text') && 'Text Box'}
                       {block.type === 'alert' && `Callout Box (${block.alertType || 'tip'})`}
                       {block.type === 'list' && 'Bullet List'}
+                      {block.type === 'table' && 'Data Table'}
                       {block.type === 'cta' && 'Interactive Lead CTA Box'}
                     </span>
                   </div>
@@ -454,17 +547,17 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                   </div>
                 )}
 
-                {block.type === 'p' && (
+                {(block.type === 'p' || block.type === 'text') && (
                   <div>
                     <label className="block text-[11px] text-slate-600 font-semibold mb-1">
-                      Paragraph Content (HTML links & formatting supported)
+                      Text Box (Headings, Paragraphs, Links & Rich Content)
                     </label>
-                    <textarea
-                      rows={3}
+                    <RichTextEditor
                       value={block.text || ''}
-                      onChange={(e) => updateBlock(index, { text: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
-                    ></textarea>
+                      onChange={(html) => updateBlock(index, { text: html })}
+                      placeholder="Write or paste full article content, headings, and paragraphs..."
+                      minHeight="240px"
+                    />
                   </div>
                 )}
 
@@ -484,12 +577,17 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                         </label>
                       ))}
                     </div>
-                    <textarea
-                      rows={2}
-                      value={block.text || ''}
-                      onChange={(e) => updateBlock(index, { text: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
-                    ></textarea>
+                    <div>
+                      <label className="block text-[11px] text-slate-600 font-semibold mb-1">
+                        Alert Content (Rich Text Toolbar)
+                      </label>
+                      <RichTextEditor
+                        value={block.text || ''}
+                        onChange={(html) => updateBlock(index, { text: html })}
+                        placeholder="Write alert or tip text..."
+                        minHeight="100px"
+                      />
+                    </div>
                   </div>
                 )}
 
@@ -506,6 +604,124 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                       }
                       className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
                     ></textarea>
+                  </div>
+                )}
+
+                {block.type === 'table' && (
+                  <div className="space-y-3">
+                    {/* Caption and Grid Controls */}
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                      <div className="flex-1">
+                        <label className="block text-[11px] text-slate-600 font-semibold mb-1">
+                          Table Title / Caption (Optional)
+                        </label>
+                        <input
+                          type="text"
+                          value={block.caption || ''}
+                          onChange={(e) => updateBlock(index, { caption: e.target.value })}
+                          placeholder="e.g. Visa Subclasses Comparison, Scoring Breakdown..."
+                          className="w-full px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs focus:ring-1 focus:ring-emerald-500 focus:bg-white shadow-xs"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 self-end sm:self-auto pt-1 sm:pt-4">
+                        <button
+                          type="button"
+                          onClick={() => addTableColumn(index)}
+                          className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-semibold border border-slate-200 transition-colors flex items-center gap-1 shadow-xs"
+                        >
+                          <span>+ Col</span>
+                        </button>
+                        <button
+                          type="button"
+                          disabled={(block.tableHeaders || []).length <= 1}
+                          onClick={() => removeTableColumn(index)}
+                          className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-semibold border border-slate-200 transition-colors disabled:opacity-40 shadow-xs"
+                          title="Remove last column"
+                        >
+                          <span>- Col</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => addTableRow(index)}
+                          className="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-semibold border border-emerald-200 transition-colors flex items-center gap-1 shadow-xs"
+                        >
+                          <span>+ Row</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Table Editor Grid */}
+                    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-slate-50/50 shadow-xs">
+                      <table className="min-w-full divide-y divide-slate-200 text-left text-xs">
+                        <thead className="bg-slate-100/80 text-slate-800">
+                          <tr>
+                            {(block.tableHeaders || []).map((header, colIdx) => (
+                              <th key={colIdx} className="p-2 border-r border-slate-200 last:border-r-0 min-w-[140px]">
+                                <div className="flex items-center gap-1 mb-1">
+                                  <span className="text-[10px] font-mono text-slate-400">Col {colIdx + 1}</span>
+                                  {(block.tableHeaders || []).length > 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => removeTableColumn(index, colIdx)}
+                                      className="ml-auto text-[10px] text-slate-400 hover:text-red-600"
+                                      title="Delete this column"
+                                    >
+                                      ✕
+                                    </button>
+                                  )}
+                                </div>
+                                <input
+                                  type="text"
+                                  value={header}
+                                  onChange={(e) => updateTableHeader(index, colIdx, e.target.value)}
+                                  placeholder={`Header ${colIdx + 1}`}
+                                  className="w-full px-2 py-1 bg-white border border-slate-300 rounded text-slate-900 text-xs font-bold focus:ring-1 focus:ring-emerald-500 focus:outline-none"
+                                />
+                              </th>
+                            ))}
+                            <th className="w-10 p-2 text-center text-[10px] font-semibold text-slate-400">Del</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-200 bg-white">
+                          {(block.tableRows || []).map((row, rowIdx) => (
+                            <tr key={rowIdx} className="hover:bg-slate-50/70 transition-colors">
+                              {row.map((cell, colIdx) => (
+                                <td key={colIdx} className="p-2 border-r border-slate-100 last:border-r-0 min-w-[140px]">
+                                  <textarea
+                                    rows={1}
+                                    value={cell || ''}
+                                    onChange={(e) => updateTableCell(index, rowIdx, colIdx, e.target.value)}
+                                    placeholder="Enter text..."
+                                    className="w-full px-2 py-1 bg-slate-50 border border-slate-200 rounded text-slate-800 text-xs leading-relaxed focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:outline-none resize-y"
+                                  />
+                                </td>
+                              ))}
+                              <td className="w-10 p-2 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => removeTableRow(index, rowIdx)}
+                                  className="p-1 rounded text-slate-400 hover:text-red-600 hover:bg-red-50 text-xs transition-colors"
+                                  title="Delete row"
+                                >
+                                  ✕
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                      <span>{(block.tableHeaders || []).length} columns &bull; {(block.tableRows || []).length} rows</span>
+                      <button
+                        type="button"
+                        onClick={() => addTableRow(index)}
+                        className="text-emerald-600 hover:text-emerald-700 font-semibold"
+                      >
+                        + Add another row
+                      </button>
+                    </div>
                   </div>
                 )}
 
@@ -649,13 +865,13 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] text-slate-600 font-semibold mb-1">Answer</label>
-                  <textarea
-                    rows={2}
-                    value={faq.answer}
-                    onChange={(e) => updateFaq(i, 'answer', e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 text-xs leading-relaxed focus:ring-1 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
-                  ></textarea>
+                  <label className="block text-[11px] text-slate-600 font-semibold mb-1">Answer (Rich Text Toolbar)</label>
+                  <RichTextEditor
+                    value={faq.answer || ''}
+                    onChange={(html) => updateFaq(i, 'answer', html)}
+                    placeholder="Write detailed FAQ answer..."
+                    minHeight="110px"
+                  />
                 </div>
               </div>
             ))
@@ -695,11 +911,11 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                   </h3>
                 );
               }
-              if (block.type === 'p') {
+              if (block.type === 'p' || (block.type as string) === 'text') {
                 return (
-                  <p
+                  <div
                     key={idx}
-                    className="text-slate-700 leading-relaxed"
+                    className="prose prose-slate max-w-none text-slate-700 leading-relaxed space-y-4 my-4"
                     dangerouslySetInnerHTML={{ __html: block.text || '' }}
                   />
                 );
@@ -726,6 +942,40 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                       <li key={itemIdx}>{item}</li>
                     ))}
                   </ul>
+                );
+              }
+              if (block.type === 'table') {
+                return (
+                  <div key={idx} className="my-6 overflow-x-auto rounded-2xl border border-slate-200 shadow-xs not-prose">
+                    {block.caption && (
+                      <div className="bg-emerald-50/70 px-4 py-2.5 font-bold text-xs uppercase tracking-wider text-emerald-900 border-b border-emerald-100 flex items-center gap-1.5">
+                        <span>📊</span>
+                        <span>{block.caption}</span>
+                      </div>
+                    )}
+                    <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+                      <thead className="bg-slate-50 text-slate-800 font-bold text-xs uppercase tracking-wider">
+                        <tr>
+                          {(block.tableHeaders || []).map((th, thIdx) => (
+                            <th key={thIdx} className="px-4 py-3 border-r border-slate-200 last:border-r-0">
+                              {th}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 bg-white">
+                        {(block.tableRows || []).map((row, rIdx) => (
+                          <tr key={rIdx} className="hover:bg-slate-50/70 transition-colors">
+                            {row.map((cell, cIdx) => (
+                              <td key={cIdx} className="px-4 py-3 text-slate-700 border-r border-slate-100 last:border-r-0 leading-relaxed">
+                                <span dangerouslySetInnerHTML={{ __html: cell || '' }} />
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 );
               }
               if (block.type === 'cta') {

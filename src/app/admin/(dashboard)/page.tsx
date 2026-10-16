@@ -137,20 +137,18 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => handleSeed('seed-faqs')}
-              disabled={seeding !== null}
-              className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-300 shadow-xs transition-colors disabled:opacity-50"
+            <Link
+              href="/admin/blogs"
+              className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-300 shadow-xs transition-colors"
             >
-              {seeding === 'faqs' ? 'Seeding...' : '📥 Sync/Seed Default FAQs'}
-            </button>
-            <button
-              onClick={() => handleSeed('seed-blogs')}
-              disabled={seeding !== null}
-              className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-300 shadow-xs transition-colors disabled:opacity-50"
+              📝 Manage Blogs ({counts.blogs})
+            </Link>
+            <Link
+              href="/admin/faqs"
+              className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-300 shadow-xs transition-colors"
             >
-              {seeding === 'blogs' ? 'Seeding...' : '📥 Sync/Seed Default Blogs'}
-            </button>
+              ❓ Manage FAQs ({counts.faqs})
+            </Link>
           </div>
         </div>
 

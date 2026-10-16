@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 interface FaqItem {
   _id: string;
@@ -317,14 +318,12 @@ export default function AdminFaqsPage() {
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5 uppercase tracking-wider">
                   Answer *
                 </label>
-                <textarea
-                  required
-                  rows={5}
+                <RichTextEditor
                   value={modalForm.answer}
-                  onChange={(e) => setModalForm({ ...modalForm, answer: e.target.value })}
+                  onChange={(html) => setModalForm((prev) => ({ ...prev, answer: html }))}
                   placeholder="Detailed answer explanation..."
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 text-xs focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none leading-relaxed shadow-xs"
-                ></textarea>
+                  minHeight="140px"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-4">

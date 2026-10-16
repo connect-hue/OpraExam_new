@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { getDb } from '../mongodb';
-import { faqs as defaultFaqs, FAQ } from '@/data/faqs';
+import { FAQ } from '@/data/faqs';
 
 export interface DbFaq {
   _id?: string;
@@ -18,49 +18,57 @@ export async function getAllFaqs(): Promise<DbFaq[]> {
   try {
     const db = await getDb();
     if (!db) {
-      // Return default static faqs if db is not connected
-      return defaultFaqs.map((f, i) => ({
-        _id: `static-${i}`,
-        question: f.question,
-        answer: f.answer,
-        order: i,
-      }));
+      console.warn('MongoDB not connected: getAllFaqs returning empty array');
+      return [];
     }
 
     const collection = db.collection<DbFaq>(COLLECTION_NAME);
-    const count = await collection.countDocuments();
-
-    // Auto-seed if collection is completely empty
-    if (count === 0) {
-      await seedDefaultFaqs();
-    }
-
     const docs = await collection.find({}).sort({ order: 1, _id: 1 }).toArray();
     return docs.map((doc) => ({
       ...doc,
       _id: doc._id?.toString(),
     }));
   } catch (error) {
-    console.warn('Error fetching FAQs from database, using fallback:', error);
-    return defaultFaqs.map((f, i) => ({
-      _id: `static-${i}`,
-      question: f.question,
-      answer: f.answer,
-      order: i,
+    console.error('Error fetching FAQs from MongoDB:', error);
+    return [];
+  }
+}
+
+export async function getFaqsByCategory(category: string): Promise<DbFaq[]> {
+  try {
+    const db = await getDb();
+    if (!db) {
+      console.warn('MongoDB not connected: getFaqsByCategory returning empty array');
+      return [];
+    }
+
+    const collection = db.collection<DbFaq>(COLLECTION_NAME);
+    const docs = await collection.find({ category }).sort({ order: 1, _id: 1 }).toArray();
+    return docs.map((doc) => ({
+      ...doc,
+      _id: doc._id?.toString(),
     }));
+  } catch (error) {
+    console.error('Error fetching FAQs by category from MongoDB:', error);
+    return [];
   }
 }
 
 export async function getFaqById(id: string): Promise<DbFaq | null> {
   const db = await getDb();
   if (!db) return null;
-  const collection = db.collection(COLLECTION_NAME);
-  const doc = await collection.findOne({ _id: new ObjectId(id) });
-  if (!doc) return null;
-  return {
-    ...doc,
-    _id: doc._id.toString(),
-  } as unknown as DbFaq;
+
+  try {
+    const collection = db.collection(COLLECTION_NAME);
+    const doc = await collection.findOne({ _id: new ObjectId(id) });
+    if (!doc) return null;
+    return {
+      ...doc,
+      _id: doc._id.toString(),
+    } as unknown as DbFaq;
+  } catch {
+    return null;
+  }
 }
 
 export async function createFaq(faq: Omit<DbFaq, '_id'>): Promise<DbFaq | null> {
@@ -117,21 +125,6 @@ export async function deleteFaq(id: string): Promise<boolean> {
 }
 
 export async function seedDefaultFaqs(): Promise<number> {
-  const db = await getDb();
-  if (!db) throw new Error('Database is not connected');
-
-  const collection = db.collection(COLLECTION_NAME);
-  const now = new Date().toISOString();
-
-  const documents = defaultFaqs.map((faq, index) => ({
-    question: faq.question,
-    answer: faq.answer,
-    order: index,
-    category: 'General',
-    createdAt: now,
-    updatedAt: now,
-  }));
-
-  const result = await collection.insertMany(documents as any);
-  return result.insertedCount;
+  // All FAQs are maintained directly in MongoDB
+  return 0;
 }

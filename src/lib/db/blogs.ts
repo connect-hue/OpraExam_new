@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { getDb } from '../mongodb';
-import { blogPosts as defaultBlogPosts, BlogPost, BlogPostContent, BlogPostFaq } from '@/data/blogPosts';
+import { BlogPost, BlogPostContent, BlogPostFaq } from '@/data/blogPosts';
 
 export interface DbBlogPost {
   _id?: string;
@@ -12,7 +12,7 @@ export interface DbBlogPost {
   readTime: string;
   keywords: string;
   content: BlogPostContent[];
-  rawContent?: string; // Optional markdown/HTML string for easier admin editing
+  rawContent?: string;
   faqs?: BlogPostFaq[];
   relatedSlugs?: string[];
   published?: boolean;
@@ -26,52 +26,58 @@ export async function getAllBlogs(): Promise<DbBlogPost[]> {
   try {
     const db = await getDb();
     if (!db) {
-      return defaultBlogPosts.map((post) => ({
-        ...post,
-        published: true,
-      }));
+      console.warn('MongoDB not connected: getAllBlogs returning empty array');
+      return [];
     }
 
     const collection = db.collection<DbBlogPost>(COLLECTION_NAME);
-    const count = await collection.countDocuments();
-
-    if (count === 0) {
-      await seedDefaultBlogs();
-    }
-
     const docs = await collection.find({}).sort({ createdAt: -1, _id: -1 }).toArray();
     return docs.map((doc) => ({
       ...doc,
       _id: doc._id?.toString(),
     }));
   } catch (error) {
-    console.warn('Error fetching blogs from database, using fallback:', error);
-    return defaultBlogPosts.map((post) => ({
-      ...post,
-      published: true,
-    }));
+    console.error('Error fetching blogs from MongoDB:', error);
+    return [];
   }
 }
 
 export async function getPublishedBlogs(): Promise<DbBlogPost[]> {
-  const blogs = await getAllBlogs();
-  return blogs.filter((b) => b.published !== false);
+  try {
+    const db = await getDb();
+    if (!db) {
+      console.warn('MongoDB not connected: getPublishedBlogs returning empty array');
+      return [];
+    }
+
+    const collection = db.collection<DbBlogPost>(COLLECTION_NAME);
+    const docs = await collection
+      .find({ published: { $ne: false } })
+      .sort({ createdAt: -1, _id: -1 })
+      .toArray();
+
+    return docs.map((doc) => ({
+      ...doc,
+      _id: doc._id?.toString(),
+    }));
+  } catch (error) {
+    console.error('Error fetching published blogs from MongoDB:', error);
+    return [];
+  }
 }
 
 export async function getBlogBySlug(slug: string): Promise<DbBlogPost | null> {
   try {
     const db = await getDb();
     if (!db) {
-      const match = defaultBlogPosts.find((p) => p.slug === slug);
-      return match ? { ...match, published: true } : null;
+      console.warn('MongoDB not connected: getBlogBySlug returning null');
+      return null;
     }
 
     const collection = db.collection<DbBlogPost>(COLLECTION_NAME);
     const doc = await collection.findOne({ slug });
     if (!doc) {
-      // Fallback check in default blogs
-      const fallback = defaultBlogPosts.find((p) => p.slug === slug);
-      return fallback ? { ...fallback, published: true } : null;
+      return null;
     }
 
     return {
@@ -79,9 +85,8 @@ export async function getBlogBySlug(slug: string): Promise<DbBlogPost | null> {
       _id: doc._id?.toString(),
     };
   } catch (error) {
-    console.warn('Error finding blog by slug, fallback used:', error);
-    const fallback = defaultBlogPosts.find((p) => p.slug === slug);
-    return fallback ? { ...fallback, published: true } : null;
+    console.error('Error finding blog by slug in MongoDB:', error);
+    return null;
   }
 }
 
@@ -166,19 +171,6 @@ export async function deleteBlog(id: string): Promise<boolean> {
 }
 
 export async function seedDefaultBlogs(): Promise<number> {
-  const db = await getDb();
-  if (!db) throw new Error('Database is not connected');
-
-  const collection = db.collection(COLLECTION_NAME);
-  const now = new Date().toISOString();
-
-  const documents = defaultBlogPosts.map((post) => ({
-    ...post,
-    published: true,
-    createdAt: now,
-    updatedAt: now,
-  }));
-
-  const result = await collection.insertMany(documents as any);
-  return result.insertedCount;
+  // All blogs are maintained directly in MongoDB
+  return 0;
 }

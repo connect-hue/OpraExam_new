@@ -9,11 +9,20 @@ export default function TableOfContents() {
   useEffect(() => {
     // Collect all h2 and h3 elements in the article content after initial render
     const elements = Array.from(document.querySelectorAll("article h2, article h3"))
-      .map((element) => ({
-        id: element.id,
-        text: element.textContent || "",
-        level: Number(element.tagName.replace("H", ""))
-      }));
+      .map((element, idx) => {
+        if (!element.id) {
+          const generatedId = (element.textContent || `section-${idx}`)
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)+/g, '');
+          element.id = generatedId || `section-${idx}`;
+        }
+        return {
+          id: element.id,
+          text: element.textContent || "",
+          level: Number(element.tagName.replace("H", ""))
+        };
+      });
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHeadings(elements);
 

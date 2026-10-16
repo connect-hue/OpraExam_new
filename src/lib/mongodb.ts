@@ -1,7 +1,25 @@
 import { MongoClient, Db } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || '';
-const dbName = process.env.MONGODB_DB || 'opraexam';
+function getMongoUri(): string {
+  const raw =
+    process.env.MONGODB_URI ||
+    process.env.MONGO_URI ||
+    process.env.MONGODB_URL ||
+    process.env.MONGO_URL ||
+    '';
+  return raw.trim().replace(/^["']|["']$/g, '');
+}
+
+function getMongoDbName(): string {
+  const raw =
+    process.env.MONGODB_DB ||
+    process.env.MONGO_DB ||
+    process.env.MONGODB_DB_NAME ||
+    process.env.MONGO_DB_NAME ||
+    process.env.MONGODB_DATABASE ||
+    'opraexam';
+  return raw.trim().replace(/^["']|["']$/g, '');
+}
 
 interface CachedConnection {
   client: MongoClient | null;
@@ -23,6 +41,7 @@ if (!global._mongoCached) {
 }
 
 export async function getMongoClient(): Promise<MongoClient | null> {
+  const uri = getMongoUri();
   if (!uri) {
     return null;
   }
@@ -33,15 +52,24 @@ export async function getMongoClient(): Promise<MongoClient | null> {
 
   if (!cached.promise) {
     const opts = {
-      serverSelectionTimeoutMS: 5000,
-      connectTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
+      connectTimeoutMS: 10000,
+      maxPoolSize: 10,
     };
     cached.promise = MongoClient.connect(uri, opts).then((client) => {
       cached.client = client;
       return client;
     }).catch((err) => {
       cached.promise = null;
-      console.warn('MongoDB connection error:', err.message || err);
+      const msg = err?.message || String(err);
+      if (msg.includes('SSL alert number 80') || msg.includes('tlsv1 alert internal error')) {
+        console.warn(
+          'MongoDB connection error (SSL Alert 80): Live server IP is blocked by MongoDB Atlas. Please whitelist 0.0.0.0/0 in MongoDB Atlas -> Network Access.',
+          msg
+        );
+      } else {
+        console.warn('MongoDB connection error:', msg);
+      }
       return null as unknown as MongoClient;
     });
   }
@@ -60,14 +88,17 @@ export async function getDb(): Promise<Db | null> {
   if (!client) {
     return null;
   }
-  return client.db(dbName);
+  return client.db(getMongoDbName());
 }
 
 export async function checkMongoStatus(): Promise<{ connected: boolean; message: string; dbName: string }> {
+  const uri = getMongoUri();
+  const dbName = getMongoDbName();
+
   if (!uri) {
     return {
       connected: false,
-      message: 'MONGODB_URI is not configured in .env.local',
+      message: 'MONGODB_URI is not configured in environment variables',
       dbName,
     };
   }
@@ -77,7 +108,7 @@ export async function checkMongoStatus(): Promise<{ connected: boolean; message:
     if (!client) {
       return {
         connected: false,
-        message: 'Could not connect to MongoDB server',
+        message: 'Could not connect to MongoDB server (check Network Access whitelist and credentials)',
         dbName,
       };
     }

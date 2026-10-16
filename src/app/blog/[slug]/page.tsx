@@ -204,7 +204,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                   const headingId = block.id || slugify(block.text);
                   return <h3 key={idx} id={headingId} className="scroll-mt-32">{block.text}</h3>;
                 }
-                if (block.type === 'p') return <p key={idx} className="leading-relaxed text-slate-700" dangerouslySetInnerHTML={{ __html: block.text || "" }} />;
+                if (block.type === 'p' || (block.type as string) === 'text') {
+                  return (
+                    <div
+                      key={idx}
+                      className="leading-relaxed text-slate-700 my-4 space-y-4"
+                      dangerouslySetInnerHTML={{ __html: block.text || "" }}
+                    />
+                  );
+                }
                 if (block.type === 'cta') return <InlineCTA key={idx} />;
                 if (block.type === 'list' && block.items) {
                   return (
@@ -212,21 +220,55 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                       {block.items.map((item, i) => (
                         <li key={i} className="flex items-start gap-3">
                           <svg className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                          <span className="text-slate-700" dangerouslySetInnerHTML={{ __html: item }} />
+                          <div className="text-slate-700 flex-1 leading-relaxed [&_p]:my-0" dangerouslySetInnerHTML={{ __html: item }} />
                         </li>
                       ))}
                     </ul>
                   );
                 }
                 if (block.type === 'alert' && block.alertType) {
-                  const s = alertStyles[block.alertType];
+                  const s = alertStyles[block.alertType] || alertStyles.tip;
                   return (
                     <div key={idx} className={`not-prose my-6 border-l-4 ${s.border} ${s.bg} rounded-r-xl p-5 flex gap-3`}>
                       <span className="text-xl flex-shrink-0">{s.icon}</span>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <p className="font-bold text-slate-800 mb-1">{s.label}</p>
-                        <p className="text-slate-700 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: block.text || "" }} />
+                        <div className="text-slate-700 text-sm leading-relaxed space-y-2 [&_p]:mb-1 [&_p:last-child]:mb-0" dangerouslySetInnerHTML={{ __html: block.text || "" }} />
                       </div>
+                    </div>
+                  );
+                }
+                if (block.type === 'table' && (block.tableHeaders?.length || block.tableRows?.length)) {
+                  return (
+                    <div key={idx} className="my-8 overflow-x-auto rounded-2xl border border-slate-200 shadow-xs not-prose">
+                      {block.caption && (
+                        <div className="bg-emerald-50/70 px-5 py-3 font-bold text-xs uppercase tracking-wider text-emerald-900 border-b border-emerald-100 flex items-center gap-2">
+                          <span>📊</span>
+                          <span>{block.caption}</span>
+                        </div>
+                      )}
+                      <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+                        <thead className="bg-slate-50 text-slate-800 font-bold text-xs uppercase tracking-wider">
+                          <tr>
+                            {(block.tableHeaders || []).map((th, thIdx) => (
+                              <th key={thIdx} className="px-4 py-3.5 border-r border-slate-200 last:border-r-0">
+                                {th}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white">
+                          {(block.tableRows || []).map((row, rIdx) => (
+                            <tr key={rIdx} className="hover:bg-slate-50/70 transition-colors">
+                              {row.map((cell, cIdx) => (
+                                <td key={cIdx} className="px-4 py-3.5 text-slate-700 border-r border-slate-100 last:border-r-0 leading-relaxed">
+                                  <div dangerouslySetInnerHTML={{ __html: cell || '' }} />
+                                </td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   );
                 }

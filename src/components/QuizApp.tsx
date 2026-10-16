@@ -715,7 +715,7 @@ export default function QuizApp() {
               <p className={`font-bold ${domainColour.text} mb-1 text-xs uppercase tracking-wide`}>
                 Explanation
               </p>
-              <p dangerouslySetInnerHTML={{ __html: question.explanation }} />
+              <div className="space-y-2 [&_p]:mb-1 [&_p:last-child]:mb-0" dangerouslySetInnerHTML={{ __html: question.explanation }} />
             </div>
           )}
 
