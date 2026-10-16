@@ -16,11 +16,31 @@ export interface DbBlogPost {
   faqs?: BlogPostFaq[];
   relatedSlugs?: string[];
   published?: boolean;
+  publishedAt?: string;
   createdAt?: string;
   updatedAt?: string;
 }
 
 const COLLECTION_NAME = 'blogs';
+
+export function getBlogTimestamp(blog: DbBlogPost): number {
+  if (blog.publishedAt) {
+    const t = new Date(blog.publishedAt).getTime();
+    if (!isNaN(t)) return t;
+  }
+  if (blog.date) {
+    const t = new Date(blog.date).getTime();
+    if (!isNaN(t)) return t;
+  }
+  if (blog.createdAt) {
+    const t = new Date(blog.createdAt).getTime();
+    if (!isNaN(t)) return t;
+  }
+  if (blog._id && blog._id.length === 24) {
+    return parseInt(blog._id.substring(0, 8), 16) * 1000;
+  }
+  return 0;
+}
 
 export async function getAllBlogs(): Promise<DbBlogPost[]> {
   try {
@@ -31,11 +51,17 @@ export async function getAllBlogs(): Promise<DbBlogPost[]> {
     }
 
     const collection = db.collection<DbBlogPost>(COLLECTION_NAME);
-    const docs = await collection.find({}).sort({ createdAt: -1, _id: -1 }).toArray();
-    return docs.map((doc) => ({
-      ...doc,
-      _id: doc._id?.toString(),
-    }));
+    const docs = await collection
+      .find({})
+      .sort({ publishedAt: -1, createdAt: -1, _id: -1 })
+      .toArray();
+
+    return docs
+      .map((doc) => ({
+        ...doc,
+        _id: doc._id?.toString(),
+      }))
+      .sort((a, b) => getBlogTimestamp(b) - getBlogTimestamp(a));
   } catch (error) {
     console.error('Error fetching blogs from MongoDB:', error);
     return [];
@@ -53,13 +79,15 @@ export async function getPublishedBlogs(): Promise<DbBlogPost[]> {
     const collection = db.collection<DbBlogPost>(COLLECTION_NAME);
     const docs = await collection
       .find({ published: { $ne: false } })
-      .sort({ createdAt: -1, _id: -1 })
+      .sort({ publishedAt: -1, createdAt: -1, _id: -1 })
       .toArray();
 
-    return docs.map((doc) => ({
-      ...doc,
-      _id: doc._id?.toString(),
-    }));
+    return docs
+      .map((doc) => ({
+        ...doc,
+        _id: doc._id?.toString(),
+      }))
+      .sort((a, b) => getBlogTimestamp(b) - getBlogTimestamp(a));
   } catch (error) {
     console.error('Error fetching published blogs from MongoDB:', error);
     return [];
@@ -120,9 +148,18 @@ export async function createBlog(post: Omit<DbBlogPost, '_id'>): Promise<DbBlogP
     throw new Error(`A blog post with slug "${post.slug}" already exists.`);
   }
 
+  let publishedAt = now;
+  if (post.date) {
+    const parsed = new Date(post.date);
+    if (!isNaN(parsed.getTime())) {
+      publishedAt = parsed.toISOString();
+    }
+  }
+
   const newDoc = {
     ...post,
     published: post.published ?? true,
+    publishedAt,
     createdAt: now,
     updatedAt: now,
   };
@@ -153,9 +190,21 @@ export async function updateBlog(id: string, updates: Partial<DbBlogPost>): Prom
     }
   }
 
+  const finalUpdates: any = {
+    ...cleanUpdates,
+    updatedAt: now,
+  };
+
+  if (cleanUpdates.date) {
+    const parsed = new Date(cleanUpdates.date);
+    if (!isNaN(parsed.getTime())) {
+      finalUpdates.publishedAt = parsed.toISOString();
+    }
+  }
+
   const result = await collection.updateOne(
     { _id: new ObjectId(id) },
-    { $set: { ...cleanUpdates, updatedAt: now } }
+    { $set: finalUpdates }
   );
 
   return result.matchedCount > 0;
