@@ -20,8 +20,8 @@ const Footer: FC = () => {
               OPRA<span className="text-emerald-400">Exam</span>
             </span>
             <p className="text-slate-400 text-sm max-w-xs">
-              Built by pharmacists who passed OPRA. Your ultimate guide for the Overseas
-              Pharmacist Readiness Assessment in Australia.
+              An independent educational resource dedicated to overseas-qualified pharmacists
+              preparing for the Overseas Pharmacist Readiness Assessment (OPRA) in Australia and New Zealand.
             </p>
           </div>
           <div>
@@ -41,7 +41,7 @@ const Footer: FC = () => {
               <li>Support: contact@opraexam.in</li>
               <li>
                 <Link href="/about" className="hover:text-emerald-400 transition-colors">
-                  About the Authors
+                  About Us
                 </Link>
               </li>
               <li>

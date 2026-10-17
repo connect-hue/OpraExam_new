@@ -22,7 +22,7 @@ export type SiteContent = {
       title: string;
       description: string;
       weight: string;
-      color: 'blue' | 'emerald' | 'purple';
+      color: 'blue' | 'emerald' | 'purple' | 'teal' | 'amber';
     }[];
   };
 };
@@ -56,26 +56,38 @@ export const defaultSiteContent: SiteContent = {
     ]
   },
   syllabus: {
-    title: "Syllabus Breakdown",
-    subtitle: "Master the key domains tested in the OPRA exam to ensure your success.",
+    title: "Official OPRA Exam Syllabus Breakdown",
+    subtitle: "According to the Australian Pharmacy Council, the OPRA examination covers five core content areas with the following approximate question distribution.",
     domains: [
       {
-        title: "Pharmaceutical Chemistry",
-        description: "Organic chemistry, stereochemistry, drug metabolism, analytical chemistry, and physical pharmacy principles.",
-        weight: "Biomedical Sciences Domain",
-        color: "blue"
-      },
-      {
-        title: "Pharmaceutics & Therapeutics",
-        description: "Formulation, biopharmaceutics, pharmacokinetics, and evidence-based clinical application of medicines.",
-        weight: "Pharmaceutical Sciences Domain",
+        title: "Therapeutics and Patient Care",
+        description: "Principles of medicine selection, therapeutic decision-making, patient condition assessment, medicine safety, and drug dosing calculations.",
+        weight: "45% Weightage",
         color: "emerald"
       },
       {
-        title: "Pharmacology & Physiology",
-        description: "Mechanism of action, adverse effects, body systems, pathology, and fundamental pharmacological concepts.",
-        weight: "Clinical Sciences Domain",
+        title: "Biomedical Sciences",
+        description: "Human physiology, major organ system functions, disease mechanisms, pathophysiology, medical microbiology, and immunology principles.",
+        weight: "20% Weightage",
+        color: "blue"
+      },
+      {
+        title: "Pharmacology and Toxicology",
+        description: "Drug mechanisms of action, receptor pharmacology, drug-drug interactions, enzyme induction/inhibition, adverse reactions, and overdose poisoning management.",
+        weight: "15% Weightage",
         color: "purple"
+      },
+      {
+        title: "Medicinal Chemistry and Biopharmaceutics",
+        description: "Physicochemical properties, drug ionization, pKa, solubility, dosage forms, chemical stability, degradation pathways, and sterilisation.",
+        weight: "10% Weightage",
+        color: "teal"
+      },
+      {
+        title: "Pharmacokinetics and Pharmacodynamics",
+        description: "ADME processes, bioavailability, volume of distribution, clearance, elimination half-life, steady-state concentrations, and concentration-response curves.",
+        weight: "10% Weightage",
+        color: "amber"
       }
     ]
   }

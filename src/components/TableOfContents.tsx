@@ -52,14 +52,16 @@ export default function TableOfContents() {
   if (headings.length === 0) return null;
 
   return (
-    <div className="sticky top-24 p-6 bg-slate-50 border border-slate-100 rounded-2xl hidden lg:block shadow-sm">
-      <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">On this page</h4>
+    <div className="p-6 bg-slate-50 border border-slate-200/80 rounded-2xl shadow-xs max-h-[calc(100vh-8rem)] overflow-y-auto">
+      <h4 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4 sticky top-0 bg-slate-50 py-1 z-10">
+        On this page
+      </h4>
       <nav className="flex flex-col space-y-3">
         {headings.map((heading, idx) => (
           <a
             key={idx}
             href={`#${heading.id}`}
-            className={`text-sm transition-colors duration-200 ${
+            className={`text-sm transition-colors duration-200 leading-snug ${
               heading.level === 3 ? "ml-4" : ""
             } ${
               activeId === heading.id

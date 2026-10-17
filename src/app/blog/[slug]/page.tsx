@@ -370,10 +370,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </article>
 
           {/* Sidebar - Table of Contents */}
-          <aside className="lg:w-4/12 relative hidden lg:block border-l border-slate-100 pl-8">
-            <div className="sticky top-10">
-              <TableOfContents />
-            </div>
+          <aside className="lg:w-4/12 hidden lg:block border-l border-slate-100 pl-8 sticky top-24 self-start">
+            <TableOfContents />
           </aside>
 
         </div>

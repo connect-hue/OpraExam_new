@@ -17,12 +17,19 @@ export default function SamplePaperGate() {
         <div className="w-full max-w-md relative z-10 transition-all duration-500">
           <div className="mb-4 text-center">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 mb-2">
-              Instant PDF Access
+              Practice Papers PDF Access
             </span>
-            <h3 className="text-xl font-bold text-slate-900">Unlock Full 120-Question Mock Papers</h3>
-            <p className="text-sm text-slate-500 mt-1">Enter your details to download the complete official-format question papers with solutions.</p>
+            <h3 className="text-xl font-bold text-slate-900">Download OPRA Practice Papers PDF</h3>
+            <p className="text-sm text-slate-500 mt-1">Enter your details to receive immediate download access to OPRA-style practice mock papers with answers.</p>
           </div>
-          <LeadForm onSuccess={handleLeadSuccess} />
+          <LeadForm
+            title="Download OPRA Practice Papers PDF"
+            buttonText="GET PRACTICE PAPERS PDF"
+            subtitle="Enter your details below to unlock instant PDF access."
+            tag="sample-papers-pdf"
+            source="SamplePapersPage"
+            onSuccess={handleLeadSuccess}
+          />
         </div>
       ) : (
         <div className="w-full bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-emerald-100 animate-in fade-in slide-in-from-bottom-8 duration-700">

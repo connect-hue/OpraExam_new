@@ -61,6 +61,36 @@ export const examSessions: ExamSession[] = [
 
 export const APC_URL = "https://www.pharmacycouncil.org.au/candidates/opra/";
 
+export function getEffectiveSessionStatus(session: ExamSession): "open" | "upcoming" | "closed" {
+    const now = new Date().getTime();
+    const closeDateMap: Record<string, string> = {
+        "November 2026": "2026-10-19T23:59:59+11:00",
+        "March 2027": "2027-02-22T23:59:59+11:00",
+        "July 2027": "2027-06-28T23:59:59+10:00",
+        "November 2027": "2027-10-11T23:59:59+11:00",
+    };
+    const openDateMap: Record<string, string> = {
+        "November 2026": "2026-08-18T00:00:00+10:00",
+        "March 2027": "2027-01-19T00:00:00+11:00",
+        "July 2027": "2027-05-11T00:00:00+10:00",
+        "November 2027": "2027-09-14T00:00:00+10:00",
+    };
+
+    const closeTime = closeDateMap[session.session] ? new Date(closeDateMap[session.session]).getTime() : null;
+    const openTime = openDateMap[session.session] ? new Date(openDateMap[session.session]).getTime() : null;
+
+    if (closeTime && now > closeTime) {
+        return "closed";
+    }
+    if (openTime && now < openTime) {
+        return "upcoming";
+    }
+    if (openTime && closeTime && now >= openTime && now <= closeTime) {
+        return "open";
+    }
+    return session.status;
+}
+
 const statusConfig = {
     open: {
         label: "Registration Open",
@@ -91,7 +121,8 @@ function formatVerifiedDate(iso: string): string {
 }
 
 function renderSessionCard(session: ExamSession) {
-    const s = statusConfig[session.status];
+    const effectiveStatus = getEffectiveSessionStatus(session);
+    const s = statusConfig[effectiveStatus];
     return (
         <div
             key={session.session}
