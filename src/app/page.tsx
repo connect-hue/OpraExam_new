@@ -74,8 +74,8 @@ export default async function Home() {
   const allBlogs = await getPublishedBlogs();
   const latestBlogs = allBlogs.slice(0, 3);
 
-  // Dynamic date maintenance: Registration closes October 19, 2026 at 23:59:59 AEDT
-  const isNov2026Open = new Date().getTime() <= new Date('2026-10-19T23:59:59+11:00').getTime();
+  // Dynamic date maintenance: Registration closed on October 19, 2026 at 5:00 PM AEDT (11:30 AM IST)
+  const isNov2026Open = new Date().getTime() < new Date('2026-10-19T17:00:00+11:00').getTime();
 
   return (
     <div className="flex flex-col w-full h-full bg-white relative">
@@ -135,11 +135,9 @@ export default async function Home() {
             {/* Left Column: Authoritative Heading & Value Props */}
             <div className="lg:col-span-7 flex flex-col items-start text-left">
               {/* Dynamic Notification Badge */}
-              <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50/90 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-emerald-800 mb-6 shadow-2xs backdrop-blur-xs">
-                <span className={`flex h-2 w-2 rounded-full mr-2 ${isNov2026Open ? 'bg-emerald-600 animate-pulse' : 'bg-slate-400'}`}></span>
-                {isNov2026Open
-                  ? "Registration for November 2026 OPRA Exam is Open"
-                  : "APC OPRA Exam Schedule 2026–2027"}
+              <div className="inline-flex items-center rounded-full border border-slate-200 bg-slate-100/90 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 mb-6 shadow-2xs backdrop-blur-xs">
+                <span className="flex h-2 w-2 rounded-full mr-2 bg-slate-400"></span>
+                November 2026 Registration Closed — Next: March 2027
               </div>
               
               {/* Single Primary H1 */}

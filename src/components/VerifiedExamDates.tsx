@@ -24,8 +24,8 @@ export const examSessions: ExamSession[] = [
         registrationClose: "19 October 2026",
         examDate: "23–25 November 2026",
         resultsDate: "22 December 2026",
-        status: "open",
-        lastVerified: "2026-10-14",
+        status: "closed",
+        lastVerified: "2026-10-19",
     },
     {
         session: "March 2027",
@@ -35,7 +35,7 @@ export const examSessions: ExamSession[] = [
         examDate: "22–24 March 2027",
         resultsDate: "6 May 2027",
         status: "upcoming",
-        lastVerified: "2026-10-14",
+        lastVerified: "2026-10-19",
     },
     {
         session: "July 2027",
@@ -45,7 +45,7 @@ export const examSessions: ExamSession[] = [
         examDate: "26–28 July 2027",
         resultsDate: "9 September 2027",
         status: "upcoming",
-        lastVerified: "2026-10-14",
+        lastVerified: "2026-10-19",
     },
     {
         session: "November 2027",
@@ -55,16 +55,17 @@ export const examSessions: ExamSession[] = [
         examDate: "8–10 November 2027",
         resultsDate: "23 December 2027",
         status: "upcoming",
-        lastVerified: "2026-10-14",
+        lastVerified: "2026-10-19",
     },
 ];
 
-export const APC_URL = "https://www.pharmacycouncil.org.au/candidates/opra/";
+export const APC_URL = "https://www.pharmacycouncil.org.au/pharmacist/skills-assessment/knowledge-stream/";
+export const APC_PORTAL_URL = "https://candidate.pharmacycouncil.org.au/";
 
 export function getEffectiveSessionStatus(session: ExamSession): "open" | "upcoming" | "closed" {
     const now = new Date().getTime();
     const closeDateMap: Record<string, string> = {
-        "November 2026": "2026-10-19T23:59:59+11:00",
+        "November 2026": "2026-10-19T17:00:00+11:00",
         "March 2027": "2027-02-22T23:59:59+11:00",
         "July 2027": "2027-06-28T23:59:59+10:00",
         "November 2027": "2027-10-11T23:59:59+11:00",

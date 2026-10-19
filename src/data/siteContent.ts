@@ -29,7 +29,7 @@ export type SiteContent = {
 
 export const defaultSiteContent: SiteContent = {
   hero: {
-    badgeText: "Registration for November 2026 OPRA Exam is Open",
+    badgeText: "November 2026 Registration Closed — Next: March 2027",
     headingPrefix: "How to Pass the ",
     headingHighlight: "OPRA Exam",
     headingSuffix: " in Australia",
