@@ -3,12 +3,12 @@ import Link from 'next/link';
 import MedicalBackground from '@/components/MedicalBackground';
 import LeadForm from '@/components/LeadForm';
 import { getPublishedBlogs } from '@/lib/db/blogs';
-import { examSessions, getEffectiveSessionStatus, APC_URL } from '@/components/VerifiedExamDates';
+import { examSessions, getEffectiveSessionStatus } from '@/components/VerifiedExamDates';
 
 export const revalidate = 60; // revalidate at most once every minute
 
 export const metadata: Metadata = {
-  title: "OPRA Exam 2026: Syllabus, Dates, Fees & Preparation",
+  title: { absolute: "OPRA Exam 2026: Syllabus, Dates, Fees & Preparation" },
   description: "Explore the OPRA Exam 2026 syllabus, exam dates, fees, eligibility, preparation strategies and free practice questions for overseas-qualified pharmacists.",
   alternates: {
     canonical: "https://www.opraexam.in/",
@@ -19,11 +19,21 @@ export const metadata: Metadata = {
     url: "https://www.opraexam.in/",
     type: "website",
     siteName: "OPRAExam.in",
+    locale: "en_AU",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "OPRA Exam 2026 preparation guide - OPRAExam.in",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "OPRA Exam 2026: Syllabus, Dates, Fees & Preparation",
     description: "Explore the OPRA Exam 2026 syllabus, exam dates, fees, eligibility, preparation strategies and free practice questions for overseas-qualified pharmacists.",
+    images: ["/og-image.jpg"],
   },
 };
 
@@ -74,33 +84,17 @@ export default async function Home() {
   const allBlogs = await getPublishedBlogs();
   const latestBlogs = allBlogs.slice(0, 3);
 
-  // Dynamic date maintenance: Registration closed on October 19, 2026 at 5:00 PM AEDT (11:30 AM IST)
-  const isNov2026Open = new Date().getTime() < new Date('2026-10-19T17:00:00+11:00').getTime();
 
   return (
     <div className="flex flex-col w-full h-full bg-white relative">
-      {/* Structured Data: Organization, WebSite, WebPage, FAQPage */}
+      {/* Structured Data: WebPage and visible FAQs.
+          Organization and WebSite are already defined in app/layout.tsx. */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@graph": [
-              {
-                "@type": "Organization",
-                "@id": "https://www.opraexam.in/#organization",
-                "name": "OPRAExam.in",
-                "url": "https://www.opraexam.in",
-                "logo": "https://www.opraexam.in/logo.png",
-                "description": "Independent educational resource supporting overseas-qualified pharmacists preparing for the OPRA examination."
-              },
-              {
-                "@type": "WebSite",
-                "@id": "https://www.opraexam.in/#website",
-                "url": "https://www.opraexam.in",
-                "name": "OPRAExam.in",
-                "publisher": { "@id": "https://www.opraexam.in/#organization" }
-              },
               {
                 "@type": "WebPage",
                 "@id": "https://www.opraexam.in/#webpage",
@@ -122,7 +116,7 @@ export default async function Home() {
                 }))
               }
             ]
-          })
+          }).replace(/</g, "\\u003c")
         }}
       />
 
@@ -452,7 +446,7 @@ export default async function Home() {
               href="/about"
               className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-7 py-3 rounded-full text-sm sm:text-base transition-all shadow-sm"
             >
-              Learn About the Pharmacist Registration Pathway &rarr;
+              Learn About OPRAExam.in &rarr;
             </Link>
           </div>
         </div>
@@ -771,7 +765,7 @@ export default async function Home() {
               href="/exam-dates"
               className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-7 py-3 rounded-full text-sm sm:text-base transition-all shadow-sm"
             >
-              View Official APC Fees and Registration Information &rarr;
+              See OPRA Fees and Exam Dates &rarr;
             </Link>
           </div>
         </div>
