@@ -1,12 +1,8 @@
-import React from 'react';
 import Link from 'next/link';
-import { Metadata } from 'next';
-import { getSiteContent } from '@/lib/db/siteContent';
+import type { Metadata } from 'next';
 import LeadForm from '@/components/LeadForm';
 
-export const revalidate = 60;
-
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://www.opraexam.in').replace(/\/$/, '');
+const SITE_URL = 'https://www.opraexam.in';
 
 export const metadata: Metadata = {
   title: {
@@ -26,22 +22,29 @@ export const metadata: Metadata = {
     "Therapeutics and Patient Care OPRA",
   ],
   alternates: {
-    canonical: `${siteUrl}/syllabus`,
+    canonical: `${SITE_URL}/syllabus`,
   },
   openGraph: {
     title: "OPRA Exam Syllabus 2026: 5 Subjects, Topics & Weightage",
     description:
       "Explore the OPRA Exam Syllabus 2026 with all 5 APC content areas, official subject weightage, important topics, exam pattern and preparation tips.",
-    url: `${siteUrl}/syllabus`,
+    url: `${SITE_URL}/syllabus`,
     type: "website",
-    images: [`${siteUrl}/og-image.jpg`],
+    siteName: "OPRAExam.in",
+    locale: "en_AU",
+    images: [{
+      url: `${SITE_URL}/og-image.jpg`,
+      width: 1200,
+      height: 630,
+      alt: "OPRA Exam Syllabus 2026 - OPRAExam.in",
+    }],
   },
   twitter: {
     card: "summary_large_image",
     title: "OPRA Exam Syllabus 2026: 5 Subjects, Topics & Weightage",
     description:
       "Explore the OPRA Exam Syllabus 2026 with all 5 APC content areas, official subject weightage, important topics, exam pattern and preparation tips.",
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${SITE_URL}/og-image.jpg`],
   },
 };
 
@@ -271,8 +274,7 @@ const preparationSteps = [
   },
 ];
 
-export default async function SyllabusPage() {
-  const content = await getSiteContent();
+export default function SyllabusPage() {
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -282,13 +284,13 @@ export default async function SyllabusPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: siteUrl,
+        item: SITE_URL,
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Syllabus',
-        item: `${siteUrl}/syllabus`,
+        item: `${SITE_URL}/syllabus`,
       },
     ],
   };
@@ -311,11 +313,11 @@ export default async function SyllabusPage() {
       {/* Schema Injections */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema).replace(/</g, '\\u003c') }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema).replace(/</g, '\\u003c') }}
       />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -462,9 +464,8 @@ export default async function SyllabusPage() {
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-3.5 overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        item.isPrimary ? "bg-emerald-600" : "bg-slate-500"
-                      }`}
+                      className={`h-full rounded-full transition-all duration-500 ${item.isPrimary ? "bg-emerald-600" : "bg-slate-500"
+                        }`}
                       style={{ width: `${item.weight}%` }}
                     />
                   </div>
@@ -834,7 +835,7 @@ export default async function SyllabusPage() {
                   href="/exam-dates"
                   className="inline-flex items-center text-emerald-600 hover:text-emerald-700 group"
                 >
-                  View 2026 OPRA Exam Dates
+                  View OPRA Exam Dates 2026–2027
                   <svg
                     className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
                     fill="none"
@@ -957,7 +958,7 @@ export default async function SyllabusPage() {
                 className="bg-white/10 hover:bg-white/20 border border-white/20 rounded-2xl p-4 text-center transition-all group"
               >
                 <div className="font-semibold text-white group-hover:text-emerald-300 transition-colors">
-                  OPRA Exam Dates 2026
+                  OPRA Exam Dates 2026–2027
                 </div>
                 <div className="text-xs text-slate-400 mt-1">Schedules & deadlines →</div>
               </Link>
@@ -995,7 +996,7 @@ export default async function SyllabusPage() {
             href="/exam-dates"
             className="bg-white border border-slate-200 text-slate-700 font-semibold py-3 px-6 rounded-full hover:bg-slate-50 hover:text-emerald-600 transition-colors shadow-2xs"
           >
-            Check 2026 Exam Dates →
+            Check OPRA Exam Dates →
           </Link>
           <Link
             href="/sample-papers"
