@@ -1,11 +1,8 @@
-import React from 'react';
 import Link from 'next/link';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import SamplePaperGate from '@/components/SamplePaperGate';
 
-export const revalidate = 60;
-
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://www.opraexam.in').replace(/\/$/, '');
+const siteUrl = 'https://www.opraexam.in';
 
 export const metadata: Metadata = {
   title: {
@@ -13,17 +10,6 @@ export const metadata: Metadata = {
   },
   description:
     "Practise free OPRA exam sample questions with answers and explanations. Explore the 2026 exam pattern, five syllabus areas and mock test resources.",
-  keywords: [
-    "OPRA Exam Sample Paper",
-    "OPRA exam sample paper 2026",
-    "OPRA exam questions and answers",
-    "OPRA exam practice questions",
-    "OPRA MCQs",
-    "OPRA exam mock test",
-    "OPRA exam sample paper PDF",
-    "Australian pharmacy council sample test",
-    "OPRA pharmaceutical calculations practice",
-  ],
   alternates: {
     canonical: `${siteUrl}/sample-papers`,
   },
@@ -33,14 +19,28 @@ export const metadata: Metadata = {
       "Practise free OPRA exam sample questions with answers and explanations. Explore the 2026 exam pattern, five syllabus areas and mock test resources.",
     url: `${siteUrl}/sample-papers`,
     type: "website",
-    images: [`${siteUrl}/og-image.jpg`],
+    locale: "en_AU",
+    siteName: "OPRAExam.in",
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "OPRA Exam Sample Papers — Free Practice Questions and Answers",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "OPRA Exam Sample Papers 2026 | Free MCQs & Answers",
     description:
       "Practise free OPRA exam sample questions with answers and explanations. Explore the 2026 exam pattern, five syllabus areas and mock test resources.",
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        alt: "OPRA Exam Sample Papers — Free Practice Questions and Answers",
+      },
+    ],
   },
 };
 
@@ -264,7 +264,7 @@ export default function SamplePapersPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: siteUrl,
+        item: `${siteUrl}/`,
       },
       {
         '@type': 'ListItem',
@@ -293,11 +293,11 @@ export default function SamplePapersPage() {
       {/* Schema Injection */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema).replace(/</g, '\\u003c') }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema).replace(/</g, '\\u003c') }}
       />
 
       {/* Breadcrumb Header */}
@@ -320,12 +320,12 @@ export default function SamplePapersPage() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 max-w-5xl">
+      <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 max-w-5xl">
         {/* ─── 1. Header Hero ─────────────────────────────────────────── */}
         <header className="text-center mb-12">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-emerald-800 mb-4">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            2026 Examination Blueprint
+            Independent 2026 OPRA Practice Questions
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">
             OPRA Exam Sample Papers 2026: <br className="hidden sm:inline" />
@@ -677,7 +677,7 @@ export default function SamplePapersPage() {
               <div className="font-semibold text-white group-hover:text-emerald-300 transition-colors">
                 OPRA Exam Dates
               </div>
-              <div className="text-xs text-slate-400 mt-1">Check 2026 test windows →</div>
+              <div className="text-xs text-slate-400 mt-1">Check 2026–2027 exam dates →</div>
             </Link>
 
             <Link
@@ -693,7 +693,7 @@ export default function SamplePapersPage() {
             Disclaimer: OPRAExam.in is an independent educational platform and is not affiliated with or endorsed by the Australian Pharmacy Council. All independently developed questions are provided for educational and revision purposes only. Candidates should verify current examination requirements through the official APC website.
           </div>
         </section>
-      </main>
+      </div>
     </div>
   );
 }
