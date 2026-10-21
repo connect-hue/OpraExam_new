@@ -1,34 +1,40 @@
-import React from 'react';
 import Link from 'next/link';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { getPublishedBlogs } from '@/lib/db/blogs';
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
+const siteUrl = 'https://www.opraexam.in';
 
 export const metadata: Metadata = {
-  title: 'OPRA Exam Preparation Blog & Articles | Expert Tips & Guides',
-  description: 'Read the latest operational guidelines, study tips, and comprehensive syllabus guides to pass the Australian OPRA pharmacist exam.',
-  keywords: [
-    'OPRA exam blog',
-    'OPRA study tips',
-    'Australian pharmacist exam guide',
-    'OPRA sample questions',
-    'APC exam preparation',
-  ],
+  title: {
+    absolute: 'OPRA Exam Blog: Preparation Tips & Study Guides',
+  },
+  description:
+    'Explore OPRA exam preparation tips, study guides, syllabus explanations, practice resources and Australian pharmacist career information.',
   alternates: {
     canonical: `${siteUrl}/blog`,
   },
   openGraph: {
-    title: 'OPRA Exam Preparation Blog & Articles | Expert Tips',
-    description: 'Expert strategies, detailed syllabus breakdowns, and insider tips to pass the Overseas Pharmacist Readiness Assessment.',
+    title: 'OPRA Exam Blog: Preparation Tips & Study Guides',
+    description:
+      'Explore OPRA exam preparation tips, study guides, syllabus explanations and practice resources.',
     url: `${siteUrl}/blog`,
     type: 'website',
-    images: [`${siteUrl}/og-image.jpg`],
+    siteName: 'OPRAExam.in',
+    locale: 'en_AU',
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: 'OPRAExam.in exam preparation blog and study guides',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'OPRA Exam Preparation Blog & Articles | Expert Guides',
-    description: 'Expert strategies and comprehensive syllabus guides to pass the Australian OPRA pharmacist exam.',
+    title: 'OPRA Exam Blog: Preparation Tips & Study Guides',
+    description:
+      'Explore OPRA exam preparation tips, syllabus guides and practice resources.',
     images: [`${siteUrl}/og-image.jpg`],
   },
 };
@@ -63,7 +69,9 @@ export default async function BlogIndexPage() {
     <div className="bg-slate-50 min-h-screen py-10 lg:py-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema).replace(/</g, '\\u003c'),
+        }}
       />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Breadcrumb */}
@@ -99,7 +107,7 @@ export default async function BlogIndexPage() {
             </h1>
 
             <p className="text-slate-300 text-base sm:text-lg leading-relaxed mb-6">
-              In-depth articles written by registered Australian pharmacists. Master the official syllabus, stay ahead of exam windows, and learn clinical problem-solving techniques for the OPRA exam.
+              Explore independent OPRA exam study guides, syllabus explanations, preparation tips, and pharmacist career resources for overseas-qualified pharmacists.
             </p>
 
             {/* Quick Cross-Links */}
@@ -109,13 +117,13 @@ export default async function BlogIndexPage() {
                 href="/syllabus"
                 className="bg-white/10 hover:bg-white/20 text-emerald-300 px-3.5 py-1.5 rounded-full transition-colors font-medium text-xs sm:text-sm"
               >
-                Official Syllabus & Domains →
+                OPRA Syllabus & Subjects →
               </Link>
               <Link
                 href="/exam-dates"
                 className="bg-white/10 hover:bg-white/20 text-teal-300 px-3.5 py-1.5 rounded-full transition-colors font-medium text-xs sm:text-sm"
               >
-                2026 Verified Exam Dates →
+                2026–2027 Exam Dates →
               </Link>
             </div>
           </div>
@@ -126,7 +134,7 @@ export default async function BlogIndexPage() {
           <div className="mb-14">
             <div className="text-xs font-bold uppercase tracking-wider text-emerald-700 mb-3 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-              Featured Comprehensive Guide
+              Featured Article
             </div>
             <Link
               href={`/blog/${featuredPost.slug}`}
@@ -155,7 +163,7 @@ export default async function BlogIndexPage() {
                     </div>
                     <div>
                       <p className="text-sm font-bold text-slate-900">{featuredPost.author}</p>
-                      <p className="text-xs text-slate-500">Australian Registered Pharmacist</p>
+                      <p className="text-xs text-slate-500">Article contributor</p>
                     </div>
                   </div>
                 </div>
@@ -163,23 +171,18 @@ export default async function BlogIndexPage() {
                 <div className="lg:col-span-4 bg-slate-50 rounded-2xl p-6 border border-slate-100 flex flex-col justify-between h-full">
                   <div>
                     <h3 className="font-bold text-slate-800 text-sm mb-2 uppercase tracking-wider">
-                      Key Highlights Inside
+                      Explore the Full Article
                     </h3>
-                    <ul className="text-xs text-slate-600 space-y-2 mb-6">
-                      <li className="flex items-center gap-2">
-                        <span className="text-emerald-500 font-bold">✓</span> Exam format & test-day schedule
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-emerald-500 font-bold">✓</span> Core AMH monographs to revise
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-emerald-500 font-bold">✓</span> Common pitfalls to avoid
-                      </li>
-                    </ul>
+                    <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                      Read this article for its topic-specific information and detailed discussion.
+                    </p>
+                    <p className="text-xs text-slate-500 leading-relaxed mb-6">
+                      OPRAExam.in is an independent educational website and is not affiliated with the Australian Pharmacy Council.
+                    </p>
                   </div>
 
                   <span className="inline-flex items-center text-sm font-bold text-emerald-600 group-hover:text-emerald-700">
-                    Read Complete Guide →
+                    Read Full Article →
                   </span>
                 </div>
               </div>
@@ -249,7 +252,7 @@ export default async function BlogIndexPage() {
             href="/exam-dates"
             className="bg-emerald-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-emerald-700 transition-colors shadow-sm"
           >
-            Check 2026 Exam Dates →
+            Check 2026–2027 Exam Dates →
           </Link>
         </div>
       </div>
