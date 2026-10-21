@@ -1,43 +1,119 @@
-import React from 'react';
 import Link from 'next/link';
-import { Metadata } from 'next';
-import VerifiedExamDates, { examSessions, APC_URL, APC_PORTAL_URL } from '@/components/VerifiedExamDates';
+import type { Metadata } from 'next';
+import { APC_URL, APC_PORTAL_URL } from '@/components/VerifiedExamDates';
 import LeadForm from '@/components/LeadForm';
 
+// The page contains time-dependent registration badges; refresh periodically.
 export const revalidate = 60;
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://www.opraexam.in').replace(/\/$/, '');
+// Must match robots.ts, sitemap.ts, root metadataBase, and site redirects.
+const siteUrl = 'https://www.opraexam.in';
+const pageUrl = `${siteUrl}/exam-dates`;
+const seoTitle = 'OPRA Exam Dates 2026–2027: Registration & Results';
+const seoDescription =
+  'Check OPRA Exam Dates 2026–2027, registration deadlines, examination centres, fees and result dates. Find the latest APC schedule and registration guidance.';
 
 export const metadata: Metadata = {
-  title: 'OPRA Exam Dates 2026–2027: Registration & Results',
-  description: 'Check OPRA Exam Dates 2026–2027, registration deadlines, examination centres, fees and result dates. Find the latest APC schedule and registration guidance.',
-  keywords: [
-    'OPRA exam dates 2026',
-    'OPRA exam dates 2027',
-    'OPRA exam schedule',
-    'OPRA registration deadline',
-    'Australian pharmacy council exam dates',
-    'OPRA November 2026 registration closed',
-    'OPRA March 2027 exam dates',
-    'Pearson VUE OPRA test centers',
-  ],
-  alternates: {
-    canonical: 'https://www.opraexam.in/exam-dates',
-  },
+  title: { absolute: seoTitle },
+  description: seoDescription,
+  alternates: { canonical: pageUrl },
   openGraph: {
-    title: 'OPRA Exam Dates 2026–2027: Registration & Results',
-    description: 'Check OPRA Exam Dates 2026–2027, registration deadlines, examination centres, fees and result dates. Find the latest APC schedule and registration guidance.',
-    url: 'https://www.opraexam.in/exam-dates',
+    title: seoTitle,
+    description: seoDescription,
+    url: pageUrl,
     type: 'website',
-    images: [`${siteUrl}/og-image.jpg`],
+    siteName: 'opraexam.in',
+    locale: 'en_AU',
+    images: [
+      {
+        url: `${siteUrl}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: 'OPRA Exam Dates 2026–2027 – opraexam.in',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'OPRA Exam Dates 2026–2027: Registration & Results',
-    description: 'Check OPRA Exam Dates 2026–2027, registration deadlines, examination centres, fees and result dates. Find the latest APC schedule and registration guidance.',
+    title: seoTitle,
+    description: seoDescription,
     images: [`${siteUrl}/og-image.jpg`],
   },
 };
+
+// Dates and Sydney-time registration cutoffs published by APC.
+// Update this array when APC publishes further examination sessions.
+const sessionSchedule = [
+  {
+    session: 'Nov 2026',
+    fullName: 'November 2026',
+    registrationDates: '18 Aug – 19 Oct 2026',
+    registrationOpens: '2026-08-18T09:00:00+10:00', // AEST
+    registrationCloses: '2026-10-19T17:00:00+11:00', // AEDT
+    openingLabel: '18 Aug 2026',
+    examDates: '23–25 Nov 2026',
+    examEnds: '2026-11-25T23:59:59+11:00',
+    resultsDate: '22 Dec 2026',
+  },
+  {
+    session: 'Mar 2027',
+    fullName: 'March 2027',
+    registrationDates: '19 Jan – 22 Feb 2027',
+    registrationOpens: '2027-01-19T09:00:00+11:00', // AEDT
+    registrationCloses: '2027-02-22T17:00:00+11:00', // AEDT
+    openingLabel: '19 Jan 2027',
+    examDates: '22–24 Mar 2027',
+    examEnds: '2027-03-24T23:59:59+11:00',
+    resultsDate: '6 May 2027',
+  },
+  {
+    session: 'Jul 2027',
+    fullName: 'July 2027',
+    registrationDates: '11 May – 28 Jun 2027',
+    registrationOpens: '2027-05-11T09:00:00+10:00', // AEST
+    registrationCloses: '2027-06-28T17:00:00+10:00', // AEST
+    openingLabel: '11 May 2027',
+    examDates: '26–28 Jul 2027',
+    examEnds: '2027-07-28T23:59:59+10:00',
+    resultsDate: '9 Sep 2027',
+  },
+  {
+    session: 'Nov 2027',
+    fullName: 'November 2027',
+    registrationDates: '14 Sep – 11 Oct 2027',
+    registrationOpens: '2027-09-14T09:00:00+10:00', // AEST
+    registrationCloses: '2027-10-11T17:00:00+11:00', // AEDT
+    openingLabel: '14 Sep 2027',
+    examDates: '8–10 Nov 2027',
+    examEnds: '2027-11-10T23:59:59+11:00',
+    resultsDate: '23 Dec 2027',
+  },
+] as const;
+
+type ExamSession = (typeof sessionSchedule)[number];
+
+function getRegistrationStatus(session: ExamSession, now: number) {
+  if (now < Date.parse(session.registrationOpens)) {
+    return {
+      label: `Opens ${session.openingLabel}`,
+      badge: 'bg-amber-100 text-amber-800 border-amber-200',
+    };
+  }
+  if (now <= Date.parse(session.registrationCloses)) {
+    return {
+      label: 'Registration Open',
+      badge: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    };
+  }
+  return {
+    label: now > Date.parse(session.examEnds) ? 'Exam Completed' : 'Registration Closed',
+    badge: 'bg-slate-100 text-slate-700 border-slate-200',
+  };
+}
+
+function safeJsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
+}
 
 const examDatesFaqs = [
   {
@@ -66,116 +142,95 @@ const examDatesFaqs = [
   },
 ];
 
+// Locations are drawn from APC's published OPRA test-centre list.
+// Listed cities do not guarantee an available appointment for every sitting.
 const testCenters = [
   {
     region: 'India & South Asia',
-    cities: 'Bengaluru, Chennai, Hyderabad, Mumbai, New Delhi, Noida and surrounding areas',
-    badge: 'High Demand',
-    note: 'Appointments depend on test-centre availability during each session.',
+    cities: 'Bengaluru (Bangalore), Chennai, Hyderabad, Mumbai, New Delhi, Noida and surrounding areas; Islamabad, Lahore, Karachi; Colombo; Itahari',
+    badge: 'APC Listed',
+    note: 'Confirm appointment availability in the APC Candidate Portal.',
   },
   {
-    region: 'Australia (Domestic)',
-    cities: 'Sydney, Melbourne, Brisbane, Perth, Adelaide, Canberra, Hobart, Darwin',
-    badge: 'Domestic',
-    note: 'Available for candidates already residing in Australia.',
+    region: 'Australia',
+    cities: 'Adelaide, Brisbane, Canberra, Darwin, Alice Springs, Hobart, Melbourne, Perth, Sydney, Townsville',
+    badge: 'APC Listed',
+    note: 'Test centres may reach capacity or change by session.',
   },
   {
     region: 'Middle East & Gulf',
-    cities: 'Dubai, Abu Dhabi, Riyadh, Jeddah, Doha, Muscat, Manama, Kuwait City',
-    badge: 'International',
-    note: 'Approved Pearson VUE test centres.',
+    cities: 'Dubai and surrounding areas; Riyadh, Jeddah, Dammam; Doha; Muscat; Salmiya',
+    badge: 'APC Listed',
+    note: 'Availability depends on the specific examination session.',
   },
   {
     region: 'United Kingdom & Europe',
-    cities: 'London, Birmingham, Edinburgh, Dublin, Frankfurt',
-    badge: 'International',
-    note: 'Approved Pearson VUE test centres.',
+    cities: 'London; Helsinki and Espoo; Athens; Krakow; Madrid; Istanbul',
+    badge: 'APC Listed',
+    note: 'Refer to APC for any location changes.',
   },
   {
     region: 'Southeast Asia & Pacific',
-    cities: 'Manila, Cebu, Kuala Lumpur, Singapore, Auckland, Suva',
-    badge: 'International',
-    note: 'Approved Pearson VUE test centres.',
+    cities: 'Manila; Kuala Lumpur; Singapore; Bangkok; Ho Chi Minh; Auckland, Wellington, Christchurch; Suva; Taipei City; Wan Chai',
+    badge: 'APC Listed',
+    note: 'Seat availability varies by test centre and session.',
   },
   {
-    region: 'North America & Africa',
-    cities: 'Toronto, New York, Johannesburg, Nairobi, Cairo',
-    badge: 'International',
-    note: 'Approved Pearson VUE test centres.',
+    region: 'Americas & Africa',
+    cities: 'Toronto, Alberta; Buenos Aires; Kingston; Johannesburg, Cape Town; Giza, Cairo; Nairobi; Gaborone; Legon; Harare',
+    badge: 'APC Listed',
+    note: 'Check the official location list before booking.',
   },
 ];
 
 export default function ExamDatesPage() {
-  const breadcrumbSchema = {
+  const now = Date.now();
+  const featuredSession =
+    sessionSchedule.find((session) => now <= Date.parse(session.examEnds)) ??
+    sessionSchedule[sessionSchedule.length - 1];
+  const featuredStatus = getRegistrationStatus(featuredSession, now);
+  const nextRegistration = sessionSchedule.find(
+    (session) => now < Date.parse(session.registrationOpens)
+  );
+
+  const pageSchema = {
     '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
+    '@graph': [
       {
-        '@type': 'ListItem',
-        position: 1,
-        name: 'Home',
-        item: siteUrl,
+        '@type': 'WebPage',
+        '@id': `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: seoTitle,
+        description: seoDescription,
+        isPartOf: { '@id': `${siteUrl}/#website` },
+        breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
       },
       {
-        '@type': 'ListItem',
-        position: 2,
-        name: 'Exam Dates',
-        item: 'https://www.opraexam.in/exam-dates',
+        '@type': 'BreadcrumbList',
+        '@id': `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+          { '@type': 'ListItem', position: 2, name: 'Exam Dates', item: pageUrl },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${pageUrl}#faq`,
+        mainEntity: examDatesFaqs.map((faq) => ({
+          '@type': 'Question',
+          name: faq.q,
+          acceptedAnswer: { '@type': 'Answer', text: faq.a },
+        })),
       },
     ],
   };
 
-  const eventSchemas = examSessions.map((session) => ({
-    '@context': 'https://schema.org',
-    '@type': 'Event',
-    name: `OPRA Examination Session (${session.session})`,
-    description: `Official Australian Pharmacy Council Overseas Pharmacist Readiness Assessment (${session.session} sitting). Test window: ${session.examDate}. Results: ${session.resultsDate}.`,
-    startDate: session.year === 2026 ? '2026-11-23T09:00:00+11:00' : `${session.year}-03-22T09:00:00+11:00`,
-    endDate: session.year === 2026 ? '2026-11-25T17:00:00+11:00' : `${session.year}-03-24T17:00:00+11:00`,
-    eventStatus: 'https://schema.org/EventScheduled',
-    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    location: {
-      '@type': 'Place',
-      name: 'Pearson VUE Professional Test Centres',
-      address: {
-        '@type': 'PostalAddress',
-        addressCountry: 'AU',
-      },
-    },
-    organizer: {
-      '@type': 'Organization',
-      name: 'Australian Pharmacy Council (APC)',
-      url: APC_URL,
-    },
-  }));
-
   return (
     <div className="bg-slate-50 min-h-screen py-10 lg:py-16">
-      {/* Schema Injections */}
+      {/* Accurate page-specific structured data. Do not invent exam start times or locations. */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchemas) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: examDatesFaqs.map((faq) => ({
-              '@type': 'Question',
-              name: faq.q,
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: faq.a,
-              },
-            })),
-          }),
-        }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(pageSchema) }}
       />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -223,15 +278,15 @@ export default function ExamDatesPage() {
             <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-300">
               <div className="flex items-center gap-2 bg-slate-800/90 border border-slate-700 px-4 py-2 rounded-full backdrop-blur-xs text-slate-200">
                 <span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
-                <span>November 2026 Registration: <strong className="text-slate-100">Closed (19 Oct 2026)</strong></span>
+                <span>{featuredSession.fullName} Registration: <strong className="text-slate-100">{featuredStatus.label}</strong></span>
               </div>
               <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full backdrop-blur-xs">
                 <span className="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
-                <span>November Exam Dates: <strong>23–25 Nov 2026</strong></span>
+                <span>{featuredSession.fullName} Exam Dates: <strong>{featuredSession.examDates}</strong></span>
               </div>
               <div className="flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/40 px-4 py-2 rounded-full backdrop-blur-xs text-emerald-300">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                <span>Next Registration: <strong>19 Jan 2027 (March 2027 Session)</strong></span>
+                <span>{nextRegistration ? (<>Next Registration: <strong>{nextRegistration.openingLabel} ({nextRegistration.fullName} Session)</strong></>) : (<>Future registration dates: <strong>Check APC</strong></>)}</span>
               </div>
             </div>
           </div>
@@ -245,27 +300,27 @@ export default function ExamDatesPage() {
                 Current Session Notice
               </div>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                November 2026 OPRA Exam — Registration Closed
+                {featuredSession.fullName} OPRA Exam — {featuredStatus.label}
               </h2>
             </div>
             <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 text-slate-700 font-bold text-xs uppercase tracking-wider border border-slate-300 self-start lg:self-auto">
               <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-              Registration Closed
+              {featuredStatus.label}
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
               <span className="text-xs text-slate-500 font-medium block mb-1">Registration Period</span>
-              <strong className="text-sm sm:text-base text-slate-900">18 August – 19 October 2026</strong>
+              <strong className="text-sm sm:text-base text-slate-900">{featuredSession.registrationDates}</strong>
             </div>
             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
               <span className="text-xs text-slate-500 font-medium block mb-1">Examination Dates</span>
-              <strong className="text-sm sm:text-base text-emerald-700">23–25 November 2026</strong>
+              <strong className="text-sm sm:text-base text-emerald-700">{featuredSession.examDates}</strong>
             </div>
             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
               <span className="text-xs text-slate-500 font-medium block mb-1">Results Release</span>
-              <strong className="text-sm sm:text-base text-slate-900">22 December 2026</strong>
+              <strong className="text-sm sm:text-base text-slate-900">{featuredSession.resultsDate}</strong>
             </div>
             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
               <span className="text-xs text-slate-500 font-medium block mb-1">Exam Fee</span>
@@ -275,10 +330,16 @@ export default function ExamDatesPage() {
 
           <div className="space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed mb-6">
             <p>
-              The registration period for the November 2026 OPRA examination has closed. Candidates who have successfully registered should review their examination confirmation, identification requirements and test-centre instructions.
+              {featuredStatus.label === 'Registration Open'
+                ? `Registration is open for the ${featuredSession.fullName} OPRA examination. Eligible candidates can book through the APC Candidate Portal, subject to seat availability.`
+                : `Check the ${featuredSession.fullName} OPRA session schedule. Candidates with confirmed bookings should review their examination confirmation, identification requirements and test-centre instructions.`}
             </p>
             <p className="text-slate-600">
-              Candidates who missed the registration deadline can prepare for the next registration window, scheduled to open on <strong>19 January 2027</strong> for the March 2027 examination.
+              {nextRegistration ? (
+                <>The next announced registration window opens on <strong>{nextRegistration.openingLabel}</strong> for the {nextRegistration.fullName} examination.</>
+              ) : (
+                <>For examination sessions after November 2027, check APC for newly announced registration windows.</>
+              )}
             </p>
           </div>
 
@@ -287,7 +348,7 @@ export default function ExamDatesPage() {
               href="#schedule-table"
               className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-sm sm:text-base transition-all shadow-sm"
             >
-              View March 2027 Exam Dates &darr;
+              View All Published Exam Dates &darr;
             </a>
           </div>
         </div>
@@ -305,7 +366,11 @@ export default function ExamDatesPage() {
               The Australian Pharmacy Council has announced three examination sessions for 2027: March, July and November.
             </p>
             <p className="text-slate-700 text-base leading-relaxed mb-4">
-              The next scheduled registration period opens on <strong>19 January 2027</strong> and closes on <strong>22 February 2027</strong> for the March examination.
+              {nextRegistration ? (
+                <>The next scheduled registration period opens on <strong>{nextRegistration.openingLabel}</strong> for the {nextRegistration.fullName} examination. See the table below for the published closing date.</>
+              ) : (
+                <>The published 2027 registration windows are shown below. Check APC for subsequent examination sessions.</>
+              )}
             </p>
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-amber-900 text-sm leading-relaxed">
               <strong>Planning Advice:</strong> Candidates are advised to complete their APC Eligibility Check well before the registration deadline. APC recommends submitting the application at least eight weeks before the relevant registration closing date.
@@ -326,50 +391,22 @@ export default function ExamDatesPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  <tr className="hover:bg-slate-50/80 bg-slate-50/40">
-                    <td className="py-4 px-6 font-bold text-slate-900">Nov 2026</td>
-                    <td className="py-4 px-6 text-slate-700">18 Aug – 19 Oct 2026</td>
-                    <td className="py-4 px-6 font-semibold text-emerald-800">23–25 Nov 2026</td>
-                    <td className="py-4 px-6 text-slate-700">22 Dec 2026</td>
-                    <td className="py-4 px-6 text-center">
-                      <span className="inline-block text-xs font-bold px-2.5 py-1 rounded-full bg-slate-200 text-slate-700 border border-slate-300">
-                        Registration Closed
-                      </span>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-slate-50/80">
-                    <td className="py-4 px-6 font-bold text-slate-900">Mar 2027</td>
-                    <td className="py-4 px-6 text-slate-700 font-medium">19 Jan – 22 Feb 2027</td>
-                    <td className="py-4 px-6 font-semibold text-emerald-700">22–24 Mar 2027</td>
-                    <td className="py-4 px-6 text-slate-700">6 May 2027</td>
-                    <td className="py-4 px-6 text-center">
-                      <span className="inline-block text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
-                        Opens 19 Jan 2027
-                      </span>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-slate-50/80">
-                    <td className="py-4 px-6 font-bold text-slate-900">Jul 2027</td>
-                    <td className="py-4 px-6 text-slate-700">11 May – 28 Jun 2027</td>
-                    <td className="py-4 px-6 font-semibold text-emerald-700">26–28 Jul 2027</td>
-                    <td className="py-4 px-6 text-slate-700">9 Sep 2027</td>
-                    <td className="py-4 px-6 text-center">
-                      <span className="inline-block text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                        Upcoming
-                      </span>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-slate-50/80">
-                    <td className="py-4 px-6 font-bold text-slate-900">Nov 2027</td>
-                    <td className="py-4 px-6 text-slate-700">14 Sep – 11 Oct 2027</td>
-                    <td className="py-4 px-6 font-semibold text-emerald-700">8–10 Nov 2027</td>
-                    <td className="py-4 px-6 text-slate-700">23 Dec 2027</td>
-                    <td className="py-4 px-6 text-center">
-                      <span className="inline-block text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                        Upcoming
-                      </span>
-                    </td>
-                  </tr>
+                  {sessionSchedule.map((session) => {
+                    const status = getRegistrationStatus(session, now);
+                    return (
+                      <tr key={session.session} className="hover:bg-slate-50/80">
+                        <td className="py-4 px-6 font-bold text-slate-900">{session.session}</td>
+                        <td className="py-4 px-6 text-slate-700">{session.registrationDates}</td>
+                        <td className="py-4 px-6 font-semibold text-emerald-800">{session.examDates}</td>
+                        <td className="py-4 px-6 text-slate-700">{session.resultsDate}</td>
+                        <td className="py-4 px-6 text-center">
+                          <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-full border ${status.badge}`}>
+                            {status.label}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -462,10 +499,10 @@ export default function ExamDatesPage() {
               Approved Locations
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3">
-              OPRA Exam Centres in India &amp; International Centres
+              OPRA Exam Centres in India &amp; International Locations
             </h2>
             <p className="text-slate-700 text-base leading-relaxed mb-2">
-              According to APC&apos;s published test-centre list, examination locations in India include <strong>Bengaluru, Chennai, Hyderabad, Mumbai, New Delhi, Noida and surrounding areas</strong>.
+              According to APC&apos;s published test-centre list, examination locations in India include <strong>Bengaluru (Bangalore), Chennai, Hyderabad, Mumbai, New Delhi, Noida and surrounding areas</strong>. Other listed international centres are summarised below.
             </p>
             <p className="text-slate-500 text-sm italic">
               Appointments depend on test-centre availability during each examination session. A city appearing on the published list does not guarantee an available appointment.
@@ -499,7 +536,7 @@ export default function ExamDatesPage() {
               APC Official Assessment Fees (2026)
             </h2>
             <p className="text-slate-300 text-sm sm:text-base mb-8 max-w-2xl leading-relaxed">
-              All fees are payable directly to the Australian Pharmacy Council (APC) through the candidate portal during registration.
+              APC charges fees at different stages of the assessment process. Make payments only through the official APC Candidate Portal when the relevant service is requested.
             </p>
 
             <div className="overflow-x-auto">
@@ -554,7 +591,7 @@ export default function ExamDatesPage() {
                 Plan Your OPRA Timeline for 2027
               </h2>
               <p className="text-slate-600 text-base sm:text-lg mb-6 leading-relaxed">
-                Need guidance on Document Evaluation requirements, registration window countdowns, or building a study plan for March 2027? Connect with our independent educational mentors.
+                Need guidance on APC Eligibility Check requirements, published registration windows, or building a study plan for an upcoming examination? Connect with our independent educational mentors.
               </p>
 
               <div className="space-y-4 mb-8">
@@ -571,7 +608,7 @@ export default function ExamDatesPage() {
                     ✓
                   </div>
                   <span className="text-slate-700 font-semibold text-sm">
-                    Understanding APC document evaluation submission checklists
+                    Understanding the APC Eligibility Check document checklist
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -727,9 +764,9 @@ export default function ExamDatesPage() {
                 </svg>
               </a>
             </p>
-            <p>Last reviewed: 19 October 2026</p>
+            <p>Last reviewed: 21 October 2026</p>
             <p className="text-slate-500 pt-2 border-t border-slate-800/60">
-              OPRAExam.in is an independent educational resource and is not affiliated with or endorsed by the Australian Pharmacy Council.
+              opraexam.in is an independent educational resource and is not affiliated with or endorsed by the Australian Pharmacy Council.
             </p>
           </div>
         </section>
