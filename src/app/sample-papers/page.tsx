@@ -358,10 +358,10 @@ export default function SamplePapersPage() {
               View Exam Pattern
             </a>
             <a
-              href="#official-apc-sample"
+              href="#download-pack"
               className="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold text-sm px-6 py-3 rounded-full shadow-xs transition-colors"
             >
-              Official APC Sample Content
+              Download Practice Papers
             </a>
           </div>
         </header>
@@ -527,46 +527,7 @@ export default function SamplePapersPage() {
           </div>
         </section>
 
-        {/* ─── 5. Official APC Sample PDF Section ──────────────────────── */}
-        <section id="official-apc-sample" className="mb-16">
-          <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 border border-slate-800 shadow-xl">
-            <div className="inline-block bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
-              Official Reference
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-4">
-              Official OPRA Exam Sample Paper PDF
-            </h2>
-            <div className="text-slate-300 text-sm sm:text-base leading-relaxed space-y-4 mb-8">
-              <p>
-                The Australian Pharmacy Council provides official sample examination content to help candidates become familiar with the OPRA question format.
-              </p>
-              <p>
-                The official sample content includes multiple-choice questions drawn from the examination&apos;s content areas and an answer sheet.
-              </p>
-              <p className="text-slate-400 text-xs sm:text-sm">
-                These questions are supplied for preparation and familiarisation purposes and are not questions currently used in live examinations.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <a
-                href="https://www.pharmacycouncil.org.au/resources/opra-exam-guide-and-sample-content/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3.5 rounded-full shadow-lg transition-all text-sm group"
-              >
-                <span>Access the Official APC OPRA Exam Sample Content</span>
-                <span className="ml-2 group-hover:translate-x-1 transition-transform">↗</span>
-              </a>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-slate-800 text-xs text-slate-400">
-              For additional practice, candidates may also use independently developed OPRA-style mock examinations and pharmaceutical calculation exercises.
-            </div>
-          </div>
-        </section>
-
-        {/* ─── 6. Your Mock-Test Resource (Separated PDF Access) ───────── */}
+        {/* ─── 5. Mock-Test Resource (PDF Access) ────────────────────── */}
         <section id="download-pack" className="mb-16">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <div className="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2">
