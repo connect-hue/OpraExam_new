@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId, type Document } from 'mongodb';
 import { getDb } from '../mongodb';
-import { BlogPost, BlogPostContent, BlogPostFaq } from '@/data/blogPosts';
+import { BlogPostContent, BlogPostFaq } from '@/data/blogPosts';
 
 export interface DbBlogPost {
   _id?: string;
@@ -124,7 +124,9 @@ export async function getBlogById(id: string): Promise<DbBlogPost | null> {
 
   try {
     const collection = db.collection(COLLECTION_NAME);
-    const doc = await collection.findOne({ _id: new ObjectId(id) });
+    const isObjectId = ObjectId.isValid(id) && id.length === 24;
+    const query = isObjectId ? { $or: [{ _id: new ObjectId(id) }, { slug: id }] } : { slug: id };
+    const doc = await collection.findOne(query);
     if (!doc) return null;
     return {
       ...doc,
@@ -164,7 +166,7 @@ export async function createBlog(post: Omit<DbBlogPost, '_id'>): Promise<DbBlogP
     updatedAt: now,
   };
 
-  const result = await collection.insertOne(newDoc as any);
+  const result = await collection.insertOne(newDoc as unknown as Document);
   return {
     ...newDoc,
     _id: result.insertedId.toString(),
@@ -177,20 +179,24 @@ export async function updateBlog(id: string, updates: Partial<DbBlogPost>): Prom
 
   const collection = db.collection(COLLECTION_NAME);
   const now = new Date().toISOString();
-  const { _id, ...cleanUpdates } = updates;
+  const cleanUpdates = { ...updates };
+  delete cleanUpdates._id;
+  const isObjectId = ObjectId.isValid(id) && id.length === 24;
+  const targetQuery = isObjectId ? { $or: [{ _id: new ObjectId(id) }, { slug: id }] } : { slug: id };
 
   // If slug is changed, check if new slug collides with another post
   if (cleanUpdates.slug) {
-    const collision = await collection.findOne({
+    const collisionQuery: Record<string, unknown> = {
       slug: cleanUpdates.slug,
-      _id: { $ne: new ObjectId(id) },
-    });
+      ...(isObjectId ? { _id: { $ne: new ObjectId(id) } } : { slug: { $ne: id } }),
+    };
+    const collision = await collection.findOne(collisionQuery);
     if (collision) {
       throw new Error(`A blog post with slug "${cleanUpdates.slug}" already exists.`);
     }
   }
 
-  const finalUpdates: any = {
+  const finalUpdates: Record<string, unknown> = {
     ...cleanUpdates,
     updatedAt: now,
   };
@@ -203,7 +209,7 @@ export async function updateBlog(id: string, updates: Partial<DbBlogPost>): Prom
   }
 
   const result = await collection.updateOne(
-    { _id: new ObjectId(id) },
+    targetQuery,
     { $set: finalUpdates }
   );
 
@@ -215,7 +221,9 @@ export async function deleteBlog(id: string): Promise<boolean> {
   if (!db) throw new Error('Database is not connected');
 
   const collection = db.collection(COLLECTION_NAME);
-  const result = await collection.deleteOne({ _id: new ObjectId(id) });
+  const isObjectId = ObjectId.isValid(id) && id.length === 24;
+  const targetQuery = isObjectId ? { $or: [{ _id: new ObjectId(id) }, { slug: id }] } : { slug: id };
+  const result = await collection.deleteOne(targetQuery);
   return result.deletedCount > 0;
 }
 

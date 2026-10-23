@@ -33,7 +33,7 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const updates: any = {};
+    const updates: Record<string, unknown> = {};
     if (body.title !== undefined) updates.title = body.title.trim();
     if (body.slug !== undefined) {
       updates.slug = body.slug
@@ -60,9 +60,17 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true, message: 'Blog updated successfully' });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || 'Failed to update blog' }, { status: 500 });
+  } catch (error: unknown) {
+    const errMsg = error instanceof Error ? error.message : 'Failed to update blog';
+    return NextResponse.json({ error: errMsg }, { status: 500 });
   }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  return PUT(request, context);
 }
 
 export async function DELETE(
@@ -82,7 +90,8 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true, message: 'Blog deleted successfully' });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || 'Failed to delete blog' }, { status: 500 });
+  } catch (error: unknown) {
+    const errMsg = error instanceof Error ? error.message : 'Failed to delete blog';
+    return NextResponse.json({ error: errMsg }, { status: 500 });
   }
 }

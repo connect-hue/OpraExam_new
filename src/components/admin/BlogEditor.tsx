@@ -50,7 +50,8 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
   });
 
   const [activeTab, setActiveTab] = useState<'meta' | 'blocks' | 'faqs' | 'preview'>('blocks');
-  const [saving, setSaving] = useState(false);
+  const [savingAction, setSavingAction] = useState<'draft' | 'publish' | null>(null);
+  const saving = savingAction !== null;
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   // Auto-slugify
@@ -228,19 +229,25 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
     }));
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveAction = async (targetPublished: boolean) => {
     if (!formData.title.trim()) {
       setMessage({ text: 'Article title is required.', type: 'error' });
+      setActiveTab('blocks');
       return;
     }
     if (!formData.slug.trim()) {
       setMessage({ text: 'URL slug is required.', type: 'error' });
+      setActiveTab('blocks');
       return;
     }
 
-    setSaving(true);
+    setSavingAction(targetPublished ? 'publish' : 'draft');
     setMessage(null);
+
+    const payload = {
+      ...formData,
+      published: targetPublished,
+    };
 
     try {
       const endpoint = isNew ? '/api/admin/blogs' : `/api/admin/blogs/${initialData?._id || formData.slug}`;
@@ -249,25 +256,40 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
       const res = await fetch(endpoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to save blog post');
 
-      setMessage({ text: 'Article saved successfully!', type: 'success' });
+      setFormData((prev) => ({ ...prev, published: targetPublished }));
+      setMessage({
+        text: targetPublished
+          ? 'Article published successfully and is now live on the website!'
+          : 'Article saved as draft (hidden from public website).',
+        type: 'success',
+      });
+
       if (isNew) {
-        router.push('/admin/blogs');
+        setTimeout(() => {
+          router.push('/admin/blogs');
+        }, 800);
       }
-    } catch (err: any) {
-      setMessage({ text: err?.message || 'Failed to save blog post', type: 'error' });
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'Failed to save blog post';
+      setMessage({ text: errMsg, type: 'error' });
     } finally {
-      setSaving(false);
+      setSavingAction(null);
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleSaveAction(formData.published);
+  };
+
   return (
-    <form onSubmit={handleSave} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Top action header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
@@ -283,19 +305,63 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
           </h1>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Current Status Pill */}
+          <div className="flex items-center mr-1">
+            {formData.published ? (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Published
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-50 text-amber-700 border border-amber-300 shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                Draft
+              </span>
+            )}
+          </div>
+
           <Link
             href="/admin/blogs"
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
             Cancel
           </Link>
+
+          {/* Button 1: Save as Draft */}
           <button
-            type="submit"
+            type="button"
             disabled={saving}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 transition-all disabled:opacity-50"
+            onClick={() => handleSaveAction(false)}
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 font-bold text-xs border border-slate-300 transition-all disabled:opacity-50 shadow-xs cursor-pointer"
+            title="Save changes privately as an incomplete draft"
           >
-            {saving ? 'Saving...' : isNew ? 'Publish Article' : 'Save Changes'}
+            <svg className="w-3.5 h-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span>{savingAction === 'draft' ? 'Saving Draft...' : 'Save as Draft'}</span>
+          </button>
+
+          {/* Button 2: Publish / Update Live */}
+          <button
+            type="button"
+            disabled={saving}
+            onClick={() => handleSaveAction(true)}
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 transition-all disabled:opacity-50 cursor-pointer"
+            title="Make this article public on the website"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+            </svg>
+            <span>
+              {savingAction === 'publish'
+                ? 'Publishing...'
+                : isNew
+                ? 'Publish Article'
+                : formData.published
+                ? 'Update & Keep Published'
+                : 'Publish Live'}
+            </span>
           </button>
         </div>
       </div>
@@ -733,6 +799,49 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
               </div>
             ))}
           </div>
+
+          {/* Bottom Action Toolbar */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+            <div className="flex items-center gap-2 text-xs text-slate-600">
+              <span>Publication status:</span>
+              {formData.published ? (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Published Live
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                  Draft (Private)
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => handleSaveAction(false)}
+                className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 font-bold text-xs border border-slate-300 transition-colors shadow-xs cursor-pointer disabled:opacity-50"
+              >
+                {savingAction === 'draft' ? 'Saving Draft...' : 'Save as Draft'}
+              </button>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => handleSaveAction(true)}
+                className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-md transition-all shadow-emerald-600/20 cursor-pointer disabled:opacity-50"
+              >
+                {savingAction === 'publish'
+                  ? 'Publishing...'
+                  : isNew
+                  ? 'Publish Article'
+                  : formData.published
+                  ? 'Update & Keep Published'
+                  : 'Publish Live'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -807,17 +916,59 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
             />
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center gap-3">
-            <input
-              type="checkbox"
-              id="published-toggle"
-              checked={formData.published}
-              onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-              className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
-            />
-            <label htmlFor="published-toggle" className="text-xs font-semibold text-slate-800 cursor-pointer">
-              Visible on Public Website (Published)
+          <div className="pt-4 border-t border-slate-100 space-y-3">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700">
+              Publication Status
             </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div
+                onClick={() => setFormData({ ...formData, published: false })}
+                className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                  !formData.published
+                    ? 'border-amber-400 bg-amber-50/70 shadow-xs'
+                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span className="text-xs font-bold text-slate-900">Draft (Incomplete)</span>
+                  </div>
+                  {!formData.published && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md">
+                      Active
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Hidden from the public website and search engines. Use this for incomplete drafts and works-in-progress.
+                </p>
+              </div>
+
+              <div
+                onClick={() => setFormData({ ...formData, published: true })}
+                className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
+                  formData.published
+                    ? 'border-emerald-500 bg-emerald-50/70 shadow-xs'
+                    : 'border-slate-200 hover:border-slate-300 bg-white'
+                }`}
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span className="text-xs font-bold text-slate-900">Published (Public)</span>
+                  </div>
+                  {formData.published && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                      Active
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Live on the website, listed on the /blog index, and accessible to readers and search engines.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}

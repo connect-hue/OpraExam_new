@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = await getBlogBySlug(slug);
 
-  if (!post) {
+  if (!post || post.published === false) {
     return {
       title: 'Post Not Found | OPRA Exam Blog',
       description: 'The requested OPRA exam article could not be found.',
@@ -71,7 +71,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     getPublishedBlogs(),
   ]);
 
-  if (!post) {
+  if (!post || post.published === false) {
     notFound();
   }
 
