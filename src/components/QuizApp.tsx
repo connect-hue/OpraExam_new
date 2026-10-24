@@ -357,10 +357,11 @@ export default function QuizApp() {
           phone: fullPhone,
           qualification: 'Bachelor of Pharmacy (B.Pharm)',
           educationQualification: 'Bachelor of Pharmacy (B.Pharm)',
-          program: 'OPRA for Australia',
-          source: 'OPRAQuiz',
+          program: 'KAPS for Australia',
+          source: 'OPRAExam',
           tag: 'opra-quiz',
           city: country,
+          notes: 'Quiz',
         }),
       });
     } catch (err) {

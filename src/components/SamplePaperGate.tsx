@@ -27,7 +27,8 @@ export default function SamplePaperGate() {
             buttonText="GET PRACTICE PAPERS PDF"
             subtitle="Enter your details below to unlock instant PDF access."
             tag="sample-papers-pdf"
-            source="SamplePapersPage"
+            source="OPRAExam"
+            notes="Sample Paper"
             onSuccess={handleLeadSuccess}
           />
         </div>

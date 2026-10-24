@@ -660,7 +660,8 @@ export default function ExamDatesPage() {
                 subtitle="Independent educational guidance for overseas pharmacists preparing for Australian licensing."
                 buttonText="GET STUDY PLAN"
                 tag="exam-dates-page"
-                source="ExamDatesPage"
+                source="OPRAExam"
+                notes="Exam Dates"
               />
             </div>
           </div>

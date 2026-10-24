@@ -883,7 +883,8 @@ export default function SyllabusPage() {
                 title="Get Syllabus Study Blueprint"
                 buttonText="SEND STUDY BLUEPRINT"
                 tag="syllabus-page"
-                source="SyllabusPage"
+                source="OPRAExam"
+                notes="Syllabus"
               />
             </div>
           </div>

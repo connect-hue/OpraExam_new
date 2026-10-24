@@ -12,6 +12,7 @@ interface LeadRequestBody {
   program?: string;
   tag?: string;
   city?: string;
+  notes?: string;
 }
 
 export async function POST(request: Request) {
@@ -29,6 +30,7 @@ export async function POST(request: Request) {
       program,
       tag,
       city,
+      notes,
     } = body;
 
     // Validation: Required fields
@@ -86,11 +88,12 @@ export async function POST(request: Request) {
       educationQualification: selectedEducation,
       education_qualification: selectedEducation,
       educationalQualification: selectedEducation,
-      program: program || 'OPRA for Australia',
+      program: program || 'KAPS for Australia',
       tag: tag || 'opraexam',
       upsert: true,
       updateIfExists: true,
       ...(city && { city: city.trim() }),
+      ...(notes && { notes: notes.trim() }),
     };
 
     const baseUrl = process.env.PHARMLLY_API_BASE_URL;
@@ -140,8 +143,8 @@ export async function POST(request: Request) {
           updates: {
             qualification: 'Pharmacy',
             Qualification: 'Pharmacy',
-            program: program || 'OPRA for Australia',
-            'Interested Program': program || 'OPRA for Australia',
+            program: program || 'KAPS for Australia',
+            'Interested Program': program || 'KAPS for Australia',
             'First Name': name.trim(),
             firstName: name.trim(),
             'Lead Name': name.trim(),
@@ -162,6 +165,7 @@ export async function POST(request: Request) {
               educationalQualification: selectedEducation,
             },
             ...(city && { city: city.trim(), City: city.trim() }),
+            ...(notes && { notes: notes.trim(), Notes: notes.trim() }),
           },
         }),
       }).catch((patchErr) =>

@@ -13,6 +13,7 @@ export type LeadData = {
   source?: string;
   tag?: string;
   city?: string;
+  notes?: string;
 };
 
 export type LeadFormProps = {
@@ -21,6 +22,7 @@ export type LeadFormProps = {
   buttonText?: string;
   tag?: string;
   source?: string;
+  notes?: string;
   onSuccess?: (data: LeadData) => void;
   className?: string;
   compact?: boolean;
@@ -35,13 +37,6 @@ const QUALIFICATION_OPTIONS = [
   "Other Pharmacy / Medical Degree",
 ];
 
-const PROGRAM_OPTIONS = [
-  "OPRA for Australia",
-  "KAPS for Australia",
-  "SPLE for Saudi",
-  "PEBC for Canada",
-  "DHA / MOH / HAAD for UAE",
-];
 
 export default function LeadForm({
   title = "Book Your 1 : 1 Doubt Clearing Session",
@@ -49,6 +44,7 @@ export default function LeadForm({
   buttonText = "BOOK NOW",
   tag = "opraexam",
   source = "OPRAExam",
+  notes = "",
   onSuccess,
   className = "",
   compact = false,
@@ -58,7 +54,6 @@ export default function LeadForm({
     email: '',
     phone: '',
     qualification: '',
-    program: 'OPRA for Australia',
     source: source,
     tag: tag,
   });
@@ -121,9 +116,10 @@ export default function LeadForm({
         phone: formattedPhone,
         qualification: 'Pharmacy',
         educationQualification: finalQualification,
-        program: formData.program || 'OPRA for Australia',
+        program: formData.program || 'KAPS for Australia',
         source: source || 'OPRAExam',
         tag: tag || 'opraexam',
+        ...(notes && { notes }),
       };
 
       const response = await fetch('/api/leads', {
@@ -312,26 +308,6 @@ export default function LeadForm({
           />
         )}
 
-        {/* PROGRAM / TARGET EXAM Dropdown */}
-        <div className="relative">
-          <select
-            id="program"
-            name="program"
-            value={formData.program}
-            onChange={handleChange}
-            disabled={isSubmitting}
-            className="w-full px-5 py-3.5 sm:py-4 rounded-2xl border-2 border-white/90 bg-transparent text-white font-bold text-sm sm:text-base outline-none appearance-none cursor-pointer focus:bg-black/10 focus:border-white focus:ring-2 focus:ring-white/30 transition-all"
-          >
-            {PROGRAM_OPTIONS.map((prog) => (
-              <option key={prog} value={prog} className="text-slate-900 font-medium">
-                {prog}
-              </option>
-            ))}
-          </select>
-          <svg className="w-4 h-4 text-white absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
 
         {/* SUBMIT Button */}
         <button

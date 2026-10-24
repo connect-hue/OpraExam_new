@@ -204,7 +204,8 @@ export default async function Home() {
                 subtitle="Independent educational guidance from international pharmacy mentors. Free study roadmap & eligibility overview."
                 buttonText="BOOK NOW"
                 tag="opraexam-home"
-                source="OPRAExam Homepage"
+                source="OPRAExam"
+                notes="Home Page"
               />
               <p className="text-[11px] text-slate-400 text-center mt-3 leading-relaxed">
                 Independent educational service. Not affiliated with APC, Ahpra, or Pearson VUE.
