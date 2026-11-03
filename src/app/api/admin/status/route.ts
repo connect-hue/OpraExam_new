@@ -11,7 +11,7 @@ export async function GET() {
   }
 
   const mongoStatus = await checkMongoStatus();
-  let counts = {
+  const counts = {
     faqs: 0,
     blogs: 0,
     leads: 0,
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || 'Operation failed' }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: (error instanceof Error ? error.message : 'Operation failed') }, { status: 500 });
   }
 }

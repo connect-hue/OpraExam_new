@@ -1,5 +1,6 @@
 import { getDb } from '../mongodb';
 import { defaultSiteContent, SiteContent } from '@/data/siteContent';
+import { siteContentSchema } from '../content/siteSchema';
 
 const COLLECTION_NAME = 'site_content';
 const CONTENT_DOC_ID = 'main_site_content';
@@ -11,18 +12,18 @@ export async function getSiteContent(): Promise<SiteContent> {
       return defaultSiteContent;
     }
 
-    const collection = db.collection(COLLECTION_NAME);
-    const doc = await collection.findOne({ _id: CONTENT_DOC_ID as any });
+    const collection = db.collection<SiteContent & { _id: string }>(COLLECTION_NAME);
+    const doc = await collection.findOne({ _id: CONTENT_DOC_ID });
     if (!doc) {
       return defaultSiteContent;
     }
 
-    const { _id, ...content } = doc as any;
-    return {
+    const content = doc;
+    return siteContentSchema.parse({
       hero: { ...defaultSiteContent.hero, ...content.hero },
       about: { ...defaultSiteContent.about, ...content.about },
       syllabus: { ...defaultSiteContent.syllabus, ...content.syllabus },
-    };
+    });
   } catch (error) {
     console.warn('Error fetching site content, using fallback:', error);
     return defaultSiteContent;
@@ -33,11 +34,11 @@ export async function updateSiteContent(content: Partial<SiteContent>): Promise<
   const db = await getDb();
   if (!db) throw new Error('Database is not connected');
 
-  const collection = db.collection(COLLECTION_NAME);
+  const collection = db.collection<SiteContent & { _id: string; updatedAt?: string }>(COLLECTION_NAME);
   const now = new Date().toISOString();
 
   await collection.updateOne(
-    { _id: CONTENT_DOC_ID as any },
+    { _id: CONTENT_DOC_ID },
     {
       $set: {
         ...content,

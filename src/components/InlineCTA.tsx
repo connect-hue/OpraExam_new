@@ -6,7 +6,7 @@ export default function InlineCTA() {
       <div className="absolute right-0 top-0 -mr-16 -mt-16 w-48 h-48 bg-emerald-100 rounded-full blur-2xl opacity-50 pointer-events-none"></div>
       <h3 className="text-2xl font-bold text-slate-900 mb-3 tracking-tight">Are you ready for the OPRA Exam?</h3>
       <p className="text-slate-600 mb-6 text-lg leading-relaxed">
-        Test your knowledge with our free 5-question diagnostic quiz tailored to mirror the actual exam format and domains.
+        Test your knowledge with our free 20-question practice quiz with explanations to identify areas for revision.
       </p>
       <Link href="/opra-quiz" className="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-8 rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all">
         Take the Free OPRA Readiness Quiz

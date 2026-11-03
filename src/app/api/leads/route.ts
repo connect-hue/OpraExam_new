@@ -1,23 +1,20 @@
 import { NextResponse } from 'next/server';
 
-interface LeadRequestBody {
-  name: string;
-  email: string;
-  phone: string;
-  qualification?: string;
-  educationQualification?: string;
-  education_qualification?: string;
-  educationalQualification?: string;
-  source?: string;
-  program?: string;
-  tag?: string;
-  city?: string;
-  notes?: string;
-}
+import { z } from 'zod';
+
+const text = z.string().trim().max(500);
+const leadSchema = z.object({
+  name: text.min(1), email: z.email().max(254), phone: text.min(1),
+  qualification: text.optional(), educationQualification: text.optional(),
+  education_qualification: text.optional(), educationalQualification: text.optional(),
+  source: text.optional(), program: text.optional(), tag: text.optional(), city: text.optional(), notes: text.optional(),
+});
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as LeadRequestBody;
+    const parsed = leadSchema.safeParse(await request.json());
+    if (!parsed.success) return NextResponse.json({ success: false, error: 'Please enter valid contact details.' }, { status: 400 });
+    const body = parsed.data;
     const {
       name,
       email,
@@ -88,7 +85,7 @@ export async function POST(request: Request) {
       educationQualification: selectedEducation,
       education_qualification: selectedEducation,
       educationalQualification: selectedEducation,
-      program: program || 'KAPS for Australia',
+      program: program || process.env.PHARMLLY_OPRA_PROGRAM || 'KAPS for Australia',
       tag: tag || 'opraexam',
       upsert: true,
       updateIfExists: true,
@@ -123,17 +120,23 @@ export async function POST(request: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(pharmllyPayload),
+      signal: AbortSignal.timeout(10000),
     });
 
     const data = await response.json().catch(() => null);
     const leadId = data?.leadId || data?.lead?._id;
 
-    // Fire-and-forget PATCH to update CRM fields — do NOT await this.
-    // The user gets their success response immediately after the POST above.
-    // The PATCH still runs in the background to keep the CRM up to date.
+    // A successful-looking payload must not override a failed HTTP response.
+    const accepted = (response.status === 200 || response.status === 201 || response.status === 409) && data && data.success !== false;
+    if (!accepted) {
+      console.error('CRM lead request rejected:', response.status);
+      return NextResponse.json({ success: false, error: 'Your details could not be submitted. Please try again.' }, { status: 502 });
+    }
+
     if (leadId) {
-      fetch(`${baseUrl.replace(/\/$/, '')}/api/leads/${leadId}`, {
+      const followUp = await fetch(`${baseUrl.replace(/\/$/, '')}/api/leads/${encodeURIComponent(leadId)}`, {
         method: 'PATCH',
+        signal: AbortSignal.timeout(10000),
         headers: {
           'x-api-access-key': accessKey,
           'x-api-secret-key': secretKey,
@@ -143,8 +146,8 @@ export async function POST(request: Request) {
           updates: {
             qualification: 'Pharmacy',
             Qualification: 'Pharmacy',
-            program: program || 'KAPS for Australia',
-            'Interested Program': program || 'KAPS for Australia',
+            program: program || process.env.PHARMLLY_OPRA_PROGRAM || 'KAPS for Australia',
+            'Interested Program': program || process.env.PHARMLLY_OPRA_PROGRAM || 'KAPS for Australia',
             'First Name': name.trim(),
             firstName: name.trim(),
             'Lead Name': name.trim(),
@@ -168,9 +171,11 @@ export async function POST(request: Request) {
             ...(notes && { notes: notes.trim(), Notes: notes.trim() }),
           },
         }),
-      }).catch((patchErr) =>
-        console.warn('[Pharmlly PATCH Warning] Background patch failed:', patchErr)
-      );
+      });
+      if (!followUp.ok) {
+        console.error('CRM lead follow-up rejected:', followUp.status);
+        return NextResponse.json({ success: false, error: 'Your details were received, but could not be fully saved. Please retry.' }, { status: 502 });
+      }
     }
 
     // 201: Newly created lead
@@ -186,7 +191,7 @@ export async function POST(request: Request) {
     }
 
     // 200: Existing lead updated
-    if (response.status === 200 || data?.action === 'updated') {
+    if (response.status === 200) {
       return NextResponse.json(
         {
           success: true,
@@ -224,14 +229,13 @@ export async function POST(request: Request) {
       { status: response.status >= 400 && response.status < 500 ? response.status : 502 }
     );
   } catch (error: unknown) {
-    console.error('[Lead Submission API Error]', error);
-    const message = error instanceof Error ? error.message : 'Internal Server Error';
+    console.error('Lead submission failed:', error instanceof Error ? error.name : 'Unknown error');
     return NextResponse.json(
       {
         success: false,
-        error: `Failed to process lead submission: ${message}`,
+        error: error instanceof SyntaxError ? 'Invalid request body.' : 'Your details could not be submitted. Please try again.',
       },
-      { status: 500 }
+      { status: error instanceof SyntaxError ? 400 : 502 }
     );
   }
 }

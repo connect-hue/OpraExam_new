@@ -1,8 +1,13 @@
+import { publicationDate, displayDate } from '@/lib/content/dates';
+import { getSiteContent } from '@/lib/db/siteContent';
+import { getPublicFaqs } from '@/lib/db/faqs';
+import { sanitizeRichText } from '@/lib/content/html';
+import { SITE_URL } from '@/lib/site';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import MedicalBackground from '@/components/MedicalBackground';
 import LeadForm from '@/components/LeadForm';
-import { getPublishedBlogs } from '@/lib/db/blogs';
+import { getPublishedBlogSummaries } from '@/lib/db/blogs';
 import { examSessions, getEffectiveSessionStatus } from '@/components/VerifiedExamDates';
 
 export const revalidate = 60; // revalidate at most once every minute
@@ -11,12 +16,12 @@ export const metadata: Metadata = {
   title: { absolute: "OPRA Exam 2026: Syllabus, Dates, Fees & Preparation" },
   description: "Explore the OPRA Exam 2026 syllabus, exam dates, fees, eligibility, preparation strategies and free practice questions for overseas-qualified pharmacists.",
   alternates: {
-    canonical: "https://www.opraexam.in/",
+    canonical: `${SITE_URL}/`,
   },
   openGraph: {
     title: "OPRA Exam 2026: Syllabus, Dates, Fees & Preparation",
     description: "Explore the OPRA Exam 2026 syllabus, exam dates, fees, eligibility, preparation strategies and free practice questions for overseas-qualified pharmacists.",
-    url: "https://www.opraexam.in/",
+    url: `${SITE_URL}/`,
     type: "website",
     siteName: "OPRAExam.in",
     locale: "en_AU",
@@ -37,7 +42,7 @@ export const metadata: Metadata = {
   },
 };
 
-const homeFaqs = [
+const defaultHomeFaqs = [
   {
     q: "1. What is the OPRA exam?",
     a: "OPRA stands for Overseas Pharmacist Readiness Assessment. It is administered by the Australian Pharmacy Council and assesses the biomedical, pharmaceutical, and clinical science knowledge of eligible overseas-qualified pharmacists.",
@@ -81,8 +86,9 @@ const homeFaqs = [
 ];
 
 export default async function Home() {
-  const allBlogs = await getPublishedBlogs();
+  const [allBlogs, siteContent, homeFaqs] = await Promise.all([getPublishedBlogSummaries(), getSiteContent(), getPublicFaqs(defaultHomeFaqs)]);
   const latestBlogs = allBlogs.slice(0, 3);
+  const homeHeading = [siteContent.hero.headingPrefix, siteContent.hero.headingHighlight, siteContent.hero.headingSuffix].filter(Boolean).join(' ').replace(/\s+([:,.!?])/g, '$1');
 
 
   return (
@@ -97,15 +103,15 @@ export default async function Home() {
             "@graph": [
               {
                 "@type": "WebPage",
-                "@id": "https://www.opraexam.in/#webpage",
-                "url": "https://www.opraexam.in/",
+                "@id": `${SITE_URL}/#webpage`,
+                "url": `${SITE_URL}/`,
                 "name": "OPRA Exam 2026: Syllabus, Dates, Fees & Preparation Guide",
                 "description": "Explore the OPRA Exam 2026 syllabus, exam dates, fees, eligibility, preparation strategies and free practice questions for overseas-qualified pharmacists.",
-                "isPartOf": { "@id": "https://www.opraexam.in/#website" }
+                "isPartOf": { "@id": `${SITE_URL}/#website` }
               },
               {
                 "@type": "FAQPage",
-                "@id": "https://www.opraexam.in/#faq",
+                "@id": `${SITE_URL}/#faq`,
                 "mainEntity": homeFaqs.map((faq) => ({
                   "@type": "Question",
                   "name": faq.q,
@@ -115,7 +121,7 @@ export default async function Home() {
                   }
                 }))
               }
-            ]
+            ].filter(entity => entity['@type'] !== 'FAQPage' || homeFaqs.length > 0)
           }).replace(/</g, "\\u003c")
         }}
       />
@@ -136,7 +142,7 @@ export default async function Home() {
               
               {/* Single Primary H1 */}
               <h1 className="text-3xl sm:text-5xl lg:text-[2.85rem] font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.2]">
-                OPRA Exam 2026: Syllabus, Dates, Fees &amp; Preparation Guide
+                {homeHeading}
               </h1>
               
               <p className="text-base sm:text-lg text-emerald-950 font-semibold mb-3 leading-relaxed">
@@ -144,7 +150,7 @@ export default async function Home() {
               </p>
 
               <p className="text-base sm:text-lg text-slate-600 mb-6 leading-relaxed">
-                Planning to become a registered pharmacist in Australia? Explore everything you need to know about the OPRA Exam 2026, including the examination pattern, syllabus, eligibility, registration dates, fees, sample questions, and preparation strategies.
+                {siteContent.hero.description}
               </p>
 
               <p className="text-sm sm:text-base text-slate-500 mb-8 leading-relaxed italic border-l-4 border-emerald-400 pl-4 py-1">
@@ -157,26 +163,7 @@ export default async function Home() {
                   Why explore OPRAExam.in?
                 </span>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs sm:text-sm text-slate-700 font-medium">
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
-                    <span>Detailed OPRA Exam Syllabus and Subject Weightage</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
-                    <span>Free OPRA Exam Sample Questions and Practice Resources</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
-                    <span>OPRA Exam Dates, Registration Deadlines and Fees</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
-                    <span>Pharmaceutical Calculations and Subject-Wise Guides</span>
-                  </li>
-                  <li className="flex items-center gap-2 sm:col-span-2">
-                    <svg className="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
-                    <span>Free OPRA Readiness Quiz</span>
-                  </li>
+                  {siteContent.hero.perks.map(perk => <li key={perk} className="flex items-start gap-2"><span aria-hidden="true" className="text-emerald-600">{'\u2713'}</span><span>{perk}</span></li>)}
                 </ul>
               </div>
 
@@ -221,24 +208,14 @@ export default async function Home() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="text-center max-w-3xl mx-auto mb-10">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-              What Is the OPRA Exam?
+              {siteContent.about.title}
             </h2>
             <div className="w-16 h-1 bg-emerald-500 rounded-full mx-auto mb-6"></div>
           </div>
 
           <div className="bg-slate-50 border border-slate-200/80 rounded-3xl p-8 md:p-10 shadow-xs space-y-5 text-slate-700 text-base md:text-lg leading-relaxed">
-            <p>
-              The <strong>Overseas Pharmacist Readiness Assessment (OPRA)</strong> is a computer-based examination administered by the <strong>Australian Pharmacy Council (APC)</strong>.
-            </p>
-            <p>
-              The examination assesses the biomedical, pharmaceutical, and clinical science knowledge of overseas-qualified pharmacists seeking to progress through the applicable pharmacist registration pathway in Australia.
-            </p>
-            <p>
-              Introduced in March 2025, OPRA replaced the former Knowledge Assessment of Pharmaceutical Sciences (KAPS) examination.
-            </p>
-            <p className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-emerald-900 text-sm md:text-base font-medium">
-              Passing the OPRA exam is an important step towards provisional registration and supervised practice for pharmacists following the APC Knowledge Stream. However, passing OPRA alone does not grant the right to practise independently as a registered pharmacist in Australia.
-            </p>
+            <p>{siteContent.about.highlight}</p><p>{siteContent.about.description}</p>
+            <ul className="list-disc pl-6 space-y-2">{siteContent.about.points.map(point => <li key={point}>{point}</li>)}</ul>
           </div>
         </div>
       </section>
@@ -537,10 +514,10 @@ export default async function Home() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="text-center max-w-3xl mx-auto mb-10">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-              OPRA Exam Syllabus 2026: Subject-Wise Weightage
+              {siteContent.syllabus.title}
             </h2>
             <p className="text-slate-600 text-base">
-              The Australian Pharmacy Council divides the OPRA examination into five main content areas.
+              {siteContent.syllabus.subtitle}
             </p>
           </div>
 
@@ -553,86 +530,12 @@ export default async function Home() {
                   <th className="py-3.5 px-5 font-bold text-right">Approximate Weightage</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
-                <tr className="hover:bg-slate-50">
-                  <td className="py-3 px-5 text-slate-800">Biomedical Sciences</td>
-                  <td className="py-3 px-5 text-right font-bold text-slate-900">20%</td>
-                </tr>
-                <tr className="hover:bg-slate-50">
-                  <td className="py-3 px-5 text-slate-800">Medicinal Chemistry and Biopharmaceutics</td>
-                  <td className="py-3 px-5 text-right font-bold text-slate-900">10%</td>
-                </tr>
-                <tr className="hover:bg-slate-50">
-                  <td className="py-3 px-5 text-slate-800">Pharmacokinetics and Pharmacodynamics</td>
-                  <td className="py-3 px-5 text-right font-bold text-slate-900">10%</td>
-                </tr>
-                <tr className="hover:bg-slate-50">
-                  <td className="py-3 px-5 text-slate-800">Pharmacology and Toxicology</td>
-                  <td className="py-3 px-5 text-right font-bold text-slate-900">15%</td>
-                </tr>
-                <tr className="hover:bg-slate-50 bg-emerald-50/50">
-                  <td className="py-3 px-5 font-semibold text-emerald-900">Therapeutics and Patient Care</td>
-                  <td className="py-3 px-5 text-right font-bold text-emerald-700">45%</td>
-                </tr>
-                <tr className="bg-slate-100 font-bold">
-                  <td className="py-3 px-5 text-slate-900">Total</td>
-                  <td className="py-3 px-5 text-right text-slate-900">100%</td>
-                </tr>
-              </tbody>
+              <tbody className="divide-y divide-slate-100">{siteContent.syllabus.domains.map(domain => <tr key={domain.title}><td className="py-3 px-5 text-slate-800">{domain.title}</td><td className="py-3 px-5 text-right font-bold">{domain.weight}</td></tr>)}</tbody>
             </table>
           </div>
 
-          {/* 5 Detailed Content Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold text-lg text-slate-900">Biomedical Sciences</h3>
-                <span className="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200">20%</span>
-              </div>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Includes human physiology, pathophysiology, microbiology, immunology, body systems, and disease mechanisms.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold text-lg text-slate-900">Medicinal Chemistry &amp; Biopharmaceutics</h3>
-                <span className="bg-teal-100 text-teal-800 text-xs font-bold px-2.5 py-1 rounded-full border border-teal-200">10%</span>
-              </div>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Covers physicochemical drug properties, solubility, dissolution, pharmaceutical formulation, stability, and drug delivery.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold text-lg text-slate-900">Pharmacokinetics &amp; Pharmacodynamics</h3>
-                <span className="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200">10%</span>
-              </div>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Covers drug absorption, distribution, metabolism, elimination, clearance, half-life, therapeutic drug monitoring, and drug effects.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold text-lg text-slate-900">Pharmacology and Toxicology</h3>
-                <span className="bg-purple-100 text-purple-800 text-xs font-bold px-2.5 py-1 rounded-full border border-purple-200">15%</span>
-              </div>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Focuses on drug mechanisms, receptor pharmacology, adverse reactions, medicine interactions, toxicity, and antidotes.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border-2 border-emerald-300 shadow-2xs md:col-span-2">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold text-lg text-emerald-900">Therapeutics and Patient Care</h3>
-                <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-300">45% (Highest Weightage)</span>
-              </div>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-                Includes therapeutic decision-making, medicine safety, dosage calculations, patient management, monitoring, and appropriate medicine use.
-              </p>
-            </div>
+            {siteContent.syllabus.domains.map(domain => <div key={domain.title} className="bg-white p-6 rounded-2xl border border-slate-200"><h3 className="font-bold text-lg text-slate-900">{domain.title}</h3><p className="text-emerald-700 font-semibold mt-2">{domain.weight}</p><p className="text-slate-600 mt-3">{domain.description}</p></div>)}
           </div>
 
           <p className="text-slate-600 text-sm sm:text-base text-center mb-6">
@@ -917,7 +820,7 @@ export default async function Home() {
                   </span>
                 </summary>
                 <div className="mt-4 pt-4 border-t border-slate-200/70 text-slate-600 text-sm sm:text-base leading-relaxed pr-6">
-                  {faq.a}
+                  <div dangerouslySetInnerHTML={{ __html: sanitizeRichText(faq.a) }} />
                 </div>
               </details>
             ))}
@@ -1078,7 +981,7 @@ export default async function Home() {
                     {post.description}
                   </p>
                   <div className="mt-auto pt-3 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500">
-                    <span>{post.date}</span>
+                    <span>{displayDate(publicationDate(post))}</span>
                     <span className="font-bold text-emerald-600 group-hover:underline">Read Guide &rarr;</span>
                   </div>
                 </Link>

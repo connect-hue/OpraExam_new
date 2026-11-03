@@ -32,7 +32,6 @@ export default function AdminFaqsPage() {
 
   const fetchFaqs = async () => {
     try {
-      setLoading(true);
       const res = await fetch('/api/admin/faqs');
       if (res.ok) {
         const data = await res.json();
@@ -46,7 +45,13 @@ export default function AdminFaqsPage() {
   };
 
   useEffect(() => {
-    fetchFaqs();
+    const controller = new AbortController();
+    fetch('/api/admin/faqs', { signal: controller.signal })
+      .then(response => { if (!response.ok) throw new Error('Failed to load admin data'); return response.json(); })
+      .then(data => { if (!controller.signal.aborted) { setFaqs(data.faqs || []); } })
+      .catch(error => { if (!controller.signal.aborted) console.error('Admin data request failed:', error); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }, []);
 
   const openCreateModal = () => {
@@ -106,8 +111,8 @@ export default function AdminFaqsPage() {
 
       setIsModalOpen(false);
       await fetchFaqs();
-    } catch (err: any) {
-      setMessage({ text: err?.message || 'Operation failed', type: 'error' });
+    } catch (err: unknown) {
+      setMessage({ text: (err instanceof Error ? err.message : 'Operation failed'), type: 'error' });
     } finally {
       setSubmitting(false);
     }
@@ -123,8 +128,8 @@ export default function AdminFaqsPage() {
       setDeleteConfirmId(null);
       setMessage({ text: 'FAQ deleted successfully.', type: 'success' });
       await fetchFaqs();
-    } catch (err: any) {
-      setMessage({ text: err?.message || 'Failed to delete FAQ', type: 'error' });
+    } catch (err: unknown) {
+      setMessage({ text: (err instanceof Error ? err.message : 'Failed to delete FAQ'), type: 'error' });
     }
   };
 

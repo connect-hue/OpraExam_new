@@ -1,8 +1,9 @@
+import { serializeJsonLd } from '@/lib/seo/structuredData';
+import { SITE_URL } from '@/lib/site';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import SamplePaperGate from '@/components/SamplePaperGate';
 
-const siteUrl = 'https://www.opraexam.in';
 
 export const metadata: Metadata = {
   title: {
@@ -11,19 +12,19 @@ export const metadata: Metadata = {
   description:
     "Practise free OPRA exam sample questions with answers and explanations. Explore the 2026 exam pattern, five syllabus areas and mock test resources.",
   alternates: {
-    canonical: `${siteUrl}/sample-papers`,
+    canonical: `${SITE_URL}/sample-papers`,
   },
   openGraph: {
     title: "OPRA Exam Sample Papers 2026 | Free MCQs & Answers",
     description:
       "Practise free OPRA exam sample questions with answers and explanations. Explore the 2026 exam pattern, five syllabus areas and mock test resources.",
-    url: `${siteUrl}/sample-papers`,
+    url: `${SITE_URL}/sample-papers`,
     type: "website",
     locale: "en_AU",
     siteName: "OPRAExam.in",
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: "OPRA Exam Sample Papers — Free Practice Questions and Answers",
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
       "Practise free OPRA exam sample questions with answers and explanations. Explore the 2026 exam pattern, five syllabus areas and mock test resources.",
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${SITE_URL}/og-image.jpg`,
         alt: "OPRA Exam Sample Papers — Free Practice Questions and Answers",
       },
     ],
@@ -264,13 +265,13 @@ export default function SamplePapersPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: `${siteUrl}/`,
+        item: `${SITE_URL}/`,
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Sample Papers',
-        item: `${siteUrl}/sample-papers`,
+        item: `${SITE_URL}/sample-papers`,
       },
     ],
   };
@@ -293,7 +294,7 @@ export default function SamplePapersPage() {
       {/* Schema Injection */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema).replace(/</g, '\\u003c') }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema).replace(/</g, '\\u003c') }}
       />
       <script
         type="application/ld+json"

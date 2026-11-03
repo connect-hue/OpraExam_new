@@ -1,7 +1,9 @@
+import Link from 'next/link';
+import { serializeJsonLd } from '@/lib/seo/structuredData';
+import { SITE_URL } from '@/lib/site';
 import type { Metadata } from "next";
 import QuizApp from "@/components/QuizApp";
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
 
 export const metadata: Metadata = {
   title: "OPRA Readiness Quiz | Free Diagnostic Test 2026",
@@ -13,20 +15,20 @@ export const metadata: Metadata = {
     "Australian pharmacy readiness assessment quiz",
   ],
   alternates: {
-    canonical: `${siteUrl}/opra-quiz`,
+    canonical: `${SITE_URL}/opra-quiz`,
   },
   openGraph: {
     title: "OPRA Readiness Quiz | Free Diagnostic Test",
     description: "Take the 2026 diagnostic quiz to evaluate your pharmacy readiness for the Australian OPRA exam.",
-    url: `${siteUrl}/opra-quiz`,
+    url: `${SITE_URL}/opra-quiz`,
     type: "website",
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${SITE_URL}/og-image.jpg`],
   },
   twitter: {
     card: "summary_large_image",
     title: "OPRA Readiness Quiz | Free Diagnostic Test",
     description: "Evaluate your readiness for the Australian OPRA exam.",
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${SITE_URL}/og-image.jpg`],
   },
 };
 
@@ -39,13 +41,13 @@ export default function QuizPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: siteUrl,
+        item: SITE_URL,
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Quiz',
-        item: `${siteUrl}/opra-quiz`,
+        item: `${SITE_URL}/opra-quiz`,
       },
     ],
   };
@@ -97,11 +99,11 @@ export default function QuizPage() {
     <div className="min-h-screen bg-slate-50 w-full py-20 px-4 sm:px-6 lg:px-8">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(quizSchema) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(quizSchema) }}
       />
       <div className="max-w-4xl mx-auto text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">OPRA Readiness Quiz</h1>
@@ -109,6 +111,7 @@ export default function QuizPage() {
       </div>
       
       <QuizApp />
+      <p className="text-center mt-8"><Link href="/practice" className="text-emerald-700 underline">Browse all practice questions and explanations</Link></p>
     </div>
   );
 }

@@ -63,7 +63,6 @@ export default function RichTextEditor({
         editorRef.current.innerHTML = value || '';
       }
     }
-    setHtmlContent(value || '');
   }, [value]);
 
   // Handle content change inside contentEditable
@@ -100,7 +99,7 @@ export default function RichTextEditor({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Format Block (Paragraph, Heading 1, 2, 3, 4, Quote, Code)
+  // Format Block (Paragraph, Section heading, 2, 3, 4, Quote, Code)
   const handleFormatBlock = (tag: string, label: string = 'Format') => {
     execCmd('formatBlock', tag);
     setFormatLabel(label);
@@ -329,10 +328,10 @@ export default function RichTextEditor({
               <button
                 type="button"
                 onMouseDown={(e) => e.preventDefault()}
-                onClick={() => handleFormatBlock('h1', 'Heading 1')}
+                onClick={() => handleFormatBlock('h2', 'Section heading')}
                 className="w-full text-left px-3 py-1.5 hover:bg-slate-100 text-sm font-bold text-slate-900"
               >
-                Heading 1
+                Section heading
               </button>
               <button
                 type="button"
@@ -402,11 +401,11 @@ export default function RichTextEditor({
         <button
           type="button"
           onMouseDown={(e) => e.preventDefault()}
-          onClick={() => handleFormatBlock('h1')}
+          onClick={() => handleFormatBlock('h2')}
           className="px-1.5 py-0.5 rounded border border-dashed border-slate-400 hover:border-slate-700 text-slate-800 text-[11px] font-extrabold hover:bg-slate-200/60 transition-colors"
-          title="Format as Heading 1"
+          title="Format as Section heading"
         >
-          H1
+          H2
         </button>
 
         {/* Divider */}
@@ -1259,7 +1258,7 @@ export default function RichTextEditor({
       {/* Editor Content Area */}
       {isHtmlMode ? (
         <textarea
-          value={htmlContent}
+          value={value}
           onChange={(e) => handleHtmlTextareaChange(e.target.value)}
           placeholder="Type or paste raw HTML code here..."
           className="w-full p-4 font-mono text-xs text-slate-800 bg-slate-50/50 rounded-b-xl focus:outline-none resize-y leading-relaxed border-0"

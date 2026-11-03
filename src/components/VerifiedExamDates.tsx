@@ -5,92 +5,11 @@
 
 import React from "react";
 
-export type ExamSession = {
-    session: string;          // e.g. "November 2026"
-    year: number;             // 2026 | 2027
-    registrationOpen: string; // e.g. "18 August 2026"
-    registrationClose: string;// e.g. "19 October 2026"
-    examDate: string;         // e.g. "23–25 November 2026"
-    resultsDate: string;      // e.g. "22 December 2026"
-    status: "open" | "upcoming" | "closed";
-    lastVerified: string;     // ISO date string e.g. "2026-10-14"
-};
-
-export const examSessions: ExamSession[] = [
-    {
-        session: "November 2026",
-        year: 2026,
-        registrationOpen: "18 August 2026",
-        registrationClose: "19 October 2026",
-        examDate: "23–25 November 2026",
-        resultsDate: "22 December 2026",
-        status: "closed",
-        lastVerified: "2026-10-19",
-    },
-    {
-        session: "March 2027",
-        year: 2027,
-        registrationOpen: "19 January 2027",
-        registrationClose: "22 February 2027",
-        examDate: "22–24 March 2027",
-        resultsDate: "6 May 2027",
-        status: "upcoming",
-        lastVerified: "2026-10-19",
-    },
-    {
-        session: "July 2027",
-        year: 2027,
-        registrationOpen: "11 May 2027",
-        registrationClose: "28 June 2027",
-        examDate: "26–28 July 2027",
-        resultsDate: "9 September 2027",
-        status: "upcoming",
-        lastVerified: "2026-10-19",
-    },
-    {
-        session: "November 2027",
-        year: 2027,
-        registrationOpen: "14 September 2027",
-        registrationClose: "11 October 2027",
-        examDate: "8–10 November 2027",
-        resultsDate: "23 December 2027",
-        status: "upcoming",
-        lastVerified: "2026-10-19",
-    },
-];
+import { examSessions, getEffectiveSessionStatus, type ExamSession } from '@/data/examSessions';
+export { examSessions, getEffectiveSessionStatus } from '@/data/examSessions';
 
 export const APC_URL = "https://www.pharmacycouncil.org.au/pharmacist/skills-assessment/knowledge-stream/";
 export const APC_PORTAL_URL = "https://candidate.pharmacycouncil.org.au/";
-
-export function getEffectiveSessionStatus(session: ExamSession): "open" | "upcoming" | "closed" {
-    const now = new Date().getTime();
-    const closeDateMap: Record<string, string> = {
-        "November 2026": "2026-10-19T17:00:00+11:00",
-        "March 2027": "2027-02-22T23:59:59+11:00",
-        "July 2027": "2027-06-28T23:59:59+10:00",
-        "November 2027": "2027-10-11T23:59:59+11:00",
-    };
-    const openDateMap: Record<string, string> = {
-        "November 2026": "2026-08-18T00:00:00+10:00",
-        "March 2027": "2027-01-19T00:00:00+11:00",
-        "July 2027": "2027-05-11T00:00:00+10:00",
-        "November 2027": "2027-09-14T00:00:00+10:00",
-    };
-
-    const closeTime = closeDateMap[session.session] ? new Date(closeDateMap[session.session]).getTime() : null;
-    const openTime = openDateMap[session.session] ? new Date(openDateMap[session.session]).getTime() : null;
-
-    if (closeTime && now > closeTime) {
-        return "closed";
-    }
-    if (openTime && now < openTime) {
-        return "upcoming";
-    }
-    if (openTime && closeTime && now >= openTime && now <= closeTime) {
-        return "open";
-    }
-    return session.status;
-}
 
 const statusConfig = {
     open: {

@@ -1,8 +1,10 @@
+import { publicationDate, displayDate } from '@/lib/content/dates';
+import { serializeJsonLd } from '@/lib/seo/structuredData';
+import { SITE_URL } from '@/lib/site';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { getPublishedBlogs } from '@/lib/db/blogs';
+import { getPublishedBlogSummaries } from '@/lib/db/blogs';
 
-const siteUrl = 'https://www.opraexam.in';
 
 export const metadata: Metadata = {
   title: {
@@ -11,19 +13,19 @@ export const metadata: Metadata = {
   description:
     'Explore OPRA exam preparation tips, study guides, syllabus explanations, practice resources and Australian pharmacist career information.',
   alternates: {
-    canonical: `${siteUrl}/blog`,
+    canonical: `${SITE_URL}/blog`,
   },
   openGraph: {
     title: 'OPRA Exam Blog: Preparation Tips & Study Guides',
     description:
       'Explore OPRA exam preparation tips, study guides, syllabus explanations and practice resources.',
-    url: `${siteUrl}/blog`,
+    url: `${SITE_URL}/blog`,
     type: 'website',
     siteName: 'OPRAExam.in',
     locale: 'en_AU',
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: 'OPRAExam.in exam preparation blog and study guides',
@@ -35,14 +37,14 @@ export const metadata: Metadata = {
     title: 'OPRA Exam Blog: Preparation Tips & Study Guides',
     description:
       'Explore OPRA exam preparation tips, syllabus guides and practice resources.',
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${SITE_URL}/og-image.jpg`],
   },
 };
 
 export const revalidate = 60;
 
 export default async function BlogIndexPage() {
-  const blogPosts = await getPublishedBlogs();
+  const blogPosts = await getPublishedBlogSummaries();
   const featuredPost = blogPosts[0];
   const remainingPosts = blogPosts.slice(1);
 
@@ -54,13 +56,13 @@ export default async function BlogIndexPage() {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: siteUrl,
+        item: SITE_URL,
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Blog',
-        item: `${siteUrl}/blog`,
+        item: `${SITE_URL}/blog`,
       },
     ],
   };
@@ -70,7 +72,7 @@ export default async function BlogIndexPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema).replace(/</g, '\\u003c'),
+          __html: serializeJsonLd(breadcrumbSchema).replace(/</g, '\\u003c'),
         }}
       />
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -146,7 +148,7 @@ export default async function BlogIndexPage() {
                     <span className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
                       {featuredPost.readTime}
                     </span>
-                    <span className="text-xs text-slate-400 font-medium">{featuredPost.date}</span>
+                    <span className="text-xs text-slate-400 font-medium">{displayDate(publicationDate(featuredPost))}</span>
                   </div>
 
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4 group-hover:text-emerald-700 transition-colors leading-tight">
@@ -207,7 +209,7 @@ export default async function BlogIndexPage() {
                   <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
                     {post.readTime}
                   </span>
-                  <span className="text-xs text-slate-400">{post.date}</span>
+                  <span className="text-xs text-slate-400">{displayDate(publicationDate(post))}</span>
                 </div>
 
                 <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-700 transition-colors line-clamp-2 leading-snug">

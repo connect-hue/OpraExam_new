@@ -5,9 +5,15 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { BlogPostContent, BlogPostFaq } from '@/data/blogPosts';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import { authors } from '@/data/authors';
 
 interface BlogFormData {
   _id?: string;
+  seoTitle: string;
+  authorId: string;
+  reviewerId: string;
+  reviewedAt: string;
+  sources: { label: string; url: string }[];
   title: string;
   slug: string;
   description: string;
@@ -30,10 +36,15 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
   const router = useRouter();
 
   const [formData, setFormData] = useState<BlogFormData>({
+    seoTitle: initialData?.seoTitle || '',
+    authorId: initialData?.authorId || (isNew ? 'editorial-team' : ''),
+    reviewerId: initialData?.reviewerId || '',
+    reviewedAt: initialData?.reviewedAt || '',
+    sources: initialData?.sources || [],
     title: initialData?.title || '',
     slug: initialData?.slug || '',
     description: initialData?.description || '',
-    author: initialData?.author || 'OPRA Exam Specialist',
+    author: initialData?.author || 'OPRAExam.in Editorial Team',
     date:
       initialData?.date ||
       new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
@@ -459,6 +470,8 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
                   <input
                     type="text"
                     required
+                    readOnly={!isNew && initialData?.published !== false}
+                    title={!isNew && initialData?.published !== false ? 'Published URLs are permanent' : undefined}
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                     className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-r-xl text-slate-900 text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:outline-none shadow-xs"
@@ -848,6 +861,13 @@ export default function BlogEditor({ initialData, isNew = false }: BlogEditorPro
       {/* Tab 2: SEO & Meta */}
       {activeTab === 'meta' && (
         <div className="rounded-3xl bg-white border border-slate-200 p-6 space-y-5 shadow-sm">
+          <div className="space-y-4">
+            <label className="block text-sm font-semibold">Search title override<input value={formData.seoTitle} onChange={e => setFormData({ ...formData, seoTitle: e.target.value })} className="block w-full border rounded-lg p-3 mt-2" placeholder="Leave blank to use the article title" /></label>
+            <label className="block text-sm font-semibold">Verified author profile<select value={formData.authorId} onChange={e => setFormData({ ...formData, authorId: e.target.value, author: authors.find(author => author.id === e.target.value)?.name || formData.author })} className="block w-full border rounded-lg p-3 mt-2"><option value="">Use contributor name below</option>{authors.map(author => <option key={author.id} value={author.id}>{author.name}</option>)}</select></label>
+            <label className="block text-sm font-semibold">Verified reviewer profile<select value={formData.reviewerId} onChange={e => setFormData({ ...formData, reviewerId: e.target.value })} className="block w-full border rounded-lg p-3 mt-2"><option value="">No professional review claim</option>{authors.filter(author => author.type === 'Person').map(author => <option key={author.id} value={author.id}>{author.name}</option>)}</select></label>
+            <label className="block text-sm font-semibold">Review date<input type="date" value={formData.reviewedAt.slice(0, 10)} onChange={e => setFormData({ ...formData, reviewedAt: e.target.value })} className="block w-full border rounded-lg p-3 mt-2" /></label>
+            <label className="block text-sm font-semibold">Sources (one HTTPS URL per line)<textarea value={formData.sources.map(source => source.url).join('\n')} onChange={e => setFormData({ ...formData, sources: e.target.value.split('\n').filter(Boolean).map(url => ({ label: formData.sources.find(source => source.url === url)?.label || url, url })) })} className="block w-full border rounded-lg p-3 mt-2" rows={4} /></label>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">

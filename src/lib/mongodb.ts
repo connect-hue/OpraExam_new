@@ -27,11 +27,10 @@ interface CachedConnection {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var _mongoCached: CachedConnection | undefined;
 }
 
-let cached: CachedConnection = global._mongoCached || {
+const cached: CachedConnection = global._mongoCached || {
   client: null,
   promise: null,
 };
@@ -119,10 +118,10 @@ export async function checkMongoStatus(): Promise<{ connected: boolean; message:
       message: 'Successfully connected to MongoDB',
       dbName,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       connected: false,
-      message: error?.message || 'Failed to ping MongoDB',
+      message: (error instanceof Error ? error.message : 'Failed to ping MongoDB'),
       dbName,
     };
   }

@@ -1,11 +1,13 @@
+import { authors } from '@/data/authors';
+import { modificationDate } from '@/lib/content/dates';
+import { SITE_URL } from '@/lib/site';
 import type { MetadataRoute } from 'next';
-import { getPublishedBlogs, type DbBlogPost } from '@/lib/db/blogs';
+import { getPublishedBlogSummaries, type DbBlogPost } from '@/lib/db/blogs';
 
 // Refresh the generated sitemap every 60 seconds
 export const revalidate = 60;
 
 // Use the same domain as your canonical URLs and redirects
-const BASE_URL = 'https://www.opraexam.in';
 
 /**
  * Return a valid modification date.
@@ -41,68 +43,65 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // date of a meaningful content update.
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: `${BASE_URL}/`,
+      url: `${SITE_URL}/`,
       changeFrequency: 'weekly',
       priority: 1.0,
     },
+    ...['/fees', '/practice', '/editorial-policy', ...authors.map(author => `/authors/${author.id}`)].map(path => ({ url: `${SITE_URL}${path}` })),
     {
-      url: `${BASE_URL}/syllabus`,
+      url: `${SITE_URL}/syllabus`,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/exam-dates`,
+      url: `${SITE_URL}/exam-dates`,
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/sample-papers`,
+      url: `${SITE_URL}/sample-papers`,
       changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/opra-quiz`,
+      url: `${SITE_URL}/opra-quiz`,
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/blog`,
+      url: `${SITE_URL}/blog`,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/about`,
+      url: `${SITE_URL}/about`,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/terms`,
+      url: `${SITE_URL}/terms`,
       changeFrequency: 'yearly',
       priority: 0.4,
     },
     {
-      url: `${BASE_URL}/privacy`,
+      url: `${SITE_URL}/privacy`,
       changeFrequency: 'yearly',
       priority: 0.4,
     },
   ];
 
   // Fetch published blogs from database
-  const blogPosts = await getPublishedBlogs();
+  const blogPosts = await getPublishedBlogSummaries();
 
   const blogRoutes: MetadataRoute.Sitemap = blogPosts
     .filter((post: DbBlogPost) => Boolean(post.slug))
     .map((post: DbBlogPost) => {
 
       // Use the actual stored modification date
-      const lastModified =
-        getValidDate(post.updatedAt) ??
-        getValidDate(post.publishedAt) ??
-        getValidDate(post.date) ??
-        getValidDate(post.createdAt);
+      const lastModified = getValidDate(modificationDate(post));
 
       return {
-        url: `${BASE_URL}/blog/${encodeURIComponent(post.slug)}`,
+        url: `${SITE_URL}/blog/${encodeURIComponent(post.slug)}`,
         ...(lastModified ? { lastModified } : {}),
         changeFrequency: 'monthly',
         priority: 0.7,

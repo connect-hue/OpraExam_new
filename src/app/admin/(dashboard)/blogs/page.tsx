@@ -25,7 +25,6 @@ export default function AdminBlogsPage() {
 
   const fetchBlogs = async () => {
     try {
-      setLoading(true);
       const res = await fetch('/api/admin/blogs');
       if (res.ok) {
         const data = await res.json();
@@ -39,7 +38,13 @@ export default function AdminBlogsPage() {
   };
 
   useEffect(() => {
-    fetchBlogs();
+    const controller = new AbortController();
+    fetch('/api/admin/blogs', { signal: controller.signal })
+      .then(response => { if (!response.ok) throw new Error('Failed to load admin data'); return response.json(); })
+      .then(data => { if (!controller.signal.aborted) { setBlogs(data.blogs || []); } })
+      .catch(error => { if (!controller.signal.aborted) console.error('Admin data request failed:', error); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }, []);
 
   const handleTogglePublish = async (idOrSlug: string, newPublishedState: boolean) => {

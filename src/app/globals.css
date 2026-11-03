@@ -50,3 +50,8 @@ body {
 .animate-drift-4 { animation: drift-reverse 60s ease-in-out infinite alternate; }
 .animate-drift-5 { animation: drift 40s ease-in-out infinite; }
 .animate-pan { animation: slow-pan 40s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-drift-1, .animate-drift-2, .animate-drift-3, .animate-drift-4, .animate-drift-5, .animate-pan { animation: none; }
+}

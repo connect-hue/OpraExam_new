@@ -35,8 +35,8 @@ export default function AdminLoginPage() {
 
       router.push('/admin');
       router.refresh();
-    } catch (err: any) {
-      setError(err?.message || 'Invalid PIN entered. Please try again.');
+    } catch (err: unknown) {
+      setError((err instanceof Error ? err.message : 'Invalid PIN entered. Please try again.'));
     } finally {
       setLoading(false);
     }

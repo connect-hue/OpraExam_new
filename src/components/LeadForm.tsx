@@ -1,5 +1,7 @@
 "use client";
 
+import { submitLead } from '@/lib/leads/client';
+import { trackEvent } from '@/lib/analytics';
 import React, { useState } from 'react';
 import { COUNTRY_CODES } from '@/data/countryCodes';
 
@@ -116,25 +118,14 @@ export default function LeadForm({
         phone: formattedPhone,
         qualification: 'Pharmacy',
         educationQualification: finalQualification,
-        program: formData.program || 'KAPS for Australia',
+        program: formData.program,
         source: source || 'OPRAExam',
         tag: tag || 'opraexam',
         ...(notes && { notes }),
       };
 
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submissionData),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok && !result.isDuplicate) {
-        throw new Error(result.error || 'Failed to submit form. Please try again.');
-      }
+      const result = await submitLead(submissionData);
+      trackEvent('generate_lead', { placement: tag, lead_outcome: result.isDuplicate ? 'duplicate' : result.isUpdated ? 'updated' : 'created' });
 
       setIsSubmitted(true);
       setStatusMessage({

@@ -1,3 +1,6 @@
+import { revalidatePublicContent } from '@/lib/content/revalidate';
+import { contentErrorResponse } from '@/lib/content/apiErrors';
+import { z } from 'zod';
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticatedAdmin } from '@/lib/auth';
 import { getAllFaqs, createFaq } from '@/lib/db/faqs';
@@ -19,7 +22,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const body = await request.json();
+    const body = z.object({ question: z.string().trim().min(1).max(1000).optional(), answer: z.string().trim().min(1).max(20000).optional(), category: z.string().trim().regex(/^[a-zA-Z0-9 -]+$/).max(100).optional(), order: z.number().int().nonnegative().optional() }).parse(await request.json());
     const { question, answer, category, order } = body;
 
     if (!question?.trim() || !answer?.trim()) {
@@ -33,8 +36,9 @@ export async function POST(request: NextRequest) {
       order: typeof order === 'number' ? order : undefined,
     });
 
+    revalidatePublicContent();
     return NextResponse.json({ success: true, faq: created });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || 'Failed to create FAQ' }, { status: 500 });
+  } catch (error: unknown) {
+    return contentErrorResponse(error);
   }
 }

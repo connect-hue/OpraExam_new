@@ -29,7 +29,9 @@ const Footer: FC = () => {
             <ul className="space-y-3 text-sm">
               <li><Link href="/" className="hover:text-emerald-400 transition-colors">Home</Link></li>
               <li><Link href="/syllabus" className="hover:text-emerald-400 transition-colors">Syllabus Breakdown</Link></li>
-              <li><Link href="/exam-dates" className="hover:text-emerald-400 transition-colors">2026 Exam Dates</Link></li>
+              <li><Link href="/exam-dates" className="hover:text-emerald-400 transition-colors">Exam Dates</Link></li>
+              <li><Link href="/fees" className="hover:text-emerald-400 transition-colors">Exam Fees</Link></li>
+              <li><Link href="/practice" className="hover:text-emerald-400 transition-colors">Practice Questions & Answers</Link></li>
               <li><Link href="/blog" className="hover:text-emerald-400 transition-colors">Blog & Guides</Link></li>
               <li><Link href="/sample-papers" className="hover:text-emerald-400 transition-colors">Sample Papers</Link></li>
               <li><Link href="/opra-quiz" className="hover:text-emerald-400 transition-colors">Free Diagnostic Quiz</Link></li>
@@ -38,6 +40,7 @@ const Footer: FC = () => {
           <div>
             <h3 className="text-white font-semibold mb-4 text-lg">Contact & Info</h3>
             <ul className="space-y-3 text-sm text-slate-400">
+              <li><Link href="/editorial-policy" className="hover:text-emerald-400 transition-colors">Editorial Policy</Link></li>
               <li>Support: contact@opraexam.in</li>
               <li>
                 <Link href="/about" className="hover:text-emerald-400 transition-colors">

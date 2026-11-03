@@ -1,8 +1,13 @@
+import SubjectResources from '@/components/SubjectResources';
+import { getSiteContent } from '@/lib/db/siteContent';
+import { getPublicFaqs } from '@/lib/db/faqs';
+import { sanitizeRichText } from '@/lib/content/html';
+import { serializeJsonLd } from '@/lib/seo/structuredData';
+import { SITE_URL } from '@/lib/site';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import LeadForm from '@/components/LeadForm';
 
-const SITE_URL = 'https://www.opraexam.in';
 
 export const metadata: Metadata = {
   title: {
@@ -48,7 +53,7 @@ export const metadata: Metadata = {
   },
 };
 
-const syllabusFaqs = [
+const defaultSyllabusFaqs = [
   {
     q: "1. How many subjects are included in the OPRA exam syllabus?",
     a: "The official OPRA exam syllabus consists of five content areas: Biomedical Sciences, Medicinal Chemistry and Biopharmaceutics, Pharmacokinetics and Pharmacodynamics, Pharmacology and Toxicology, and Therapeutics and Patient Care.",
@@ -274,7 +279,10 @@ const preparationSteps = [
   },
 ];
 
-export default function SyllabusPage() {
+export const revalidate = 60;
+
+export default async function SyllabusPage() {
+  const [siteContent, syllabusFaqs] = await Promise.all([getSiteContent(), getPublicFaqs(defaultSyllabusFaqs, 'Syllabus')]);
 
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
@@ -313,14 +321,20 @@ export default function SyllabusPage() {
       {/* Schema Injections */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema).replace(/</g, '\\u003c') }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema).replace(/</g, '\\u003c') }}
       />
-      <script
+      {syllabusFaqs.length > 0 && (<script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema).replace(/</g, '\\u003c') }}
-      />
+      />)}
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <section className="mb-10 bg-white p-6 rounded-2xl border border-slate-200">
+          <h2 className="text-2xl font-bold mb-3">{siteContent.syllabus.title}</h2>
+          <p className="text-slate-600">{siteContent.syllabus.subtitle}</p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">{siteContent.syllabus.domains.map(domain => <li key={domain.title}><strong>{domain.title}: {domain.weight}</strong><p className="text-sm text-slate-600">{domain.description}</p></li>)}</ul>
+        </section>
+        <SubjectResources />
         {/* Breadcrumb Navigation */}
         <nav aria-label="breadcrumb" className="mb-8 text-sm text-slate-500 font-medium">
           <ol className="flex items-center space-x-2">
@@ -923,7 +937,7 @@ export default function SyllabusPage() {
                   </span>
                 </summary>
                 <div className="mt-4 pt-4 border-t border-slate-100 text-slate-600 leading-relaxed text-sm sm:text-base">
-                  {faq.a}
+                  <span dangerouslySetInnerHTML={{ __html: sanitizeRichText(faq.a) }} />
                 </div>
               </details>
             ))}

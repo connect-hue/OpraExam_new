@@ -1,3 +1,5 @@
+import { sessionSchedule } from '@/data/examSessions';
+import { SITE_URL } from '@/lib/site';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { APC_URL, APC_PORTAL_URL } from '@/components/VerifiedExamDates';
@@ -7,8 +9,7 @@ import LeadForm from '@/components/LeadForm';
 export const revalidate = 60;
 
 // Must match robots.ts, sitemap.ts, root metadataBase, and site redirects.
-const siteUrl = 'https://www.opraexam.in';
-const pageUrl = `${siteUrl}/exam-dates`;
+const pageUrl = `${SITE_URL}/exam-dates`;
 const seoTitle = 'OPRA Exam Dates 2026–2027: Registration & Results';
 const seoDescription =
   'Check OPRA Exam Dates 2026–2027, registration deadlines, examination centres, fees and result dates. Find the latest APC schedule and registration guidance.';
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     locale: 'en_AU',
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: `${SITE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: 'OPRA Exam Dates 2026–2027 – opraexam.in',
@@ -37,58 +38,13 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: seoTitle,
     description: seoDescription,
-    images: [`${siteUrl}/og-image.jpg`],
+    images: [`${SITE_URL}/og-image.jpg`],
   },
 };
 
 // Dates and Sydney-time registration cutoffs published by APC.
 // Update this array when APC publishes further examination sessions.
-const sessionSchedule = [
-  {
-    session: 'Nov 2026',
-    fullName: 'November 2026',
-    registrationDates: '18 Aug – 19 Oct 2026',
-    registrationOpens: '2026-08-18T09:00:00+10:00', // AEST
-    registrationCloses: '2026-10-19T17:00:00+11:00', // AEDT
-    openingLabel: '18 Aug 2026',
-    examDates: '23–25 Nov 2026',
-    examEnds: '2026-11-25T23:59:59+11:00',
-    resultsDate: '22 Dec 2026',
-  },
-  {
-    session: 'Mar 2027',
-    fullName: 'March 2027',
-    registrationDates: '19 Jan – 22 Feb 2027',
-    registrationOpens: '2027-01-19T09:00:00+11:00', // AEDT
-    registrationCloses: '2027-02-22T17:00:00+11:00', // AEDT
-    openingLabel: '19 Jan 2027',
-    examDates: '22–24 Mar 2027',
-    examEnds: '2027-03-24T23:59:59+11:00',
-    resultsDate: '6 May 2027',
-  },
-  {
-    session: 'Jul 2027',
-    fullName: 'July 2027',
-    registrationDates: '11 May – 28 Jun 2027',
-    registrationOpens: '2027-05-11T09:00:00+10:00', // AEST
-    registrationCloses: '2027-06-28T17:00:00+10:00', // AEST
-    openingLabel: '11 May 2027',
-    examDates: '26–28 Jul 2027',
-    examEnds: '2027-07-28T23:59:59+10:00',
-    resultsDate: '9 Sep 2027',
-  },
-  {
-    session: 'Nov 2027',
-    fullName: 'November 2027',
-    registrationDates: '14 Sep – 11 Oct 2027',
-    registrationOpens: '2027-09-14T09:00:00+10:00', // AEST
-    registrationCloses: '2027-10-11T17:00:00+11:00', // AEDT
-    openingLabel: '14 Sep 2027',
-    examDates: '8–10 Nov 2027',
-    examEnds: '2027-11-10T23:59:59+11:00',
-    resultsDate: '23 Dec 2027',
-  },
-] as const;
+
 
 type ExamSession = (typeof sessionSchedule)[number];
 
@@ -184,6 +140,8 @@ const testCenters = [
 ];
 
 export default function ExamDatesPage() {
+  // Server-rendered registration badges intentionally use the ISR render timestamp.
+  // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
   const featuredSession =
     sessionSchedule.find((session) => now <= Date.parse(session.examEnds)) ??
@@ -202,14 +160,14 @@ export default function ExamDatesPage() {
         url: pageUrl,
         name: seoTitle,
         description: seoDescription,
-        isPartOf: { '@id': `${siteUrl}/#website` },
+        isPartOf: { '@id': `${SITE_URL}/#website` },
         breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
       },
       {
         '@type': 'BreadcrumbList',
         '@id': `${pageUrl}#breadcrumb`,
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+          { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
           { '@type': 'ListItem', position: 2, name: 'Exam Dates', item: pageUrl },
         ],
       },

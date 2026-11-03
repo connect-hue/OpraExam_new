@@ -19,12 +19,10 @@ export default function AdminDashboardPage() {
   const [status, setStatus] = useState<SystemStatus | null>(null);
   const [counts, setCounts] = useState<Counts>({ faqs: 0, blogs: 0, leads: 0 });
   const [loading, setLoading] = useState(true);
-  const [seeding, setSeeding] = useState<'faqs' | 'blogs' | null>(null);
   const [seedNotice, setSeedNotice] = useState('');
 
   const fetchStatus = async () => {
     try {
-      setLoading(true);
       const res = await fetch('/api/admin/status');
       if (res.ok) {
         const data = await res.json();
@@ -39,31 +37,14 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    fetchStatus();
+    const controller = new AbortController();
+    fetch('/api/admin/status', { signal: controller.signal })
+      .then(response => { if (!response.ok) throw new Error('Failed to load admin data'); return response.json(); })
+      .then(data => { if (!controller.signal.aborted) { setStatus(data.status); setCounts(data.counts); } })
+      .catch(error => { if (!controller.signal.aborted) console.error('Admin data request failed:', error); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }, []);
-
-  const handleSeed = async (type: 'seed-faqs' | 'seed-blogs') => {
-    setSeeding(type === 'seed-faqs' ? 'faqs' : 'blogs');
-    setSeedNotice('');
-    try {
-      const res = await fetch('/api/admin/status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: type }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setSeedNotice(data.message || 'Operation successful!');
-        await fetchStatus();
-      } else {
-        setSeedNotice(`Error: ${data.error || 'Failed to seed'}`);
-      }
-    } catch (err: any) {
-      setSeedNotice(`Error: ${err?.message || 'Failed to seed'}`);
-    } finally {
-      setSeeding(null);
-    }
-  };
 
   return (
     <div className="space-y-8">

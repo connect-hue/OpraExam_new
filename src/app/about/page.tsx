@@ -1,7 +1,8 @@
+import { serializeJsonLd } from '@/lib/seo/structuredData';
+import { SITE_URL } from '@/lib/site';
 import { Metadata } from "next";
 import Link from "next/link";
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://www.opraexam.in').replace(/\/$/, '');
 
 export const metadata: Metadata = {
     title: {
@@ -10,22 +11,22 @@ export const metadata: Metadata = {
     description:
         "Learn about OPRAExam.in, an independent resource for OPRA exam preparation, syllabus guides, practice questions, sample papers and pharmacist registration information.",
     alternates: {
-        canonical: "https://www.opraexam.in/about",
+        canonical: `${SITE_URL}/about`,
     },
     openGraph: {
         title: "About OPRAExam.in | OPRA Exam Preparation & Study Resources",
         description:
             "Learn about OPRAExam.in, an independent resource for OPRA exam preparation, syllabus guides, practice questions, sample papers and pharmacist registration information.",
-        url: "https://www.opraexam.in/about",
+        url: `${SITE_URL}/about`,
         type: "website",
-        images: [`${siteUrl}/og-image.jpg`],
+        images: [`${SITE_URL}/og-image.jpg`],
     },
     twitter: {
         card: "summary_large_image",
         title: "About OPRAExam.in | OPRA Exam Preparation & Study Resources",
         description:
             "Learn about OPRAExam.in, an independent resource for OPRA exam preparation, syllabus guides, practice questions, sample papers and pharmacist registration information.",
-        images: [`${siteUrl}/og-image.jpg`],
+        images: [`${SITE_URL}/og-image.jpg`],
     },
 };
 
@@ -38,13 +39,13 @@ export default function AboutPage() {
                 "@type": "ListItem",
                 position: 1,
                 name: "Home",
-                item: siteUrl,
+                item: SITE_URL,
             },
             {
                 "@type": "ListItem",
                 position: 2,
                 name: "About Us",
-                item: `${siteUrl}/about`,
+                item: `${SITE_URL}/about`,
             },
         ],
     };
@@ -53,13 +54,13 @@ export default function AboutPage() {
         "@context": "https://schema.org",
         "@type": "AboutPage",
         name: "About OPRAExam.in",
-        url: `${siteUrl}/about`,
+        url: `${SITE_URL}/about`,
         description:
             "Learn about OPRAExam.in, an independent resource for OPRA exam preparation, syllabus guides, practice questions, sample papers and pharmacist registration information.",
         mainEntity: {
             "@type": "EducationalOrganization",
             name: "OPRAExam.in",
-            url: siteUrl,
+            url: SITE_URL,
             description:
                 "An independent educational platform dedicated to supporting overseas-qualified pharmacists preparing for the Overseas Pharmacist Readiness Assessment (OPRA) exam.",
             email: "contact@opraexam.in",
@@ -163,7 +164,7 @@ export default function AboutPage() {
             {/* JSON-LD Schemas */}
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+                dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbSchema) }}
             />
             <script
                 type="application/ld+json"

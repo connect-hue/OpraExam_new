@@ -1,13 +1,13 @@
+import { SITE_URL } from '@/lib/site';
 import { Metadata } from "next";
 import Link from "next/link";
 
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || process.env.SITE_URL || 'https://opraexam.in').replace(/\/$/, '');
 
 export const metadata: Metadata = {
   title: "Terms of Service | OPRA Exam Guide",
   description: "Terms and conditions governing your use of the OPRA Exam Guide (opraexam.in) educational website, resources, and study tools.",
   alternates: {
-    canonical: `${siteUrl}/terms`,
+    canonical: `${SITE_URL}/terms`,
   },
 };
 

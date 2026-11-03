@@ -1,3 +1,6 @@
+import { validateBlogInput } from '@/lib/content/blog';
+import { contentErrorResponse } from '@/lib/content/apiErrors';
+import { revalidatePublicContent } from '@/lib/content/revalidate';
 import { NextRequest, NextResponse } from 'next/server';
 import { isAuthenticatedAdmin } from '@/lib/auth';
 import { getBlogById, updateBlog, deleteBlog } from '@/lib/db/blogs';
@@ -33,36 +36,17 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const updates: Record<string, unknown> = {};
-    if (body.title !== undefined) updates.title = body.title.trim();
-    if (body.slug !== undefined) {
-      updates.slug = body.slug
-        .toLowerCase()
-        .trim()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-    if (body.description !== undefined) updates.description = body.description.trim();
-    if (body.author !== undefined) updates.author = body.author.trim();
-    if (body.date !== undefined) updates.date = body.date.trim();
-    if (body.readTime !== undefined) updates.readTime = body.readTime.trim();
-    if (body.keywords !== undefined) updates.keywords = body.keywords.trim();
-    if (body.content !== undefined) updates.content = body.content;
-    if (body.rawContent !== undefined) updates.rawContent = body.rawContent;
-    if (body.faqs !== undefined) updates.faqs = body.faqs;
-    if (body.relatedSlugs !== undefined) updates.relatedSlugs = body.relatedSlugs;
-    if (body.published !== undefined) updates.published = Boolean(body.published);
+    const updates = validateBlogInput(body, true);
 
     const success = await updateBlog(id, updates);
     if (!success) {
       return NextResponse.json({ error: 'Blog not found or update failed' }, { status: 404 });
     }
 
+    revalidatePublicContent();
     return NextResponse.json({ success: true, message: 'Blog updated successfully' });
   } catch (error: unknown) {
-    const errMsg = error instanceof Error ? error.message : 'Failed to update blog';
-    return NextResponse.json({ error: errMsg }, { status: 500 });
+    return contentErrorResponse(error);
   }
 }
 
@@ -89,9 +73,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Blog not found or deletion failed' }, { status: 404 });
     }
 
+    revalidatePublicContent();
     return NextResponse.json({ success: true, message: 'Blog deleted successfully' });
   } catch (error: unknown) {
-    const errMsg = error instanceof Error ? error.message : 'Failed to delete blog';
-    return NextResponse.json({ error: errMsg }, { status: 500 });
+    return contentErrorResponse(error);
   }
 }

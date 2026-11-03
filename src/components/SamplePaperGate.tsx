@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from 'react';
-import LeadForm, { LeadData } from '@/components/LeadForm';
+import { trackEvent } from '@/lib/analytics';
+import LeadForm from '@/components/LeadForm';
 
 export default function SamplePaperGate() {
   const [isUnlocked, setIsUnlocked] = useState(false);
 
-  const handleLeadSuccess = (data: LeadData) => {
-    console.log("Lead captured and unlocked sample papers:", data);
+  const handleLeadSuccess = () => {
     setIsUnlocked(true);
   };
 
@@ -58,6 +58,7 @@ export default function SamplePaperGate() {
             </p>
             <a
               href="https://pharmlly.com/api/documents/6ad06c346756a46507b7d358/url"
+              onClick={() => trackEvent('sample_paper_download_click', { placement: 'sample-papers' })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base px-8 py-4 rounded-full shadow-lg hover:shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0"

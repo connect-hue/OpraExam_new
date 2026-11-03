@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OPRAExam.in
 
-## Getting Started
+Independent OPRA examination information, preparation guides, practice questions and lead capture, built with Next.js 16, React 19, TypeScript and MongoDB.
 
-First, run the development server:
+## Local setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Use a supported Node.js runtime; this checkout was validated with Node.js 24 on Windows.
+
+1. Install dependencies with `npm.cmd install`.
+2. Create `.env.local` with the intended environment's configuration. Never commit it.
+3. Set `MONGODB_URI` and `MONGODB_DB`.
+4. Set `SITE_URL=https://www.opraexam.in`. This is the public search identity, including for preview builds.
+5. Configure private `ADMIN_SECRET_PIN` and `ADMIN_SESSION_SECRET` values before using the admin portal.
+6. Configure `PHARMLLY_API_BASE_URL`, `PHARMLLY_ACCESS_KEY`, and `PHARMLLY_SECRET_KEY` for lead delivery. `PHARMLLY_OPRA_PROGRAM` may override the existing CRM program identifier after its accepted value is verified.
+7. Set `NEXT_PUBLIC_GA_ID` when analytics is required.
+8. Run `npm.cmd run dev`.
+
+The public blog and sitemap require a working database for initial generation. Built-in site-content and FAQ defaults remain available when those optional CMS sections cannot be loaded.
+
+## Checks
+
+```powershell
+npm.cmd run lint
+node node_modules/typescript/bin/tsc --noEmit --incremental false
+npm.cmd test
+npm.cmd run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the production build on localhost and inspect it:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+npm.cmd run start -- --port 3100 --hostname 127.0.0.1
+npm.cmd run seo:check -- --base-url=http://127.0.0.1:3100
+npm.cmd run test:e2e
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Browser tests use installed Chrome by default, mock lead submission and block external traffic. Screenshots and failure traces go to ignored `test-results/`. Use `PLAYWRIGHT_CHANNEL` to select another installed supported browser channel.
 
-## Learn More
+## Editorial changes and deployment
 
-To learn more about Next.js, take a look at the following resources:
+See [SEO implementation and release notes](SEO-IMPLEMENTATION.md) for publishing behavior, migration previews, database backups, staging verification, deployment and Search Console checks. The migration defaults to read-only and requires an explicit `--apply` flag to write data. Do not run it against an unintended database.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The dated [SEO audit](SEO-AUDIT-2026-11-03.md) records the starting state; it is not a description of the current implementation.

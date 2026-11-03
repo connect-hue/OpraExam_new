@@ -1,30 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ArticleHeading } from '@/lib/content/article';
 
-export default function TableOfContents() {
-  const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([]);
+export default function TableOfContents({ headings }: { headings: ArticleHeading[] }) {
   const [activeId, setActiveId] = useState<string>("");
 
   useEffect(() => {
     // Collect all h2 and h3 elements in the article content after initial render
-    const elements = Array.from(document.querySelectorAll("article h2, article h3"))
-      .map((element, idx) => {
-        if (!element.id) {
-          const generatedId = (element.textContent || `section-${idx}`)
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/(^-|-$)+/g, '');
-          element.id = generatedId || `section-${idx}`;
-        }
-        return {
-          id: element.id,
-          text: element.textContent || "",
-          level: Number(element.tagName.replace("H", ""))
-        };
-      });
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHeadings(elements);
+    const elements = headings;
 
     // Setup IntersectionObserver for scroll spy
     const callback: IntersectionObserverCallback = (entries) => {
@@ -47,7 +31,7 @@ export default function TableOfContents() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [headings]);
 
   if (headings.length === 0) return null;
 

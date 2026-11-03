@@ -9,25 +9,14 @@ export default function AdminContentPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
-  const fetchContent = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch('/api/admin/content');
-      if (res.ok) {
-        const data = await res.json();
-        if (data.content) {
-          setContent(data.content);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to fetch site content:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchContent();
+    const controller = new AbortController();
+    fetch('/api/admin/content', { signal: controller.signal })
+      .then(response => { if (!response.ok) throw new Error('Failed to load admin data'); return response.json(); })
+      .then(data => { if (!controller.signal.aborted) { if (data.content) setContent(data.content); } })
+      .catch(error => { if (!controller.signal.aborted) console.error('Admin data request failed:', error); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {
@@ -46,8 +35,8 @@ export default function AdminContentPage() {
       if (!res.ok) throw new Error(data.error || 'Failed to update content');
 
       setMessage({ text: 'Homepage content updated successfully!', type: 'success' });
-    } catch (err: any) {
-      setMessage({ text: err?.message || 'Failed to update content', type: 'error' });
+    } catch (err: unknown) {
+      setMessage({ text: (err instanceof Error ? err.message : 'Failed to update content'), type: 'error' });
     } finally {
       setSaving(false);
     }

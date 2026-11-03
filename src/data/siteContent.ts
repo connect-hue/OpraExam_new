@@ -30,9 +30,9 @@ export type SiteContent = {
 export const defaultSiteContent: SiteContent = {
   hero: {
     badgeText: "November 2026 Registration Closed — Next: March 2027",
-    headingPrefix: "How to Pass the ",
-    headingHighlight: "OPRA Exam",
-    headingSuffix: " in Australia",
+    headingPrefix: "OPRA Exam ",
+    headingHighlight: "2026",
+    headingSuffix: ": Syllabus, Dates, Fees & Preparation Guide",
     description: "The Overseas Pharmacist Readiness Assessment (OPRA) is conducted by the Australian Pharmacy Council (APC). It is a computer-based, multiple-choice examination for eligible overseas-qualified pharmacists.",
     perks: [
       "120 Multiple-Choice Questions (2 Hours 30 Minutes)",
@@ -40,8 +40,8 @@ export const defaultSiteContent: SiteContent = {
       "Biomedical, Pharmaceutical & Clinical Sciences",
       "1-on-1 APC Eligibility & Documentation Advice"
     ],
-    candidatesGuided: "5,000+ Pharmacists Guided",
-    satisfactionRating: "4.9/5 Candidate Satisfaction"
+    candidatesGuided: "",
+    satisfactionRating: ""
   },
   about: {
     title: "OPRA Exam Format",

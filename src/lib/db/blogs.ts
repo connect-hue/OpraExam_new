@@ -1,233 +1,116 @@
 import { ObjectId, type Document } from 'mongodb';
+import { cache } from 'react';
 import { getDb } from '../mongodb';
-import { BlogPostContent, BlogPostFaq } from '@/data/blogPosts';
+import type { BlogPostContent, BlogPostFaq } from '@/data/blogPosts';
+import { ContentValidationError, publicationTransition } from '../content/blog';
+import { publicationDate, toIsoDate } from '../content/dates';
+import { sanitizeBlocks, sanitizeRichText } from '../content/html';
 
 export interface DbBlogPost {
-  _id?: string;
-  slug: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  readTime: string;
-  keywords: string;
-  content: BlogPostContent[];
-  rawContent?: string;
-  faqs?: BlogPostFaq[];
-  relatedSlugs?: string[];
-  published?: boolean;
-  publishedAt?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  _id?: string; slug: string; title: string; description: string; author: string;
+  date: string; readTime: string; keywords: string; content: BlogPostContent[];
+  rawContent?: string; faqs?: BlogPostFaq[]; relatedSlugs?: string[]; published?: boolean;
+  publishedAt?: string; createdAt?: string; updatedAt?: string; contentUpdatedAt?: string;
+  seoTitle?: string; authorId?: string; reviewerId?: string; reviewedAt?: string;
+  seoCorrectionVersion?: number;
+  sources?: { label: string; url: string }[];
 }
 
-const COLLECTION_NAME = 'blogs';
+export class ContentUnavailableError extends Error {
+  constructor() { super('Content service is temporarily unavailable.'); }
+}
 
-export function getBlogTimestamp(blog: DbBlogPost): number {
-  if (blog.publishedAt) {
-    const t = new Date(blog.publishedAt).getTime();
-    if (!isNaN(t)) return t;
-  }
-  if (blog.date) {
-    const t = new Date(blog.date).getTime();
-    if (!isNaN(t)) return t;
-  }
-  if (blog.createdAt) {
-    const t = new Date(blog.createdAt).getTime();
-    if (!isNaN(t)) return t;
-  }
-  if (blog._id && blog._id.length === 24) {
-    return parseInt(blog._id.substring(0, 8), 16) * 1000;
-  }
-  return 0;
+async function collection() {
+  const db = await getDb();
+  if (!db) throw new ContentUnavailableError();
+  return db.collection('blogs');
+}
+
+function normalize(doc: Document): DbBlogPost {
+  return { ...doc, _id: doc._id.toString() } as DbBlogPost;
+}
+
+export function getBlogTimestamp(blog: DbBlogPost): number { return Date.parse(publicationDate(blog) ?? '') || 0; }
+
+function ordered(docs: Document[]): DbBlogPost[] {
+  return docs.map(normalize).sort((a, b) => getBlogTimestamp(b) - getBlogTimestamp(a));
 }
 
 export async function getAllBlogs(): Promise<DbBlogPost[]> {
-  try {
-    const db = await getDb();
-    if (!db) {
-      console.warn('MongoDB not connected: getAllBlogs returning empty array');
-      return [];
-    }
-
-    const collection = db.collection<DbBlogPost>(COLLECTION_NAME);
-    const docs = await collection
-      .find({})
-      .sort({ publishedAt: -1, createdAt: -1, _id: -1 })
-      .toArray();
-
-    return docs
-      .map((doc) => ({
-        ...doc,
-        _id: doc._id?.toString(),
-      }))
-      .sort((a, b) => getBlogTimestamp(b) - getBlogTimestamp(a));
-  } catch (error) {
-    console.error('Error fetching blogs from MongoDB:', error);
-    return [];
-  }
+  return ordered(await (await collection()).find({}).toArray());
 }
+
+// Legacy records without a flag remain public until explicitly unpublished.
+export const publishedFilter = { published: { $ne: false } };
 
 export async function getPublishedBlogs(): Promise<DbBlogPost[]> {
-  try {
-    const db = await getDb();
-    if (!db) {
-      console.warn('MongoDB not connected: getPublishedBlogs returning empty array');
-      return [];
-    }
-
-    const collection = db.collection<DbBlogPost>(COLLECTION_NAME);
-    const docs = await collection
-      .find({ published: { $ne: false } })
-      .sort({ publishedAt: -1, createdAt: -1, _id: -1 })
-      .toArray();
-
-    return docs
-      .map((doc) => ({
-        ...doc,
-        _id: doc._id?.toString(),
-      }))
-      .sort((a, b) => getBlogTimestamp(b) - getBlogTimestamp(a));
-  } catch (error) {
-    console.error('Error fetching published blogs from MongoDB:', error);
-    return [];
-  }
+  return ordered(await (await collection()).find(publishedFilter).toArray());
 }
 
-export async function getBlogBySlug(slug: string): Promise<DbBlogPost | null> {
-  try {
-    const db = await getDb();
-    if (!db) {
-      console.warn('MongoDB not connected: getBlogBySlug returning null');
-      return null;
-    }
+export async function getPublishedBlogSummaries(): Promise<DbBlogPost[]> {
+  return ordered(await (await collection()).find(publishedFilter, {
+    projection: { slug: 1, title: 1, description: 1, author: 1, authorId: 1, date: 1, readTime: 1, publishedAt: 1, createdAt: 1, contentUpdatedAt: 1, updatedAt: 1 },
+  }).toArray());
+}
 
-    const collection = db.collection<DbBlogPost>(COLLECTION_NAME);
-    const doc = await collection.findOne({ slug });
-    if (!doc) {
-      return null;
-    }
+export const getBlogBySlug = cache(async (slug: string): Promise<DbBlogPost | null> => {
+  const doc = await (await collection()).findOne({ slug, ...publishedFilter });
+  return doc ? normalize(doc) : null;
+});
 
-    return {
-      ...doc,
-      _id: doc._id?.toString(),
-    };
-  } catch (error) {
-    console.error('Error finding blog by slug in MongoDB:', error);
-    return null;
-  }
+function identity(id: string) {
+  return ObjectId.isValid(id) && id.length === 24 ? { _id: new ObjectId(id) } : { slug: id };
 }
 
 export async function getBlogById(id: string): Promise<DbBlogPost | null> {
-  const db = await getDb();
-  if (!db) return null;
-
-  try {
-    const collection = db.collection(COLLECTION_NAME);
-    const isObjectId = ObjectId.isValid(id) && id.length === 24;
-    const query = isObjectId ? { $or: [{ _id: new ObjectId(id) }, { slug: id }] } : { slug: id };
-    const doc = await collection.findOne(query);
-    if (!doc) return null;
-    return {
-      ...doc,
-      _id: doc._id.toString(),
-    } as unknown as DbBlogPost;
-  } catch {
-    return null;
-  }
+  const doc = await (await collection()).findOne(identity(id));
+  return doc ? normalize(doc) : null;
 }
 
-export async function createBlog(post: Omit<DbBlogPost, '_id'>): Promise<DbBlogPost | null> {
-  const db = await getDb();
-  if (!db) throw new Error('Database is not connected');
-
-  const collection = db.collection(COLLECTION_NAME);
-  const now = new Date().toISOString();
-
-  // Validate slug uniqueness
-  const existing = await collection.findOne({ slug: post.slug });
-  if (existing) {
-    throw new Error(`A blog post with slug "${post.slug}" already exists.`);
-  }
-
-  let publishedAt = now;
-  if (post.date) {
-    const parsed = new Date(post.date);
-    if (!isNaN(parsed.getTime())) {
-      publishedAt = parsed.toISOString();
-    }
-  }
-
-  const newDoc = {
-    ...post,
-    published: post.published ?? true,
-    publishedAt,
-    createdAt: now,
-    updatedAt: now,
-  };
-
-  const result = await collection.insertOne(newDoc as unknown as Document);
+function cleanContent(post: Partial<DbBlogPost>): Partial<DbBlogPost> {
   return {
-    ...newDoc,
-    _id: result.insertedId.toString(),
+    ...post,
+    ...(post.content ? { content: sanitizeBlocks(post.content) } : {}),
+    ...(post.rawContent !== undefined ? { rawContent: sanitizeRichText(post.rawContent) } : {}),
+    ...(post.faqs ? { faqs: post.faqs.map(faq => ({ ...faq, answer: sanitizeRichText(faq.answer) })) } : {}),
   };
+}
+
+export async function createBlog(post: Omit<DbBlogPost, '_id'>): Promise<DbBlogPost> {
+  const blogs = await collection();
+  if (await blogs.findOne({ slug: post.slug })) throw new ContentValidationError('This article slug already exists.');
+  if (post.published !== false && !post.content.length) throw new ContentValidationError('Add article content before publishing.');
+  const now = new Date().toISOString();
+  const publishedAt = post.published !== false ? toIsoDate(post.date) ?? now : undefined;
+  const doc = { ...cleanContent(post), published: post.published !== false, ...(publishedAt ? { publishedAt } : {}), createdAt: now, updatedAt: now, contentUpdatedAt: now };
+  const result = await blogs.insertOne(doc as Document);
+  return { ...doc, _id: result.insertedId.toString() } as DbBlogPost;
 }
 
 export async function updateBlog(id: string, updates: Partial<DbBlogPost>): Promise<boolean> {
-  const db = await getDb();
-  if (!db) throw new Error('Database is not connected');
-
-  const collection = db.collection(COLLECTION_NAME);
+  const blogs = await collection();
+  const previous = await blogs.findOne(identity(id));
+  if (!previous) return false;
+  if (updates.slug && updates.slug !== previous.slug) {
+    if (previous.published !== false || previous.publishedAt) throw new ContentValidationError('Published article URLs are permanent. Keep the existing slug.');
+    if (await blogs.findOne({ slug: updates.slug, _id: { $ne: previous._id } })) throw new ContentValidationError('This article slug already exists.');
+  }
+  const current = normalize(previous);
+  const merged = { ...current, ...updates };
+  if (merged.published !== false && !merged.content.length) throw new ContentValidationError('Add article content before publishing.');
   const now = new Date().toISOString();
-  const cleanUpdates = { ...updates };
-  delete cleanUpdates._id;
-  const isObjectId = ObjectId.isValid(id) && id.length === 24;
-  const targetQuery = isObjectId ? { $or: [{ _id: new ObjectId(id) }, { slug: id }] } : { slug: id };
-
-  // If slug is changed, check if new slug collides with another post
-  if (cleanUpdates.slug) {
-    const collisionQuery: Record<string, unknown> = {
-      slug: cleanUpdates.slug,
-      ...(isObjectId ? { _id: { $ne: new ObjectId(id) } } : { slug: { $ne: id } }),
-    };
-    const collision = await collection.findOne(collisionQuery);
-    if (collision) {
-      throw new Error(`A blog post with slug "${cleanUpdates.slug}" already exists.`);
-    }
-  }
-
-  const finalUpdates: Record<string, unknown> = {
-    ...cleanUpdates,
-    updatedAt: now,
-  };
-
-  if (cleanUpdates.date) {
-    const parsed = new Date(cleanUpdates.date);
-    if (!isNaN(parsed.getTime())) {
-      finalUpdates.publishedAt = parsed.toISOString();
-    }
-  }
-
-  const result = await collection.updateOne(
-    targetQuery,
-    { $set: finalUpdates }
-  );
-
-  return result.matchedCount > 0;
+  const cleaned = cleanContent(updates);
+  delete cleaned._id;
+  const publishedAt = publicationTransition(current, merged.published !== false, updates.date, now);
+  const editorialFields: (keyof DbBlogPost)[] = ['title', 'description', 'content', 'faqs', 'author', 'authorId', 'reviewerId', 'reviewedAt', 'sources'];
+  const contentChanged = editorialFields.some(key => key in cleaned && JSON.stringify(cleaned[key]) !== JSON.stringify(current[key]));
+  return (await blogs.updateOne({ _id: previous._id }, { $set: {
+    ...cleaned, updatedAt: now, ...(publishedAt ? { publishedAt } : {}), ...(contentChanged ? { contentUpdatedAt: now } : {}),
+  } })).matchedCount > 0;
 }
 
 export async function deleteBlog(id: string): Promise<boolean> {
-  const db = await getDb();
-  if (!db) throw new Error('Database is not connected');
-
-  const collection = db.collection(COLLECTION_NAME);
-  const isObjectId = ObjectId.isValid(id) && id.length === 24;
-  const targetQuery = isObjectId ? { $or: [{ _id: new ObjectId(id) }, { slug: id }] } : { slug: id };
-  const result = await collection.deleteOne(targetQuery);
-  return result.deletedCount > 0;
+  return (await (await collection()).deleteOne(identity(id))).deletedCount > 0;
 }
 
-export async function seedDefaultBlogs(): Promise<number> {
-  // All blogs are maintained directly in MongoDB
-  return 0;
-}
+export async function seedDefaultBlogs(): Promise<number> { return 0; }

@@ -1,3 +1,5 @@
+import { serializeJsonLd } from '@/lib/seo/structuredData';
+import { SITE_URL, SITE_NAME } from '@/lib/site';
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -13,9 +15,8 @@ const inter = Inter({
 });
 
 // Preferred canonical domain
-const SITE_URL = "https://www.opraexam.in";
 
-const SITE_NAME = "OPRAExam.in";
+
 
 const DEFAULT_TITLE =
   "OPRA Exam 2026: Syllabus, Dates, Fees & Preparation";
@@ -122,7 +123,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLd).replace(
+            __html: serializeJsonLd(jsonLd).replace(
               /</g,
               "\\u003c"
             ),

@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     await setAdminSessionCookie();
 
     return NextResponse.json({ success: true, message: 'Authenticated successfully' });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message || 'Authentication failed' }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: (error instanceof Error ? error.message : 'Authentication failed') }, { status: 500 });
   }
 }
